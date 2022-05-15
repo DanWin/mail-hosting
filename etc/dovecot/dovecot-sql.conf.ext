@@ -1,0 +1,10 @@
+connect = host=localhost dbname=postfix user=postfix_readonly password=YOUR_PASSWORD
+driver = mysql
+
+# Query to retrieve password. user can be used to retrieve username in other formats also.
+password_query = SELECT username AS user, CONCAT(password_hash_type, password) AS password, CONCAT(domain, '/', local_part, '/') AS maildir, 5000 AS userdb_uid, 5000 AS userdb_gid, CONCAT('*:bytes=', quota) AS userdb_quota_rule FROM mailbox WHERE username = CONCAT('%n', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active='1'
+
+# Query to retrieve user information, note uid matches dovecot.conf AND Postfix virtual_uid_maps parameter.
+user_query = SELECT CONCAT(domain, '/', local_part, '/') AS maildir, 5000 AS uid, 5000 AS gid, CONCAT('*:bytes=', quota) AS quota_rule FROM mailbox WHERE username = CONCAT('%n', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active='1'
+
+iterate_query = SELECT username AS user FROM mailbox

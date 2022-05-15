@@ -1,0 +1,87 @@
+# general configuration options
+smtpd_banner = danwin1210.de ESMTP $mail_name (Debian/GNU)
+biff = no
+append_dot_mydomain = no
+delay_warning_time = 10h
+myhostname = danwin1210.de
+alias_maps = 
+alias_database = 
+myorigin = danwin1210.de
+mydestination = 
+mynetworks = 127.0.0.0/8 192.168.178.0/24 10.9.0.0/24
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+ignore_mx_lookup_error = yes
+always_add_missing_headers = yes
+message_drop_headers = bcc content-length resent-bcc return-path x-mailer x-originating-ip user-agent x-received x-sender-ip x-client-ip x-client-hostname
+notify_classes = 2bounce data delay resource software
+message_size_limit = 52428800
+backwards_bounce_logfile_compatibility = no
+show_user_unknown_table_name = no
+virtual_transport = lmtp:unix:/private/dovecot-lmtp
+compatibility_level = 3.6
+smtputf8_autodetect_classes = all
+
+# TLS parameters
+smtpd_tls_cert_file = /etc/acme.sh/danwin1210.de_ecc/fullchain.cer
+smtpd_tls_key_file = /etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key
+smtpd_tls_ciphers = HIGH
+smtpd_tls_mandatory_ciphers = HIGH
+smtp_tls_ciphers = HIGH
+smtp_tls_mandatory_ciphers = HIGH
+tls_eecdh_auto_curves = X448 X25519 secp521r1 secp384r1 prime256v1
+smtpd_tls_protocols = TLSv1.2 TLSv1.3
+smtp_tls_protocols = TLSv1.2 TLSv1.3
+smtpd_tls_exclude_ciphers = aNULL MD5 SHA CAMELLIA
+smtpd_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA
+smtp_tls_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+smtp_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+tls_preempt_cipherlist = yes
+smtpd_tls_dh1024_param_file = /etc/postfix/dh4096.pem
+smtpd_tls_security_level = may
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_security_level = may
+smtp_tls_CApath = /etc/ssl/certs
+smtp_dns_support_level = dnssec
+tls_ssl_options = NO_RENEGOTIATION
+smtp_tls_chain_files = /etc/postfix/danwin1210-mail.chain
+smtpd_tls_received_header = yes
+
+#lookup maps for domains and email addresses
+relay_domains = torbox.danwin1210.me torbox.danwin1210.de
+canonical_maps = inline:{{@mail2tor.onion=@mail2tor.com}, {@torbox3uiot6wchz.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.danwin1210.me=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.danwin1210.de=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}}
+sender_canonical_maps = inline:{{@localhost=@danwin1210.de}, {@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion=@danwin1210.de}, {@danwin1210.me=@danwin1210.de}}
+transport_maps = inline:{{torbox3uiot6wchz.onion=relay:[torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion]:25}, {.onion=smtp}, {mail2tor.com=relay:[xc7tgk2c5onxni2wsy76jslfsitxjbbptejnqhw6gy2ft7khpevhc7ad.onion]:25}, {blackhost.xyz=relay:[blackhost7pws76u6vohksdahnm6adf7riukgcmahrwt43wv2drvyxid.onion]:25}} proxy:mysql:/etc/postfix/sql/mysql_transport_maps.cf inline:{*=relay:[10.9.0.1]:1025}
+virtual_alias_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/sql/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_mailbox_maps.cf
+
+#sasl authentication and restrictions
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = danwin1210.de
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_client_restrictions = reject_unauth_pipelining
+smtpd_recipient_restrictions = check_policy_service inet:127.0.0.1:12340, permit_sasl_authenticated, check_recipient_access proxy:mysql:/etc/postfix/sql/mysql_tls_policy_in.cf
+smtpd_sender_restrictions = reject_sender_login_mismatch, check_sender_access inline:{{<> = REJECT}}, permit_sasl_authenticated
+smtpd_relay_restrictions = permit_sasl_authenticated, permit_auth_destination, reject_unauth_destination
+smtpd_sender_login_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_auth_maps.cf
+smtpd_helo_restrictions = check_helo_access hash:/etc/postfix/helo_checks
+
+# anti-spam settings
+smtpd_milters = inet:127.0.0.1:11332
+non_smtpd_milters = inet:127.0.0.1:11332
+milter_default_action = accept
+milter_protocol = 6
+header_checks = regexp:/etc/postfix/header_checks
+body_checks = regexp:/etc/postfix/body_checks
+disable_vrfy_command = yes
+smtpd_discard_ehlo_keywords = silent-discard, dsn
+smtpd_delay_reject = yes
+smtpd_helo_required = yes
+strict_rfc821_envelopes = yes
+default_destination_concurrency_limit = 2
+smtpd_recipient_limit = 10

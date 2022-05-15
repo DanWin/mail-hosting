@@ -1,0 +1,12 @@
+connect = host=localhost dbname=postfix user=postfix password=YOUR_PASSWORD
+
+map {
+  pattern = shared/last-login/$user
+  table = mailbox
+  value_field = last_login
+  value_type = uint
+
+  fields {
+    username = $user
+  }
+}

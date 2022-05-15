@@ -1,0 +1,5 @@
+user = postfix_readonly
+password = YOUR_PASSWORD
+hosts = localhost
+dbname = postfix
+query = SELECT 'reject_plaintext_session' FROM mailbox WHERE username=CONCAT('%u', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active = 1 AND enforce_tls_in = 1 UNION SELECT 'reject_plaintext_session' FROM alias WHERE address=CONCAT('%u', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active = 1 AND enforce_tls_in = 1

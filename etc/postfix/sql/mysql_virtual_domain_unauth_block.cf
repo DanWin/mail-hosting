@@ -1,0 +1,6 @@
+user = postfix_readonly
+password = YOUR_PASSWORD
+hosts = localhost
+dbname = postfix
+query = SELECT 'REJECT' FROM domain WHERE domain='%d' AND active = '1'
+
