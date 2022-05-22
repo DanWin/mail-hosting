@@ -1,0 +1,21 @@
+server {
+	listen [::]:443 ssl proxy_protocol http2;
+	add_header Expect-CT "max-age=86400, enforce" always;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+	root /var/www/html;
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	server_name openpgpkey.danwin1210.de;
+	location ~ ^/\.well-known/openpgpkey/(.*)/policy$ {
+		return 200 "";
+	}
+	rewrite /.well-known/openpgpkey/(.*)/hu /mail/openpgpkey_wkd.php?domain=$1 last;
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		expires off;
+	}
+	ssl_certificate /etc/acme.sh/danwin1210.de_ecc/fullchain.cer;
+	ssl_certificate_key /etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key;
+}
