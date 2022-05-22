@@ -1,0 +1,19 @@
+server {
+        listen [::]:80;
+        server_name 116.202.17.147 www.danwin1210.de [2a01:4f8:c010:d56::1];
+	location / {
+		rewrite / https://danwin1210.de$request_uri? permanent;
+	}
+	location /.well-known/ {
+		proxy_pass https://localhost;
+	}
+}
+server {
+	listen [::]:80 fastopen=100 backlog=2048 ipv6only=off default_server;
+	location / {
+		rewrite / https://$host$request_uri? permanent;
+	}
+	location /.well-known/ {
+		proxy_pass https://localhost;
+	}
+}

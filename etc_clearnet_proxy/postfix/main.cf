@@ -1,0 +1,76 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+smtpd_banner = mail.danwin1210.de ESMTP $mail_name (Debian/GNU)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+delay_warning_time = 5m
+
+readme_directory = no
+
+# See http://www.postfix.org/COMPATIBILITY_README.html -- default to 2 on
+# fresh installs.
+compatibility_level=3.6
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/acme.sh/danwin1210.de_ecc/fullchain.cer
+smtpd_tls_key_file=/etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_ciphers = HIGH
+smtpd_tls_mandatory_ciphers = HIGH
+smtp_tls_ciphers = HIGH
+smtp_tls_mandatory_ciphers = HIGH
+tls_eecdh_auto_curves = X448 X25519 secp521r1 secp384r1 prime256v1
+smtpd_tls_protocols = TLSv1.3 TLSv1.2
+smtp_tls_protocols = TLSv1.3 TLSV1.2
+smtpd_tls_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+smtp_tls_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+smtpd_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+smtp_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
+tls_preempt_cipherlist = yes
+sender_dependent_default_transport_maps = proxy:mysql:/etc/postfix/sql/mysql_tls_policy_out.cf
+smtp_tls_security_level = dane
+smtpd_tls_security_level = encrypt
+smtp_tls_CApath = /etc/ssl/certs
+smtp_dns_support_level = dnssec
+smtp_bind_address=0.0.0.0
+smtp_bind_address6=::
+smtp_tls_servername = hostname
+smtpd_tls_received_header = yes
+smtpd_relay_restrictions = permit_tls_all_clientcerts reject
+smtpd_client_restrictions = reject_unauth_pipelining
+
+myhostname = mail.danwin1210.de
+alias_maps = 
+alias_database = 
+myorigin = danwin1210.de
+mydestination = 
+relayhost = 
+mynetworks = 10.9.0.0/24
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = 10.9.0.1
+inet_protocols = all
+
+#notify_classes = bounce 2bounce data delay policy protocol resource software
+notify_classes = data delay policy protocol resource software
+message_size_limit=52428800
+smtp_helo_name = danwin1210.de
+smtpd_discard_ehlo_keywords = silent-discard, dsn
+backwards_bounce_logfile_compatibility = no
+respectful_logging = yes
+show_user_unknown_table_name = no
+tls_ssl_options = NO_RENEGOTIATION
+
+smtpd_tls_req_ccert = yes
+smtpd_tls_ask_ccert = yes
+smtpd_tls_CAfile = /etc/postfix/danwin1210-mail.crt
+
+strict_rfc821_envelopes = yes
+smtpd_delay_reject = yes
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+smtputf8_autodetect_classes = all
