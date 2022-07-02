@@ -74,3 +74,4 @@ smtpd_delay_reject = yes
 smtpd_helo_required = yes
 disable_vrfy_command = yes
 smtputf8_autodetect_classes = all
+smtp_pix_workarounds = delay_dotcrlf

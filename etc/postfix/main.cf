@@ -85,3 +85,4 @@ smtpd_helo_required = yes
 strict_rfc821_envelopes = yes
 default_destination_concurrency_limit = 2
 smtpd_recipient_limit = 10
+smtp_pix_workarounds = delay_dotcrlf
