@@ -14,7 +14,7 @@ if [ ! -e rspamd ]; then
 	git clone --recurse-submodules https://github.com/rspamd/rspamd.git
 fi
 export PROC_LIMIT=`free -g | grep Mem | awk -v nproc=$(nproc) '{print (($2 + 1) < nproc) ? ($2 + 1) : nproc;}'`
-#start build
+# start build
 cd rspamd
 git fetch --all --recurse-submodules
 git checkout 3.2 --recurse-submodules
@@ -33,7 +33,23 @@ curl -sSL https://github.com/composer/composer/releases/download/2.3.8/composer.
 chmod +x /usr/bin/composer
 composer self-update
 
-#rspamd user
+# rspamd user
 id -u _rspamd >/dev/null 2>&1 ||useradd -M -r -s /bin/false -d /var/lib/rspamd _rspamd
 mkdir -p /var/lib/rspamd
 chown _rspamd: /var/lib/rspamd
+
+# mysql encryption
+if [ ! -e /etc/mysql/encryption/keyfile.enc ]; then
+	mkdir -p /etc/mysql/encryption/
+	openssl rand -hex 128 > /etc/mysql/encryption/keyfile.key
+	echo "1;"$(openssl rand -hex 32) | openssl enc -aes-256-cbc -md sha1 -pass file:/etc/mysql/encryption/keyfile.key -out /etc/mysql/encryption/keyfile.enc
+fi
+
+# install squirrelmail
+if [ ! -e /var/www/html/mail/squirrelmail ]; then
+	mkdir -p /var/www/html/mail/squirrelmail
+	cd /var/www/html/mail/squirrelmail
+	git clone https://github.com/RealityRipple/squirrelmail .
+	mkdir -p /var/local/squirrelmail/data /var/local/squirrelmail/attach
+	chown www-data:www-data -R /var/local/squirrelmail
+fi
