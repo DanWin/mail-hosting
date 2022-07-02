@@ -9,6 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
+const DBVERSION = 1; // Database schema version
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 3
 
