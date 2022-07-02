@@ -81,7 +81,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
 <body>
 <main>
 <p><a href="/mail/">Info</a> | Register | <a href="/mail/squirrelmail/src/login.php" target="_blank">Webmail-Login</a> |
-    <a href="/mail/manage_account.php">Manage account</a></p>
+    <a href="/mail/manage_account.php">Manage account</a> | <a href="https://danwin1210.de:5281/conversejs" target="_blank" rel="noopener">Web-XMPP</a></p>
 <?php echo "<p>$msg</p>"; ?>
 <form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token"
                                                                     value="<?php echo $_SESSION[ 'csrf_token' ] ?>">

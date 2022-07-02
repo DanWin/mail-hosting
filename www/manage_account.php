@@ -237,7 +237,7 @@ if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?>
             <button name="action" value="logout" type="submit">Logout</button>
 		<?php } else { ?>
             | Manage account<?php
-		} ?></p>
+		} ?> | <a href="https://danwin1210.de:5281/conversejs" target="_blank" rel="noopener">Web-XMPP</a></p>
 	<?php if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?></form><?php }
 echo "<p>$msg</p>";
 if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>

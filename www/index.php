@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://danwin1210.de/mail/">
 </head><body>
 <main>
-<p>Info | <a href="/mail/register.php">Register</a> | <a href="/mail/squirrelmail/src/login.php" target="_blank">Webmail-Login</a> | <a href="/mail/manage_account.php">Manage account</a></p>
+<p>Info | <a href="/mail/register.php">Register</a> | <a href="/mail/squirrelmail/src/login.php" target="_blank">Webmail-Login</a> | <a href="/mail/manage_account.php">Manage account</a> | <a href="https://danwin1210.de:5281/conversejs" target="_blank" rel="noopener">Web-XMPP</a></p>
 <h2>What you will get</h2>
 <p>You get a free anonymous E-Mail address and an XMPP/Jabber account using the same details. Your Jabber ID is user@danwin1210.de and can be connected to directly from clearnet or via TOR hidden service (danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion).</p>
 <p>You will have 50MB of disk space available for your mails. If you desperately need more space, just <a href="/contact.php">contact me</a>. Your E-Mail address will be user@danwin1210.de</p>

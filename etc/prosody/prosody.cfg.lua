@@ -96,6 +96,7 @@ modules_enabled = {
 		"conversejs";
 		"http_altconnect";
 		"external_services";
+		"conversejs";
 }
 
 -- These modules are auto-loaded, but should you want
@@ -287,8 +288,15 @@ external_services = {
         secret = "YOUR_SECRET"
     }
 }
-cross_domain_bosh = true
-cross_domain_websocket = true
+conversejs_resources = "/srv/conversejs/dist";
+conversejs_options = {
+    view_mode = "fullscreen";
+    allow_non_roster_messaging = true;
+    clear_cache_on_logout = true;
+    default_domain = "danwin1210.de";
+    enable_smacks = true;
+    muc_domain = "conference.danwin1210.de";
+}
 
 VirtualHost "danwin1210.de"
 
