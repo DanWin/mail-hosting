@@ -32,6 +32,7 @@ smtpd_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA3
 smtp_tls_mandatory_exclude_ciphers = aNULL MD5 SHA CAMELLIA AES+SHA256 AES+SHA384
 tls_preempt_cipherlist = yes
 sender_dependent_default_transport_maps = proxy:mysql:/etc/postfix/sql/mysql_tls_policy_out.cf
+smtp_tls_policy_maps = socketmap:inet:127.0.0.1:8461:postfix
 smtp_tls_security_level = dane
 smtpd_tls_security_level = encrypt
 smtp_tls_CApath = /etc/ssl/certs
