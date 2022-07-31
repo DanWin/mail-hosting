@@ -12,6 +12,7 @@ const DBNAME = 'postfix'; // Database
 const DBVERSION = 1; // Database schema version
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 3
+const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsbubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can mot be used on public registration
 
 require_once( 'vendor/autoload.php' );
 

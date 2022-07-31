@@ -47,7 +47,11 @@ if ( isset( $_POST[ 'user' ] ) ) {
 			if ( ! $validator->isValid( "$user@$domain", new NoRFCWarningsValidation() ) ) {
 				$ok = false;
 				$msg .= '<div class="red" role="alert">The email address you specified is not valid</div>';
+			} elseif(in_array($user, RESERVED_USERNAMES, true)){
+				$ok = false;
+				$msg .= '<div class="red" role="alert">The user name you specified is reserved</div>';
 			}
+
 		}
 	}
 	if ( $ok ) {
