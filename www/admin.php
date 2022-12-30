@@ -205,25 +205,37 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$msg .= '<div class="green" role="alert">Successfully updated alias domain.</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_domain' && ! empty( $_POST[ 'domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
-				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ?;' );
-				$stmt->execute( [ $_POST[ 'domain' ] ] );
+				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ? UNION SELECT null FROM alias_domain WHERE alias_domain = ?;' );
+				$stmt->execute( [ $_POST[ 'domain' ], $_POST[ 'domain' ] ] );
 				if ( $stmt->fetch() ) {
 					$msg .= '<div class="red" role="alert">Oops, it looks like the domain "' . htmlspecialchars( $_POST[ 'domain' ] ) . '" already exists.</div>';
 				} else {
+					$ascii_domian = idn_to_ascii($_POST['domain'], IDNA_NONTRANSITIONAL_TO_ASCII);
+					$utf8_domian = idn_to_utf8($_POST['domain'], IDNA_NONTRANSITIONAL_TO_UNICODE);
 					$active = isset( $_POST[ 'active' ] ) ? 1 : 0;
 					$stmt = $db->prepare( 'INSERT INTO domain (active, domain, created, modified) VALUES (?, ?, NOW(), NOW());' );
-					$stmt->execute( [ $active, $_POST[ 'domain' ] ] );
+					$stmt->execute( [ $active, $utf8_domain ] );
+					if($ascii_domain !== $utf8_domain){
+						$stmt = $db->prepare( 'INSERT INTO alias_domain (active, alias_domain, target_domain, created, modified) VALUES (1, ?, ?, NOW(), NOW());' );
+						$stmt->execute( [ $ascii_domain, $utf8_domain ] );
+					}
 					$msg .= '<div class="green" role="alert">Successfully created domain.</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_alias_domain' && ! empty( $_POST[ 'alias_domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
-				$stmt = $db->prepare( 'SELECT null FROM alias_domain WHERE alias_domain = ?;' );
-				$stmt->execute( [ $_POST[ 'alias_domain' ] ] );
+				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ? UNION SELECT null FROM alias_domain WHERE alias_domain = ?;' );
+				$stmt->execute( [ $_POST[ 'alias_domain' ], $_POST[ 'alias_domain' ] ] );
 				if ( $stmt->fetch() ) {
-					$msg .= '<div class="red" role="alert">Oops, it looks like the alias domain "' . htmlspecialchars( $_POST[ 'domain' ] ) . '" already exists.</div>';
+					$msg .= '<div class="red" role="alert">Oops, it looks like the alias domain "' . htmlspecialchars( $_POST[ 'alias_domain' ] ) . '" already exists.</div>';
 				} else {
+					$ascii_domian = idn_to_ascii($_POST['alias_domain'], IDNA_NONTRANSITIONAL_TO_ASCII);
+					$utf8_domian = idn_to_utf8($_POST['alias_domain'], IDNA_NONTRANSITIONAL_TO_UNICODE);
 					$active = isset( $_POST[ 'active' ] ) ? 1 : 0;
 					$stmt = $db->prepare( 'INSERT INTO alias_domain (active, alias_domain, target_domain, created, modified) VALUES (?, ?, ?, NOW(), NOW());' );
-					$stmt->execute( [ $active, $_POST[ 'alias_domain' ], $_POST[ 'target_domain' ] ] );
+					$stmt->execute( [ $active, $utf8_domain, $_POST[ 'target_domain' ] ] );
+					if($ascii_domain !== $utf8_domain){
+						$stmt = $db->prepare( 'INSERT INTO alias_domain (active, alias_domain, target_domain, created, modified) VALUES (?, ?, ?, NOW(), NOW());' );
+						$stmt->execute( [ $active, $ascii_domain, $_POST[ 'target_domain' ] ] );
+					}
 					$msg .= '<div class="green" role="alert">Successfully created alias domain.</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_alias' && ! empty( $_POST[ 'alias' ] ) && ! empty( $_POST[ 'target' ] ) ) {
@@ -362,8 +374,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
         <link rel="canonical" href="https://danwin1210.de/mail/admin.php">
     </head>
     <body>
-        <main>
-	<?php if ( ! empty( $_SESSION[ 'email_admin_user' ] ) ) { ?>
+	<main><h1>E-Mail and XMPP - Admin managemen</h1>
+	if ( ! empty( $_SESSION[ 'email_admin_user' ] ) ) { ?>
         <form method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <p>Logged in as <?php echo htmlspecialchars( $_SESSION[ 'email_admin_user' ] ); ?> |
             <button name="action" value="logout" type="submit">Logout</button><?php
@@ -969,12 +981,12 @@ function send_edit_mailbox(): void
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
-		$aliases_to = implode( "\n", array_diff( $aliases, [ $_POST[ 'user' ] ] ) );
+		$aliases_to = implode( "\n", array_diff( $aliases, [ $_REQUEST[ 'user' ] ] ) );
 		?>
-        <h2>Edit mailbox <?php echo htmlspecialchars( $_POST[ 'user' ] ); ?></h2>
+        <h2>Edit mailbox <?php echo htmlspecialchars( $_REQUEST[ 'user' ] ); ?></h2>
         <form class="form_limit" action="admin.php" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
-            <input type="hidden" name="user" value="<?php echo htmlspecialchars( $_POST[ 'user' ] ); ?>">
+            <input type="hidden" name="user" value="<?php echo htmlspecialchars( $_REQUEST[ 'user' ] ); ?>">
             <div class="row">
                 <div class="col"><label for="alias_to">Forward to</label></div>
                 <div class="col"><textarea name="alias_to"
@@ -983,7 +995,7 @@ function send_edit_mailbox(): void
             <div class="row">
                 <div class="col"><label for="alias_keep_copy">Keep a local copy</label></div>
                 <div class="col"><input type="checkbox" name="alias_keep_copy"
-                                        id="alias_keep_copy"<?php echo in_array( $_POST[ 'user' ], $aliases, true ) ? ' checked' : ''; ?>>
+                                        id="alias_keep_copy"<?php echo in_array( $_REQUEST[ 'user' ], $aliases, true ) ? ' checked' : ''; ?>>
                 </div>
             </div>
             <div class="row">

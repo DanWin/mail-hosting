@@ -1,3 +1,4 @@
+<?php include_once('../common_config.php'); ?>
 <!DOCTYPE html><html lang="en-gb"><head>
 <title>Daniel - E-Mail and XMPP</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

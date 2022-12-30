@@ -47,10 +47,10 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 			$delete_prosody_archive->execute( [ $tmp[ 'local_part' ], $tmp[ 'domain' ] ] );
 		}
 	}
-	if ( $tmp[ 'active' ] === '-2' ) {
+	if ( $tmp[ 'active' ] === -2 ) {
 		$delete->execute( [ $tmp[ 'username' ] ] );
 	}
-	if ( $tmp[ 'active' ] === '-1' ) {
+	if ( $tmp[ 'active' ] === -1 ) {
 		$disable->execute( [ $tmp[ 'username' ] ] );
 	}
 	$delete_alias->execute( [ $tmp[ 'username' ] ] );
