@@ -243,7 +243,7 @@ if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?>
             |
             <button name="action" value="logout" type="submit"><?php echo _('Logout'); ?></button>
 		<?php } else { ?>
-            | Manage account');
+            | <?php echo _('Manage account');
 		} ?> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a></p>
 	<?php if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?></form><?php }
 echo "<p>$msg</p>";
