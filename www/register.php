@@ -111,7 +111,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
         <div class="col"><input type="password" name="pwd2" id="pwd2" autocomplete="new-password" required></div>
     </div>
     <div class="row">
-        <div class="col"><label for="accept_privacy"><?php echo _('I have read and agreed to the <a href="%s" target="_blank">Privacy Policy</a>', PRIVACY_POLICY_URL); ?></label>
+        <div class="col"><label for="accept_privacy"><?php printf(_('I have read and agreed to the <a href="%s" target="_blank">Privacy Policy</a>'), PRIVACY_POLICY_URL); ?></label>
         </div>
         <div class="col"><input type="checkbox" id="accept_privacy" name="accept_privacy" required></div>
     </div>
