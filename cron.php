@@ -2,17 +2,13 @@
 if ( php_sapi_name() !== 'cli' ) {
 	exit;
 }
-const DBHOST_PROSODY = 'localhost'; // Database host
-const DBUSER_PROSODY = 'prosody'; // Database user
-const DBPASS_PROSODY = 'YOUR_PASSWORD'; // Database password
-const DBNAME_PROSODY = 'prosody'; // Database
 
 require_once 'common_config.php';
 $db = get_db_instance();
 try {
 	$db_prosody = new PDO( 'mysql:host=' . DBHOST_PROSODY . ';dbname=' . DBNAME_PROSODY, DBUSER_PROSODY, DBPASS_PROSODY, [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION ] );
 } catch ( PDOException $e ) {
-	die( 'No Connection to MySQL database!' );
+	die( _('No Connection to MySQL database!') . PHP_EOL);
 }
 setlocale( LC_CTYPE, 'C.UTF-8' ); // make sure to use UTF-8 locale. Non UTF-8 locales can cause serious issues when handling UTF-8 file names
 

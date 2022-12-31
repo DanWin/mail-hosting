@@ -13,6 +13,64 @@ const DBVERSION = 1; // Database schema version
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 3
 const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsbubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can mot be used on public registration
+const CANONICAL_URL = 'https://danwin1210.de/mail/'; // our preferred URL prefix for search engines
+const PRIVACY_POLICY_URL = '/privacy.php'; // URL to privacy policy
+const WEB_XMPP_URL = 'https://danwin1210.de:5281/conversejs'; // URL to Web-XMPP
+const XMPP_BOSH_URL = 'https://danwin1210.de:5281/http-bind'; // XMPP BOSH URL
+const XMPP_FILE_PROXY = 'proxy.danwin1210.de'; // File proxy domain
+const ROOT_URL = '/mail/'; // Relative root URL under which the mail hosting is installed
+const CONTACT_URL = '/contact.php'; // URL to get in contact with you
+const CLEARNET_SERVER = 'danwin1210.de'; // Clearnet domain of the mail server
+const ONION_SERVER = 'danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion'; // Onion domain of the mail server
+const DBHOST_PROSODY = 'localhost'; // Database host
+const DBUSER_PROSODY = 'prosody'; // Database user
+const DBPASS_PROSODY = 'YOUR_PASSWORD'; // Database password
+const DBNAME_PROSODY = 'prosody'; // Database
+
+const LANGUAGES = [
+	'de' => ['name' => 'Deutsch', 'locale' => 'de_DE', 'flag' => '🇩🇪', 'show_in_menu' => true, 'dir' => 'ltr'],
+	'en' => ['name' => 'English', 'locale' => 'en_GB', 'flag' => '🇬🇧', 'show_in_menu' => true, 'dir' => 'ltr'],
+];
+$language = 'en';
+$locale = 'en_GB';
+$dir = 'ltr';
+
+if(isset($_REQUEST['lang']) && isset(LANGUAGES[$_REQUEST['lang']])){
+	$locale = LANGUAGES[$_REQUEST['lang']]['locale'];
+	$language = $_REQUEST['lang'];
+	$dir = LANGUAGES[$_REQUEST['lang']]['dir'];
+	setcookie('language', $_REQUEST['lang'], ['expires' => 0, 'path' => '/', 'domain' => '', 'secure' => ($_SERVER['HTTPS'] ?? '' === 'on'), 'httponly' => true, 'samesite' => 'Strict']);
+}elseif(isset($_COOKIE['language']) && isset(LANGUAGES[$_COOKIE['language']])){
+	$locale = LANGUAGES[$_COOKIE['language']]['locale'];
+	$language = $_COOKIE['language'];
+	$dir = LANGUAGES[$_COOKIE['language']]['dir'];
+}elseif(!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+	$prefLocales = array_reduce(
+		explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']),
+		function (array $res, string $el) {
+			list($l, $q) = array_merge(explode(';q=', $el), [1]);
+			$res[$l] = (float) $q;
+			return $res;
+		}, []);
+	arsort($prefLocales);
+	foreach($prefLocales as $l => $q){
+		$lang = locale_lookup(array_keys(LANGUAGES), $l);
+		if(!empty($lang)){
+			$locale = LANGUAGES[$lang]['locale'];
+			$language = $lang;
+			$dir = LANGUAGES[$lang]['dir'];
+			setcookie('language', $lang, ['expires' => 0, 'path' => '/', 'domain' => '', 'secure' => ($_SERVER['HTTPS'] ?? '' === 'on'), 'httponly' => true, 'samesite' => 'Strict']);
+			break;
+		}
+	}
+
+}
+putenv('LC_ALL='.$locale);
+setlocale(LC_ALL, $locale);
+
+bindtextdomain('mail-hosting', __DIR__.'/locale');
+bind_textdomain_codeset('mail-hosting', 'UTF-8');
+textdomain('mail-hosting');
 
 require_once( 'vendor/autoload.php' );
 
@@ -26,7 +84,7 @@ function get_db_instance(): PDO
 		$db = new PDO( 'mysql:host=' . DBHOST . ';dbname=' . DBNAME, DBUSER, DBPASS, [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => PERSISTENT ] );
 	} catch ( PDOException ) {
 		http_response_code( 500 );
-		die( 'No Connection to MySQL database!' );
+		die( _('No Connection to MySQL database!') );
 	}
 	return $db;
 }
@@ -75,7 +133,7 @@ function send_captcha(): void
 	$time = time();
 	$stmt = $db->prepare( 'INSERT INTO captcha (id, time, code) VALUES (?, ?, ?);' );
 	$stmt->execute( [ $randid, $time, $code ] );
-	echo '<div class="row"><div class="col"><td>Copy:<br>';
+	echo '<div class="row"><div class="col"><td>'._('Copy:').'<br>';
 	if ( CAPTCHA_DIFFICULTY === 1 ) {
 		$im = imagecreatetruecolor( 55, 24 );
 		$bg = imagecolorallocate( $im, 0, 0, 0 );
@@ -194,7 +252,7 @@ function validate_email_list( array $targets, string &$msg = '' ): string
 		if ( $validator->isValid( $email, new NoRFCWarningsValidation() ) ) {
 			$alias_goto .= ",$email";
 		} else {
-			$msg .= '<div class="red" role="alert">Oops, the email "' . htmlspecialchars( $email ) . '" doesn\' look like a valid email address and thus wasn\'t added to the forwarding list.</div>';
+			$msg .= '<div class="red" role="alert">'.sprintf(_('Oops, the email "%s" doesn\' look like a valid email address and thus wasn\'t added to the forwarding list.'), htmlspecialchars( $email ) ) . '</div>';
 		}
 	}
 	return ltrim( $alias_goto, ',' );
@@ -220,7 +278,7 @@ function check_domain_access( string &$email, string &$msg = '' ): bool
 			$managed_domains [] = $tmp[ 'domain' ];
 		}
 		if ( ! in_array( $domain, $managed_domains, true ) ) {
-			$msg .= '<div class="red" role="alert">You are not allowed to manage this domain.</div>';
+			$msg .= '<div class="red" role="alert">'._('You are not allowed to manage this domain.').'</div>';
 			return false;
 		}
 	}
@@ -231,8 +289,20 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 {
 	$validator = new EmailValidator();
 	if ( ! $validator->isValid( $email, new NoRFCWarningsValidation() ) ) {
-		$msg .= '<div class="red" role="alert">Invalid email address.</div>';
+		$msg .= '<div class="red" role="alert">'._('Invalid email address.').'</div>';
 		return false;
 	}
 	return true;
+}
+
+function alt_links(): void
+{
+	global $language;
+	foreach(LANGUAGES as $lang => $data) {
+		if($lang === $language){
+			continue;
+		}
+		echo '<link rel="alternate" href="?lang='.$lang.'" hreflang="'.$lang.'" />';
+		echo '<meta property="og:locale:alternate" content="'.$data['locale'].'">';
+	}
 }

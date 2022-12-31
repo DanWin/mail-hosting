@@ -1,21 +1,26 @@
 <?php
+if(!extension_loaded('gettext')){
+	die('The gettext extension of PHP is required. Please install it first.' . PHP_EOL);
+}
 require('common_config.php');
-if(!extension_loaded('pdo_mysql')){
-	die("Error: You need to install and enable the PDO php module\n");
+foreach(['pdo_mysql', 'mbstring', 'pcre', 'gnupg', 'intl'] as $required_extension) {
+	if ( ! extension_loaded( $required_extension ) ) {
+		die( sprintf( _( 'The %s extension of PHP is required. Please install it first.' ), $required_extension ) . PHP_EOL );
+	}
 }
 try{
 	$db=new PDO('mysql:host=' . DBHOST . ';dbname=' . DBNAME . ';charset=utf8mb4', DBUSER, DBPASS, [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
-}catch(PDOException $e){
+}catch(PDOException){
 	try{
 		//Attempt to create database
 		$db=new PDO('mysql:host=' . DBHOST . ';charset=utf8mb4', DBUSER, DBPASS, [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
 		if(false!==$db->exec('CREATE DATABASE ' . DBNAME)){
 			$db=new PDO('mysql:host=' . DBHOST . ';dbname=' . DBNAME . ';charset=utf8mb4', DBUSER, DBPASS, [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
 		}else{
-			die("Error: No database connection!\n");
+			die( _('No Connection to MySQL database!') . PHP_EOL);
 		}
-	}catch(PDOException $e){
-		die("Error: No database connection!\n");
+	}catch(PDOException){
+		die( _('No Connection to MySQL database!') . PHP_EOL);
 	}
 }
 try{
@@ -27,13 +32,13 @@ try{
 		$stmt->execute([DBVERSION]);
 		$db->commit();
 		if($version < DBVERSION){
-			echo "Database has successfully been updated.\n";
+			echo _('Database has successfully been updated.') . PHP_EOL;
 		} else {
-			echo "Database is already up-to-date.\n";
+			echo _('Database is already up-to-date.') . PHP_EOL;
 		}
 	} catch(PDOException $e){
-		echo "Error updating database:\n";
-		echo $e->getMessage() . "\n";
+		echo _('Error updating database:') . PHP_EOL;
+		echo $e->getMessage() . PHP_EOL;
 		$db->rollBack();
 	}
 } catch(PDOException){
@@ -49,9 +54,9 @@ try{
 		$db->exec('CREATE TABLE settings (setting varchar(50) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL PRIMARY KEY, value text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;');
 		$stmt=$db->prepare("INSERT INTO settings (setting, value) VALUES ('version', ?);");
 		$stmt->execute([DBVERSION]);
-		echo "Database has successfully been set up.\n";
+		echo _('Database has successfully been set up.') . PHP_EOL;
 	} catch(PDOException $e){
-		echo "Error setting up database:\n";
-		echo $e->getMessage() . "\n";
+		echo _('Error setting up database:') . PHP_EOL;
+		echo $e->getMessage() . PHP_EOL;
 	}
 }

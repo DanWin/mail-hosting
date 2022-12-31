@@ -11,15 +11,15 @@ $dirs = [];
 foreach ( $domains as $domain ) {
 	if ( is_dir( '/var/mail/vmail/' . basename( $domain ) ) ) {
 		if ( ! isset( $mailboxes[ $domain ] ) ) {
-			echo "$domain does not seem to have any accounts, but has a directory. Consider deleting it.\n";
+			echo sprintf(_('%s does not seem to have any accounts, but has a directory. Consider deleting it.'), $domain).PHP_EOL;
 		} else {
 			$accounts = array_diff( scandir( '/var/mail/vmail/' . basename( $domain ) ), array( '..', '.' ) );
 			foreach ( $accounts as $account ) {
 				if ( ! isset( $mailboxes[ $domain ][ $account ] ) && is_dir( '/var/mail/vmail/' . basename( $domain ) . '/' . basename( $account ) ) ) {
 					exec( 'rm -r ' . escapeshellarg('/var/mail/vmail/' . basename( $domain ) . '/' . basename( $account )));
-					echo "Deleted: /var/mail/vmail/" . basename( $domain ) . '/' . basename( $account ) . "\n";
+					echo sprintf(_('Deleted: %s'), '/var/mail/vmail/' . basename( $domain ) . '/' . basename( $account )) . PHP_EOL;
 				} elseif( is_file('/var/mail/vmail/' . basename( $domain ) . '/' . basename( $account ))){
-					echo 'File found in mail directory location: "/var/mail/vmail/' . basename( $domain ) . '/' . basename( $account ) . "\". Consider deleting it.\n";
+					echo sprintf(_('File found in mail directory location: "%s". Consider deleting it.'), '/var/mail/vmail/'. basename( $domain ) . '/' . basename( $account ) ) . PHP_EOL;
 				}
 			}
 		}

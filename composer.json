@@ -1,8 +1,10 @@
 {
-    "require": {
-        "egulias/email-validator": "^3.1",
-        "ext-mbstring": "*",
-        "ext-pdo": "*",
-        "ext-gnupg": "*"
-    }
+	"require": {
+		"egulias/email-validator": "^3.2",
+		"ext-mbstring": "*",
+		"ext-pdo": "*",
+		"ext-gnupg": "*",
+		"ext-gettext": "*",
+		"ext-intl": "*"
+	}
 }
