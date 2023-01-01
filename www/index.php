@@ -16,6 +16,7 @@ global $language, $dir, $locale;
 <meta property="og:description" content="<?php echo _('Get a free and anonymous E-Mail address and an XMPP/Jabber account'); ?>">
 <meta property="og:url" content="<?php echo CANONICAL_URL; ?>">
 <meta property="og:locale" content="<?php echo $locale; ?>">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"<?php echo _('E-Mail and XMPP'); ?>", "description": "<?php echo _('Get a free and anonymous E-Mail address and an XMPP/Jabber account'); ?>", "availableChannel": {"@type": "ServiceChannel", "serviceUrl": "<?php echo CANONICAL_URL; ?>"}}</script>
 </head><body>
 <main>
 <p><?php echo _('Info'); ?> | <a href="<?php echo ROOT_URL; ?>register.php"><?php echo _('Register'); ?></a> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo _('Webmail-Login'); ?></a> | <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo _('Manage account'); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a></p>

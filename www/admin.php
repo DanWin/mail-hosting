@@ -379,6 +379,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
         <meta property="og:description" content="<?php echo _('Lets domain owners manage their email domain and user accounts.'); ?>">
         <meta property="og:url" content="<?php echo CANONICAL_URL; ?>admin.php">
         <meta property="og:locale" content="<?php echo $locale; ?>">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"<?php echo _('E-Mail and XMPP - Admin management'); ?>", "description": "<?php echo _('Lets domain owners manage their email domain and user accounts.'); ?>"}</script>
     </head>
     <body>
 	<main><h1><?php echo _('E-Mail and XMPP - Admin management'); ?></h1>

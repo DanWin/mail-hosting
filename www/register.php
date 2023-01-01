@@ -88,6 +88,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
     <meta property="og:description" content="<?php echo _('Register for a free and anonymous E-Mail address and an XMPP/Jabber account'); ?>">
     <meta property="og:url" content="<?php echo CANONICAL_URL; ?>register.php">
     <meta property="og:locale" content="<?php echo $locale; ?>">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"<?php echo _('E-Mail and XMPP - Register'); ?>", "description": "<?php echo _('Register for a free and anonymous E-Mail address and an XMPP/Jabber account'); ?>"}</script>
 </head>
 <body>
 <main>

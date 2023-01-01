@@ -192,6 +192,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
     <meta property="og:description" content="<?php echo _('Manage your free and anonymous E-Mail address and an XMPP/Jabber account. Add forwarding addresses, change your password or disable/delete your account.'); ?>">
     <meta property="og:url" content="<?php echo CANONICAL_URL; ?>manage_account.php">
     <meta property="og:locale" content="<?php echo $locale; ?>">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"<?php echo _('E-Mail and XMPP - Manage account'); ?>", "description": "<?php echo _('Manage your free and anonymous E-Mail address and an XMPP/Jabber account. Add forwarding addresses, change your password or disable/delete your account.'); ?>"}</script>
 </head>
 <body>
 <main>
