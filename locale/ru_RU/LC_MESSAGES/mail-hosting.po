@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-01-01 13:08+0100\n"
+"PO-Revision-Date: 2023-01-03 21:44+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -50,7 +50,7 @@ msgstr ""
 
 #: www/index.php:22
 msgid "What you will get"
-msgstr ""
+msgstr "После регистрации вам будет доступно"
 
 #: www/index.php:23
 #, php-format
@@ -59,6 +59,9 @@ msgid ""
 "same details. Your Jabber ID is user@%1$s and can be connected to directly "
 "from clearnet or via Tor hidden service (%2$s)."
 msgstr ""
+"Бесплатная и анонимная электронная почта, а также аккаунт Jabber, все это "
+"доступно из под одной учетной записи. Ваш Jabber ID это user@%1$s он "
+"доступен как через обычный интернет так и через Tor сеть (%2$s)."
 
 #: www/index.php:24
 #, php-format
@@ -66,6 +69,9 @@ msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
 "space, just <a href=\"%1$s\">contact me</a>. Your E-Mail address will be %2$s"
 msgstr ""
+"Вам будет выделено 50МБ свободного места для ваших писем. Если вам "
+"понадобится больше места, пожалуйста <a href=\"%1$s\">свяжитесь со мной</a>. "
+"Ваш домен E-Mail будет выглядеть как %2$s"
 
 #: www/index.php:25
 msgid ""
@@ -75,6 +81,12 @@ msgid ""
 "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
 "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</a>"
 msgstr ""
+"Для обеспечения конфидециальности, по возможности используйте PGP для "
+"шифрования почты. Это не позволит третьим лицам читать ваши письма (включая "
+"меня). GnuPGs официальный сайт: <a href=\"https://gnupg.org\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">https://gnupg.org</a> Windows "
+"Для: <a href=\"https://gpg4usb.org\" target=\"_blank\" rel=\"noopener "
+"noreferrer\">https://gpg4usb.org</a>"
 
 #: www/index.php:26
 msgid "E-Mail Setup"
@@ -83,21 +95,21 @@ msgstr ""
 #: www/index.php:28
 #, php-format
 msgid "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
-msgstr ""
+msgstr "SMTP: %s Port 465 (SSL/TLS) или 587 (StartTLS)"
 
 #: www/index.php:29
 #, php-format
 msgid "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
-msgstr ""
+msgstr "IMAP: %s Port 993 (SSL/TLS) или 143 (StartTLS)"
 
 #: www/index.php:30
 #, php-format
 msgid "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
-msgstr ""
+msgstr "POP3: %s Port 995 (SSL/TLS) или 110 (StartTLS)"
 
 #: www/index.php:31
 msgid "Authentication: PLAIN, LOGIN"
-msgstr ""
+msgstr "Аутентификация: ОБЫЧНАЯ, ЛОГИН"
 
 #: www/index.php:33
 #, php-format
@@ -105,6 +117,8 @@ msgid ""
 "You can also connect on the same ports via the Tor onion address %s, but you "
 "will have to accept an SSL certificate only valid for the clearnet domain."
 msgstr ""
+"Вы можете подключиться через сеть Tor %s, использовав эти же порты но вам "
+"необходимо будет принять SSL-сертификат как для обчного интернета (clearnet)."
 
 #: www/index.php:34
 msgid "XMPP setup"
@@ -142,7 +156,7 @@ msgstr "Неверный код"
 
 #: www/manage_account.php:38 www/admin.php:33
 msgid "Successfully logged out"
-msgstr "Вы вышли из системы"
+msgstr "Вы вышли из аккаунта"
 
 #: www/manage_account.php:43 www/register.php:22
 msgid "Invalid captcha"
@@ -164,7 +178,7 @@ msgstr "Вы не заполнили пароли или они не совпа�
 
 #: www/manage_account.php:105 www/admin.php:348
 msgid "Successfully updated password"
-msgstr "Вы успешно обновили пароль"
+msgstr "Пароль обновлен"
 
 #: www/manage_account.php:108
 msgid ""
@@ -172,10 +186,13 @@ msgid ""
 "can immediately register with this user again. It cannot be reversed. Are "
 "you absolutely sure?"
 msgstr ""
+"Внимание: Это приведет к удалению вашей учетной записии и всех данных "
+"навсегда. Любой желающий сможет сразу зарегистрироваться под вашим именем "
+"пользователя. Отменить это действие невозможно, вы абсолютно уверены?"
 
 #: www/manage_account.php:110
 msgid "Yes, I want to permanently delete my account"
-msgstr ""
+msgstr "Да, я хочу навсегда удалить свой аккаунт"
 
 #: www/manage_account.php:112
 msgid ""
@@ -183,10 +200,13 @@ msgid ""
 "After a year it is available for registrations again. It cannot be reversed. "
 "Are you absolutely sure?"
 msgstr ""
+"Внимание: Это приведет к отключению вашей учетной записи на год, и удалению "
+"всех ваших данных. Через год можно будет зарегистрировать это имя "
+"пользователя снова. Отменить это действие невозможно. Вы абсолютно уверены?"
 
 #: www/manage_account.php:114
 msgid "Yes, I want to disable my account"
-msgstr ""
+msgstr "Да, я хочу отключить свой аккаунт"
 
 #: www/manage_account.php:123
 msgid "Successfully deleted account"
@@ -225,7 +245,7 @@ msgstr "Двухфакторная аутентификация включена
 
 #: www/manage_account.php:181 www/manage_account.php:191
 msgid "E-Mail and XMPP - Manage account"
-msgstr ""
+msgstr "E-Mail and XMPP - Настройки аккаунта"
 
 #: www/manage_account.php:186 www/manage_account.php:192
 msgid ""
@@ -237,7 +257,7 @@ msgstr ""
 #: www/manage_account.php:213
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
-msgstr ""
+msgstr "Чтобы войти в систему пожалуйста введите следующий код код:"
 
 #: www/manage_account.php:215
 msgid ""
@@ -322,12 +342,12 @@ msgstr ""
 "другого провайдера, вы можете попробовать отключить принудительное "
 "шифрование. Но имейте в виду, что это позволяет третьим лицам перехватывать "
 "и читать ваши письма. Обязательно попросите вашего корреспондента, запросить "
-"поддержку шифрования у своего поставщика услуг электронной почты, для защиты "
-"от чтения ваших писем третьими лицами."
+"поддержку шифрования TLS/SSL у своего поставщика услуг электронной почты, "
+"для защиты от чтения ваших писем третьими лицами."
 
 #: www/manage_account.php:300 www/admin.php:964 www/admin.php:1011
 msgid "Enforce encryption for incoming mail"
-msgstr "Влючить шифрование входящей почты"
+msgstr "Включить шифрование входящей почты"
 
 #: www/manage_account.php:306 www/admin.php:968 www/admin.php:1016
 msgid "Enforce encryption for outgoing mail"
@@ -582,7 +602,7 @@ msgstr "Почтовый ящик успешно обновлен."
 
 #: www/admin.php:311 www/register.php:62
 msgid "Sorry, this user already exists"
-msgstr ""
+msgstr "Такой пользователь уже есть, выберите другое имя"
 
 #: www/admin.php:333 www/register.php:70
 msgid "Successfully created new mailbox!"
