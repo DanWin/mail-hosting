@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-01-08 18:29+0000\n"
+"PO-Revision-Date: 2023-01-15 14:16+0000\n"
 "Last-Translator: Weblate Admin <daniel@danwin1210.de>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/ru/>\n"
@@ -91,7 +91,7 @@ msgstr ""
 
 #: www/index.php:26
 msgid "E-Mail Setup"
-msgstr ""
+msgstr "Настройки E-Mail"
 
 #: www/index.php:28
 #, php-format
@@ -124,12 +124,12 @@ msgstr ""
 
 #: www/index.php:34
 msgid "XMPP setup"
-msgstr ""
+msgstr "Настройки XMPP"
 
 #: www/index.php:35
 #, php-format
 msgid "Domain: %s"
-msgstr ""
+msgstr "Домен: %s"
 
 #: www/index.php:36
 #, php-format
@@ -150,7 +150,7 @@ msgstr ""
 
 #: www/manage_account.php:17 www/admin.php:21
 msgid "It looks like your user no longer exists!"
-msgstr ""
+msgstr "Похоже, такого пользователя больше не существует!"
 
 #: www/manage_account.php:30
 msgid "Wrong 2FA code"
@@ -236,6 +236,10 @@ msgid ""
 "Oops, looks like the key is missing this email address as user id. Please "
 "add your address \"%s\" as user ID to your pgp key or create a new key pair."
 msgstr ""
+"Упс, похоже, в ключе отсутствует этот адрес электронной почты в качестве "
+"идентификатора пользователя. Пожалуйста, добавьте свой адрес \"%s\" в "
+"качестве идентификатора пользователя к вашему ключу pgp или создайте новую "
+"пару ключей."
 
 #: www/manage_account.php:168
 msgid "Sorry, the code was incorrect"
@@ -255,6 +259,9 @@ msgid ""
 "Add forwarding addresses, change your password or disable/delete your "
 "account."
 msgstr ""
+"Здесь вы можете управлять своим бесплатным и анонимным адресом электронной "
+"почты и учетной записью XMPP/Jabber. Добавить адреса пересылки, изменить "
+"свой пароль, отключить или удалить свою учетную запись."
 
 #: www/manage_account.php:213
 msgid ""
@@ -299,7 +306,7 @@ msgstr "Пароль"
 
 #: www/manage_account.php:265 www/admin.php:415
 msgid "Login"
-msgstr "Войти"
+msgstr "Логин"
 
 #: www/manage_account.php:282
 msgid "Settings"
@@ -472,6 +479,8 @@ msgid ""
 "Warning: This will permanently delete the alias domain \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Предупреждение: Это приведет к безвозвратному удалению псевдонима домена \"%"
+"s\". Отменить это действие будет невозможно. Вы абсолютно уверены?"
 
 #: www/admin.php:85
 msgid "Yes, I want to permanently delete this alias domain"
@@ -494,18 +503,20 @@ msgid ""
 "Warning: This will permanently delete the mailbox \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Предупреждение: Это приведет к безвозвратному удалению почтового ящика \"%s\""
+". Отменить это действие будет невозможно. Вы абсолютно уверены?"
 
 #: www/admin.php:95
 msgid "Yes, I want to permanently delete this mailbox"
-msgstr ""
+msgstr "Да, я хочу навсегда удалить этот почтовый ящик"
 
 #: www/admin.php:98
 msgid "You can't delete your own admin account!"
-msgstr ""
+msgstr "Вы не можете удалить свою собственную учетную запись администратора!"
 
 #: www/admin.php:102
 msgid "Successfully deleted admin account."
-msgstr ""
+msgstr "Учетная запись администратора успешно удалена."
 
 #: www/admin.php:107
 msgid "Successfully deleted domain."
@@ -526,11 +537,11 @@ msgstr "Почтовый ящик был успешно удален."
 #: www/admin.php:128
 #, php-format
 msgid "Oops, it looks like the admin account \"%s\" doesn't exist."
-msgstr ""
+msgstr "Упс, похоже, учетная запись администратора \"%s\" не существует."
 
 #: www/admin.php:132
 msgid "Passwords don't match!"
-msgstr ""
+msgstr "Пароли не совпадают!"
 
 #: www/admin.php:137
 msgid "Successfully updated password."
@@ -538,16 +549,16 @@ msgstr "Пароль успешно обновлен."
 
 #: www/admin.php:166
 msgid "Successfully edited admin account."
-msgstr ""
+msgstr "Учетная запись администратора успешно отредактированна."
 
 #: www/admin.php:172
 #, php-format
 msgid "Oops, it looks like the admin account \"%s\" already exists."
-msgstr ""
+msgstr "Упс, похоже, учетная запись администратора \"%s\" уже существует."
 
 #: www/admin.php:182
 msgid "Successfully created admin account."
-msgstr ""
+msgstr "Учетная запись администратора зарегистрирована."
 
 #: www/admin.php:189
 #, php-format
@@ -685,7 +696,7 @@ msgstr ""
 #: www/admin.php:482 www/admin.php:636 www/admin.php:724 www/admin.php:821
 #: www/admin.php:927
 msgid "Edit"
-msgstr ""
+msgstr "Редактировать"
 
 #: www/admin.php:497
 #, php-format
@@ -915,7 +926,7 @@ msgstr ""
 
 #: common_config.php:136
 msgid "Copy:"
-msgstr ""
+msgstr "Копировать:"
 
 #: common_config.php:255
 #, php-format
