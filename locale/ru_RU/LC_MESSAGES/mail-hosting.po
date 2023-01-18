@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-01-16 20:06+0000\n"
+"PO-Revision-Date: 2023-01-18 11:25+0000\n"
 "Last-Translator: Goatli <goatli@porcod.io>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/ru/>\n"
@@ -308,7 +308,7 @@ msgstr "Пароль"
 
 #: www/manage_account.php:265 www/admin.php:415
 msgid "Login"
-msgstr "Логин"
+msgstr "Вход"
 
 #: www/manage_account.php:282
 msgid "Settings"
@@ -928,7 +928,7 @@ msgstr ""
 
 #: common_config.php:136
 msgid "Copy:"
-msgstr "Копировать:"
+msgstr "Код с картинки:"
 
 #: common_config.php:255
 #, php-format
