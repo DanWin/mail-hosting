@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-01-23 19:54+0000\n"
+"PO-Revision-Date: 2023-01-26 18:54+0000\n"
 "Last-Translator: Weblate Admin <daniel@danwin1210.de>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/ru/>\n"
@@ -308,7 +308,7 @@ msgstr "Пароль"
 
 #: www/manage_account.php:265 www/admin.php:415
 msgid "Login"
-msgstr "Вход"
+msgstr "Войти"
 
 #: www/manage_account.php:282
 msgid "Settings"
