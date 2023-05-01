@@ -8,46 +8,49 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-05-01 02:04+0000\n"
+"Last-Translator: Haydar Erdogan <bygenc19@gmail.com>\n"
+"Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
 
 #: www/index.php:6 www/index.php:15
 msgid "E-Mail and XMPP"
-msgstr ""
+msgstr "E-posta ve XMPP"
 
 #: www/index.php:10 www/index.php:16
 msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr ""
+msgstr "Ücretsiz ve anonim bir E-posta adresi ve bir XMPP/Jabber hesabı edinin"
 
 #: www/index.php:21 www/manage_account.php:236 www/register.php:94
 msgid "Info"
-msgstr ""
+msgstr "Bilgi"
 
 #: www/index.php:21 www/manage_account.php:240 www/register.php:94
 #: www/register.php:121
 msgid "Register"
-msgstr ""
+msgstr "Kayıt ol"
 
 #: www/index.php:21 www/manage_account.php:241 www/register.php:94
 msgid "Webmail-Login"
-msgstr ""
+msgstr "Webmail-Giriş"
 
 #: www/index.php:21 www/manage_account.php:246 www/register.php:95
 msgid "Manage account"
-msgstr ""
+msgstr "Hesabı yönet"
 
 #: www/index.php:21 www/manage_account.php:247 www/register.php:95
 msgid "Web-XMPP"
-msgstr ""
+msgstr "Web-XMPP"
 
 #: www/index.php:22
 msgid "What you will get"
-msgstr ""
+msgstr "Ne alacaksın"
 
 #: www/index.php:23
 #, php-format
@@ -56,6 +59,9 @@ msgid ""
 "same details. Your Jabber ID is user@%1$s and can be connected to directly "
 "from clearnet or via Tor hidden service (%2$s)."
 msgstr ""
+"Aynı ayrıntıları kullanarak ücretsiz bir anonim E-Posta adresi ve bir XMPP/"
+"Jabber hesabı alırsınız. Jabber kimliğiniz user@%1$s şeklindedir ve doğrudan "
+"clearnet'ten veya Tor gizli hizmeti (%2$s) üzerinden bağlanabilir."
 
 #: www/index.php:24
 #, php-format
@@ -63,6 +69,9 @@ msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
 "space, just <a href=\"%1$s\">contact me</a>. Your E-Mail address will be %2$s"
 msgstr ""
+"Postalarınız için 50 MB boş disk alanınız olacak. Daha fazla alana "
+"ihtiyacınız varsa <a href=\"%1$s\">benimle iletişime geçin</a>. E-Mail "
+"adresiniz %2$s olacak"
 
 #: www/index.php:25
 msgid ""
@@ -72,29 +81,35 @@ msgid ""
 "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
 "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</a>"
 msgstr ""
+"Gizlilik için, yapabiliyorsanız lütfen PGP posta şifreleme kullanın. Bu, "
+"başkalarının (ben ve/veya LEA dahil) postalarınızı okumasını engeller. "
+"GnuPG'lerin resmi evi: <a href=\"https://gnupg.org\" target=\"_blank\" rel="
+"\"noopener noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https: "
+"//gpg4usb.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb"
+".org</a>"
 
 #: www/index.php:26
 msgid "E-Mail Setup"
-msgstr ""
+msgstr "E-Posta Kurulumu"
 
 #: www/index.php:28
-#, php-format
+#, fuzzy, php-format
 msgid "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
-msgstr ""
+msgstr "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
 
 #: www/index.php:29
-#, php-format
+#, fuzzy, php-format
 msgid "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
-msgstr ""
+msgstr "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
 
 #: www/index.php:30
-#, php-format
+#, fuzzy, php-format
 msgid "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
-msgstr ""
+msgstr "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
 
 #: www/index.php:31
 msgid "Authentication: PLAIN, LOGIN"
-msgstr ""
+msgstr "Kimlik doğrulama: PLAIN, LOGIN"
 
 #: www/index.php:33
 #, php-format
@@ -102,25 +117,28 @@ msgid ""
 "You can also connect on the same ports via the Tor onion address %s, but you "
 "will have to accept an SSL certificate only valid for the clearnet domain."
 msgstr ""
+"Aynı bağlantı noktalarına Tor onion adresi %s aracılığıyla da "
+"bağlanabilirsiniz, ancak yalnızca clearnet etki alanı için geçerli bir SSL "
+"sertifikasını kabul etmeniz gerekecektir."
 
 #: www/index.php:34
 msgid "XMPP setup"
-msgstr ""
+msgstr "XMPP kurulumu"
 
 #: www/index.php:35
-#, php-format
+#, fuzzy, php-format
 msgid "Domain: %s"
-msgstr ""
+msgstr "Domain: %s"
 
 #: www/index.php:36
 #, php-format
 msgid "Connect server: %s (optional for torification)"
-msgstr ""
+msgstr "Sunucuyu bağla: %s (torifikasyon için isteğe bağlı)"
 
 #: www/index.php:37
 #, php-format
 msgid "File transfer proxy: %s"
-msgstr ""
+msgstr "Dosya aktarım proxy'si: %s"
 
 #: www/index.php:38
 #, php-format
@@ -128,40 +146,42 @@ msgid ""
 "BOSH URL: %s (only enable if you have to, as it is slower than directly "
 "using xmpp)"
 msgstr ""
+"BOSH URL: %s (doğrudan xmpp kullanmaktan daha yavaş olduğu için yalnızca "
+"mecbursanız etkinleştirin)"
 
 #: www/manage_account.php:17 www/admin.php:21
 msgid "It looks like your user no longer exists!"
-msgstr ""
+msgstr "Görünüşe göre kullanıcınız artık yok!"
 
 #: www/manage_account.php:30
 msgid "Wrong 2FA code"
-msgstr ""
+msgstr "Yanlış 2FA kodu"
 
 #: www/manage_account.php:38 www/admin.php:33
 msgid "Successfully logged out"
-msgstr ""
+msgstr "Oturum başarıyla kapatıldı"
 
 #: www/manage_account.php:43 www/register.php:22
 msgid "Invalid captcha"
-msgstr ""
+msgstr "Captcha kodunu yalnış girdiniz"
 
 #: www/manage_account.php:47 www/admin.php:37
 msgid "Invalid username"
-msgstr ""
+msgstr "Geçersiz kullanıcı adı"
 
 #: www/manage_account.php:63 www/manage_account.php:81 www/admin.php:43
 #: www/admin.php:55
 msgid "Incorrect username or password"
-msgstr ""
+msgstr "Yanlış kullanıcı adı ya da parola"
 
 #: www/manage_account.php:100 www/admin.php:175 www/admin.php:343
 #: www/register.php:33
 msgid "Passwords empty or don't match"
-msgstr ""
+msgstr "Parolalar eşleşmiyor"
 
 #: www/manage_account.php:105 www/admin.php:348
 msgid "Successfully updated password"
-msgstr ""
+msgstr "Parola başarıyla güncellendi"
 
 #: www/manage_account.php:108
 msgid ""
@@ -169,10 +189,13 @@ msgid ""
 "can immediately register with this user again. It cannot be reversed. Are "
 "you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, hesabınızı ve tüm verilerinizi kalıcı olarak silecektir. Herkes "
+"bu kullanıcıyla hemen tekrar kayıt olabilir. Geri alınamaz. Kesinlikle emin "
+"misin?"
 
 #: www/manage_account.php:110
 msgid "Yes, I want to permanently delete my account"
-msgstr ""
+msgstr "Evet, hesabımı kalıcı olarak silmek istiyorum"
 
 #: www/manage_account.php:112
 msgid ""
@@ -180,30 +203,33 @@ msgid ""
 "After a year it is available for registrations again. It cannot be reversed. "
 "Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, hesabınızı bir yıl süreyle devre dışı bırakacak ve tüm "
+"verilerinizi silecektir. Bir yıl sonra tekrar kayıt için kullanılabilir. "
+"Geri alınamaz. Kesinlikle emin misin?"
 
 #: www/manage_account.php:114
 msgid "Yes, I want to disable my account"
-msgstr ""
+msgstr "Evet, hesabımı devre dışı bırakmak istiyorum"
 
 #: www/manage_account.php:123
 msgid "Successfully deleted account"
-msgstr ""
+msgstr "Hesap başarıyla silindi"
 
 #: www/manage_account.php:132
 msgid "Successfully disabled account"
-msgstr ""
+msgstr "Hesap başarıyla devre dışı bırakıldı"
 
 #: www/manage_account.php:136
 msgid "Successfully removed the key"
-msgstr ""
+msgstr "Anahtar başarıyla kaldırıldı"
 
 #: www/manage_account.php:145
 msgid "There was an error importing the key"
-msgstr ""
+msgstr "Anahtar içe aktarılırken bir hata oluştu"
 
 #: www/manage_account.php:158
 msgid "Successfully imported the key"
-msgstr ""
+msgstr "Anahtar başarıyla içe aktarıldı"
 
 #: www/manage_account.php:162
 #, php-format
@@ -211,18 +237,21 @@ msgid ""
 "Oops, looks like the key is missing this email address as user id. Please "
 "add your address \"%s\" as user ID to your pgp key or create a new key pair."
 msgstr ""
+"Maalesef, kullanıcı kimliği olarak anahtarda bu e-posta adresi eksik gibi "
+"görünüyor. Lütfen \"%s\" adresinizi kullanıcı kimliği olarak pgp "
+"anahtarınıza ekleyin veya yeni bir anahtar çifti oluşturun."
 
 #: www/manage_account.php:168
 msgid "Sorry, the code was incorrect"
-msgstr ""
+msgstr "Üzgünüz, kod yanlıştı"
 
 #: www/manage_account.php:172
 msgid "Successfully enabled 2FA"
-msgstr ""
+msgstr "2FA başarıyla etkinleştirildi"
 
 #: www/manage_account.php:181 www/manage_account.php:191
 msgid "E-Mail and XMPP - Manage account"
-msgstr ""
+msgstr "E-Posta ve XMPP - Hesabı yönet"
 
 #: www/manage_account.php:186 www/manage_account.php:192
 msgid ""
@@ -230,57 +259,64 @@ msgid ""
 "Add forwarding addresses, change your password or disable/delete your "
 "account."
 msgstr ""
+"Ücretsiz ve anonim E-Posta adresinizi ve bir XMPP/Jabber hesabını yönetin. "
+"Yönlendirme adresleri ekleyin, şifrenizi değiştirin veya hesabınızı devre "
+"dışı bırakın/silin."
 
 #: www/manage_account.php:213
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
 msgstr ""
+"Oturum açmak için, anahtarınızın sahipliğini onaylamak üzere lütfen "
+"aşağıdaki kodu girin:"
 
 #: www/manage_account.php:215
 msgid ""
 "To login, please decrypt the following PGP encrypted message and confirm the "
 "code:"
 msgstr ""
+"Giriş yapmak için lütfen aşağıdaki PGP şifreli mesajın şifresini çözün ve "
+"kodu onaylayın:"
 
 #: www/manage_account.php:221 www/manage_account.php:370
 msgid "2FA code"
-msgstr ""
+msgstr "2FA kodu"
 
 #: www/manage_account.php:223 www/manage_account.php:372
 msgid "Confirm"
-msgstr ""
+msgstr "Onayla"
 
 #: www/manage_account.php:238 www/admin.php:388
 #, php-format
 msgid "Logged in as %s"
-msgstr ""
+msgstr "%s olarak giriş yaptı"
 
 #: www/manage_account.php:244 www/admin.php:389
 msgid "Logout"
-msgstr ""
+msgstr "Çıkış Yap"
 
 #: www/manage_account.php:254 www/admin.php:406 www/admin.php:582
 #: www/admin.php:912 www/admin.php:941 www/register.php:101
 msgid "Username"
-msgstr ""
+msgstr "Kullanıcı adı"
 
 #: www/manage_account.php:259 www/manage_account.php:322 www/admin.php:410
 #: www/admin.php:503 www/admin.php:586 www/admin.php:945 www/admin.php:1030
 #: www/register.php:106
 msgid "Password"
-msgstr ""
+msgstr "Şifre"
 
 #: www/manage_account.php:265 www/admin.php:415
 msgid "Login"
-msgstr ""
+msgstr "Giriş"
 
 #: www/manage_account.php:282
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: www/manage_account.php:283
 msgid "Delivery"
-msgstr ""
+msgstr "Teslimat"
 
 #: www/manage_account.php:284
 msgid ""
@@ -288,14 +324,18 @@ msgid ""
 "line, or comma seperated. When you disable the \"keep a local copy\" "
 "checkbox, your mail will only be sent to your forwarding addresses."
 msgstr ""
+"Postanızın teslim edilme şeklini değiştirin. Yönlendirme adreslerini her "
+"satıra bir tane veya virgülle ayırarak ekleyebilirsiniz. \"Yerel bir "
+"kopyasını sakla\" onay kutusunu devre dışı bıraktığınızda, postalarınız "
+"yalnızca yönlendirme adreslerinize gönderilecektir."
 
 #: www/manage_account.php:287 www/admin.php:953 www/admin.php:994
 msgid "Forward to"
-msgstr ""
+msgstr "İlet"
 
 #: www/manage_account.php:292 www/admin.php:957 www/admin.php:999
 msgid "Keep a local copy"
-msgstr ""
+msgstr "Yerel bir kopya tutun"
 
 #: www/manage_account.php:297
 msgid "Encryption"
@@ -309,14 +349,19 @@ msgid ""
 "Make sure to ask your correspondent to demand encryption support from their "
 "provider for a safer internet."
 msgstr ""
+"Başka bir sağlayıcıyla posta gönderme veya alma konusunda sorun "
+"yaşıyorsanız, burada zorunlu şifrelemeyi devre dışı bırakmayı "
+"deneyebilirsiniz. Ancak bunun, ağdaki 3. tarafların e-postalarınızı "
+"okumasını mümkün kıldığını unutmayın. Muhabirinizden daha güvenli bir "
+"internet için sağlayıcılarından şifreleme desteği talep etmesini isteyin."
 
 #: www/manage_account.php:300 www/admin.php:964 www/admin.php:1011
 msgid "Enforce encryption for incoming mail"
-msgstr ""
+msgstr "Gelen posta için şifrelemeyi zorunlu kıl"
 
 #: www/manage_account.php:306 www/admin.php:968 www/admin.php:1016
 msgid "Enforce encryption for outgoing mail"
-msgstr ""
+msgstr "Giden posta için şifreleme uygula"
 
 #: www/manage_account.php:313
 msgid "Update settings"
@@ -389,7 +434,7 @@ msgstr ""
 
 #: www/manage_account.php:409
 msgid "Delete account"
-msgstr ""
+msgstr "Hesabı sil"
 
 #: www/admin.php:72
 #, php-format
@@ -611,7 +656,7 @@ msgstr ""
 
 #: www/admin.php:471
 msgid "Admin"
-msgstr ""
+msgstr "Yönetici"
 
 #: www/admin.php:472 www/admin.php:521 www/admin.php:534 www/admin.php:600
 #: www/admin.php:624 www/admin.php:656 www/admin.php:680 www/admin.php:714
@@ -632,7 +677,7 @@ msgstr ""
 #: www/admin.php:482 www/admin.php:636 www/admin.php:724 www/admin.php:821
 #: www/admin.php:927
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
 #: www/admin.php:497
 #, php-format
@@ -653,7 +698,7 @@ msgstr ""
 
 #: www/admin.php:558 www/admin.php:685 www/admin.php:783 www/admin.php:886
 msgid "Save changes"
-msgstr ""
+msgstr "Değişiklikleri kaydet"
 
 #: www/admin.php:564
 msgid "Delete admin"
@@ -862,7 +907,7 @@ msgstr ""
 
 #: common_config.php:136
 msgid "Copy:"
-msgstr ""
+msgstr "Kopyala:"
 
 #: common_config.php:255
 #, php-format
