@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-05-01 02:04+0000\n"
+"PO-Revision-Date: 2023-05-04 00:26+0000\n"
 "Last-Translator: Daniel Winzen <daniel@danwin1210.de>\n"
 "Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/tr/>\n"
@@ -339,7 +339,7 @@ msgstr "Yerel bir kopya tutun"
 
 #: www/manage_account.php:297
 msgid "Encryption"
-msgstr ""
+msgstr "Şifreleme"
 
 #: www/manage_account.php:298
 msgid ""
@@ -365,59 +365,65 @@ msgstr "Giden posta için şifreleme uygula"
 
 #: www/manage_account.php:313
 msgid "Update settings"
-msgstr ""
+msgstr "Ayarları güncelle"
 
 #: www/manage_account.php:318 www/manage_account.php:333 www/admin.php:1025
 #: www/admin.php:1041
 msgid "Change password"
-msgstr ""
+msgstr "Şifre değiştir"
 
 #: www/manage_account.php:327 www/admin.php:508 www/admin.php:591
 #: www/admin.php:949 www/admin.php:1035 www/register.php:110
 msgid "Password again"
-msgstr ""
+msgstr "Şifre Tekrar"
 
 #: www/manage_account.php:344
 msgid "Yay, PGP based 2FA is enabled!"
-msgstr ""
+msgstr "Yay, PGP tabanlı 2FA etkinleştirildi!"
 
 #: www/manage_account.php:354
 msgid ""
 "Sorry, this key can't be used to encrypt a message to you. Your key may have "
 "expired or has been revoked."
 msgstr ""
+"Üzgünüz, bu anahtar size gönderilen bir mesajı şifrelemek için kullanılamaz. "
+"Anahtarınızın süresi dolmuş veya iptal edilmiş olabilir."
 
 #: www/manage_account.php:362
 msgid ""
 "To enable 2FA, please enter the following code to confirm ownership of your "
 "key:"
 msgstr ""
+"2FA'yı etkinleştirmek için lütfen anahtarınızın sahipliğini onaylamak üzere "
+"aşağıdaki kodu girin:"
 
 #: www/manage_account.php:363
 msgid "Enable 2FA"
-msgstr ""
+msgstr "2FA'yı etkinleştir"
 
 #: www/manage_account.php:364
 msgid ""
 "To enable 2FA using your PGP key, please decrypt the following PGP encrypted "
 "message and confirm the code:"
 msgstr ""
+"PGP anahtarınızı kullanarak 2FA'yı etkinleştirmek için lütfen aşağıdaki PGP "
+"şifreli mesajın şifresini çözün ve kodu onaylayın:"
 
 #: www/manage_account.php:383
 msgid "Add PGP key for 2FA and end-to-end encryption"
-msgstr ""
+msgstr "2FA ve uçtan uca şifreleme için PGP anahtarı ekleyin"
 
 #: www/manage_account.php:388
 msgid "PGP key"
-msgstr ""
+msgstr "PGP anahtarı"
 
 #: www/manage_account.php:393
 msgid "Update PGP key"
-msgstr ""
+msgstr "PGP anahtarını güncelle"
 
 #: www/manage_account.php:399
 msgid "Disable/Delete account"
-msgstr ""
+msgstr "Hesabı Devre Dışı Bırak/Sil"
 
 #: www/manage_account.php:400
 msgid ""
@@ -427,10 +433,15 @@ msgid ""
 "completely wipe all records of it and it will be available for new "
 "registrations again."
 msgstr ""
+"Uyarı, bu kalıcıdır ve geri alınamaz. Bir hesabın devre dışı bırakılması, e-"
+"posta verilerinizin sunucudan silinmesine neden olur, ancak hesabı bir yıl "
+"süreyle veritabanında bloke ederek başka kimsenin kullanamamasına neden "
+"olur. Hesabınızın silinmesi, hesabınızın tüm kayıtlarını tamamen silecek ve "
+"tekrar yeni kayıtlar için uygun olacaktır."
 
 #: www/manage_account.php:404
 msgid "Disable account"
-msgstr ""
+msgstr "Hesabı devre dışı bırak"
 
 #: www/manage_account.php:409
 msgid "Delete account"
@@ -442,10 +453,12 @@ msgid ""
 "Warning: This will permanently delete the admin account \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, \"%s\" yönetici hesabını kalıcı olarak siler. Geri alınamaz. "
+"Kesinlikle emin misin?"
 
 #: www/admin.php:75
 msgid "Yes, I want to permanently delete this admin account"
-msgstr ""
+msgstr "Evet, bu yönetici hesabını kalıcı olarak silmek istiyorum"
 
 #: www/admin.php:77
 #, php-format
@@ -453,10 +466,12 @@ msgid ""
 "Warning: This will permanently delete the domain \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, \"%s\" etki alanını kalıcı olarak silecektir. Geri alınamaz. "
+"Kesinlikle emin misin?"
 
 #: www/admin.php:80
 msgid "Yes, I want to permanently delete this domain"
-msgstr ""
+msgstr "Evet, bu alanı kalıcı olarak silmek istiyorum"
 
 #: www/admin.php:82
 #, php-format
@@ -464,10 +479,12 @@ msgid ""
 "Warning: This will permanently delete the alias domain \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, \"%s\" etki alanı takma adını kalıcı olarak silecektir. Geri "
+"alınamaz. Kesinlikle emin misin?"
 
 #: www/admin.php:85
 msgid "Yes, I want to permanently delete this alias domain"
-msgstr ""
+msgstr "Evet, bu alan takma adını kalıcı olarak silmek istiyorum"
 
 #: www/admin.php:87
 #, php-format
@@ -475,10 +492,12 @@ msgid ""
 "Warning: This will permanently delete the alias \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, \"%s\" takma adını kalıcı olarak siler. Geri alınamaz. Kesinlikle "
+"emin misin?"
 
 #: www/admin.php:90
 msgid "Yes, I want to permanently delete this alias"
-msgstr ""
+msgstr "Evet, bu takma adı kalıcı olarak silmek istiyorum"
 
 #: www/admin.php:92
 #, php-format
@@ -486,47 +505,49 @@ msgid ""
 "Warning: This will permanently delete the mailbox \"%s\". It cannot be "
 "reversed. Are you absolutely sure?"
 msgstr ""
+"Uyarı: Bu, \"%s\" posta kutusunu kalıcı olarak siler. Geri alınamaz. "
+"Kesinlikle emin misin?"
 
 #: www/admin.php:95
 msgid "Yes, I want to permanently delete this mailbox"
-msgstr ""
+msgstr "Evet, bu posta kutusunu kalıcı olarak silmek istiyorum"
 
 #: www/admin.php:98
 msgid "You can't delete your own admin account!"
-msgstr ""
+msgstr "Kendi yönetici hesabınızı silemezsiniz!"
 
 #: www/admin.php:102
 msgid "Successfully deleted admin account."
-msgstr ""
+msgstr "Yönetici hesabı başarıyla silindi."
 
 #: www/admin.php:107
 msgid "Successfully deleted domain."
-msgstr ""
+msgstr "Etki alanı başarıyla silindi."
 
 #: www/admin.php:111
 msgid "Successfully deleted alias domain."
-msgstr ""
+msgstr "Alan takma adı başarıyla silindi."
 
 #: www/admin.php:116
 msgid "Successfully deleted alias."
-msgstr ""
+msgstr "Takma ad başarıyla silindi."
 
 #: www/admin.php:122
 msgid "Successfully deleted mailbox."
-msgstr ""
+msgstr "Posta kutusu başarıyla silindi."
 
 #: www/admin.php:128
 #, php-format
 msgid "Oops, it looks like the admin account \"%s\" doesn't exist."
-msgstr ""
+msgstr "Hay aksi, \"%s\" yönetici hesabı yok gibi görünüyor."
 
 #: www/admin.php:132
 msgid "Passwords don't match!"
-msgstr ""
+msgstr "Şifreler eşleşmiyor!"
 
 #: www/admin.php:137
 msgid "Successfully updated password."
-msgstr ""
+msgstr "Parola başarıyla güncellendi."
 
 #: www/admin.php:166
 msgid "Successfully edited admin account."
@@ -927,7 +948,7 @@ msgstr ""
 #: setup.php:8
 #, php-format
 msgid "The %s extension of PHP is required. Please install it first."
-msgstr ""
+msgstr "PHP'nin %s uzantısı gereklidir. Lütfen önce kurun."
 
 #: setup.php:35
 msgid "Database has successfully been updated."
