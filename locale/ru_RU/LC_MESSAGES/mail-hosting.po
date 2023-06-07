@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-01-29 06:11+0000\n"
-"Last-Translator: Goatli <goatli@porcod.io>\n"
+"PO-Revision-Date: 2023-06-07 05:46+0000\n"
+"Last-Translator: qweruba <qweruba@yandex.ru>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/ru/>\n"
 "Language: ru_RU\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15.1\n"
+"X-Generator: Weblate 4.17\n"
 
 #: www/index.php:6 www/index.php:15
 msgid "E-Mail and XMPP"
@@ -32,7 +32,7 @@ msgstr ""
 
 #: www/index.php:21 www/manage_account.php:236 www/register.php:94
 msgid "Info"
-msgstr "Справка"
+msgstr "Инфо"
 
 #: www/index.php:21 www/manage_account.php:240 www/register.php:94
 #: www/register.php:121
@@ -156,7 +156,7 @@ msgstr "Похоже, такого пользователя больше не с
 
 #: www/manage_account.php:30
 msgid "Wrong 2FA code"
-msgstr "Неверный код"
+msgstr "Неправильный 2FA-код"
 
 #: www/manage_account.php:38 www/admin.php:33
 msgid "Successfully logged out"
@@ -268,15 +268,17 @@ msgstr ""
 #: www/manage_account.php:213
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
-msgstr "Чтобы войти в систему пожалуйста введите следующий код:"
+msgstr ""
+"Чтобы войти в систему, введите следующий код для подтверждения владения "
+"вашим ключом:"
 
 #: www/manage_account.php:215
 msgid ""
 "To login, please decrypt the following PGP encrypted message and confirm the "
 "code:"
 msgstr ""
-"Чтобы войти в систему, пожалуйста, расшифруйте следующее PGP сообщение и "
-"введите код:"
+"Для входа в систему, пожалуйста, расшифруйте следующее зашифрованное PGP-"
+"сообщение и подтвердите код:"
 
 #: www/manage_account.php:221 www/manage_account.php:370
 msgid "2FA code"
@@ -308,7 +310,7 @@ msgstr "Пароль"
 
 #: www/manage_account.php:265 www/admin.php:415
 msgid "Login"
-msgstr "Войти"
+msgstr "Логин"
 
 #: www/manage_account.php:282
 msgid "Settings"
