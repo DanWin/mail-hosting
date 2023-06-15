@@ -1,0 +1,6 @@
+HiddenServiceDir /var/lib/tor/hidden_service/
+HiddenServicePort 80 unix:/var/run/nginx.sock
+HiddenServicePort 25
+HiddenServicePort 143
+HiddenServicePort 110
+HiddenServicePort 587
