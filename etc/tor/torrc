@@ -13,3 +13,14 @@ HiddenServicePort 5269
 HiddenServiceMaxStreams 10
 HiddenServiceMaxStreamsCloseCircuit 1
 HiddenServiceEnableIntroDoSDefense 1
+
+ClientUseIPv6 1
+ClientUseIPv4 1
+VirtualAddrNetworkIPv4 10.192.0.0/10
+VirtualAddrNetworkIPv6 [FC00::]/7
+AutomapHostsOnResolve 1
+TransPort 9040
+TransPort [::1]:9040
+DNSPort 54
+DNSPort [::1]:54
+SOCKSPort 9050
