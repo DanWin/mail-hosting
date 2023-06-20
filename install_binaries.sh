@@ -20,7 +20,7 @@ export PROC_LIMIT=`free -g | grep Mem | awk -v nproc=$(nproc) '{print (($2 + 1) 
 # start build
 cd rspamd
 git fetch --all --recurse-submodules
-git checkout 3.2 --recurse-submodules
+git checkout 3.5 --recurse-submodules
 cd ..
 mkdir -p rspamd_build
 cd rspamd_build
