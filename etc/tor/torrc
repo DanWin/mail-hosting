@@ -1,6 +1,15 @@
 HiddenServiceDir /var/lib/tor/hidden_service/
 HiddenServicePort 80 unix:/var/run/nginx.sock
-HiddenServicePort 25
+HiddenServicePort 25 127.0.0.1:26
 HiddenServicePort 143
 HiddenServicePort 110
 HiddenServicePort 587
+HiddenServicePort 993
+HiddenServicePort 995
+HiddenServicePort 465
+HiddenServicePort 5000
+HiddenServicePort 5222
+HiddenServicePort 5269
+HiddenServiceMaxStreams 10
+HiddenServiceMaxStreamsCloseCircuit 1
+HiddenServiceEnableIntroDoSDefense 1
