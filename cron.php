@@ -32,15 +32,16 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		if ( file_exists( $mail_files ) ) {
 			exec( 'rm -r ' . escapeshellarg( $mail_files ) );
 		}
-		@unlink( '/var/local/squirrelmail/data/' . $local_basename . '@' . $domain_basename . '.pref' );
-		@unlink( '/var/local/squirrelmail/data/' . $local_basename . '@' . $domain_basename . '.abook' );
+		$files = glob( '/var/local/squirrelmail/data/' . $local_basename . '@' . $domain_basename . '.{pref,abook,sig}', GLOB_BRACE );
 		if ( $tmp[ 'domain' ] === 'danwin1210.de' ) {
-			@unlink( '/var/local/squirrelmail/data/' . $local_basename . '.pref' );
-			@unlink( '/var/local/squirrelmail/data/' . $local_basename . '.abook' );
-			@unlink( '/var/local/squirrelmail/data/' . $local_basename . '@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion.pref' );
-			@unlink( '/var/local/squirrelmail/data/' . $local_basename . '@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion.abook' );
+			$files = array_merge( $files, glob( '/var/local/squirrelmail/data/' . $local_basename . '{@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion,}.{pref,abook,sig}', GLOB_BRACE ) );
 			$delete_prosody->execute( [ $tmp[ 'local_part' ], $tmp[ 'domain' ] ] );
 			$delete_prosody_archive->execute( [ $tmp[ 'local_part' ], $tmp[ 'domain' ] ] );
+		}
+		if ( is_array( $files ) ) {
+			foreach ( $files as $file ) {
+				@unlink( $file );
+			}
 		}
 	}
 	if ( $tmp[ 'active' ] === -2 ) {
@@ -60,7 +61,7 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 	if ( ! in_array( $domain_basename, [ '..', '.', '' ], true ) ) {
 		$del_alias->execute( [ $tmp[ 'domain' ] ] );
 		$del_mailbox->execute( [ $tmp[ 'domain' ] ] );
-		$files = glob( '/var/local/squirrelmail/data/*@' . $domain_basename . '.{pref,abook}', GLOB_BRACE );
+		$files = glob( '/var/local/squirrelmail/data/*@' . $domain_basename . '.{pref,abook,sig}', GLOB_BRACE );
 		$mail_files = '/var/mail/vmail/' . $domain_basename . '/';
 		if ( file_exists( $mail_files ) ) {
 			exec( 'rm -r ' . escapeshellarg( $mail_files ) );
