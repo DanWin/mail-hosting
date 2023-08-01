@@ -92,8 +92,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
 </head>
 <body>
 <main>
-<p><a href="<?php echo ROOT_URL; ?>"><?php echo _('Info'); ?></a> | <?php echo _('Register'); ?> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo _('Webmail-Login'); ?></a> |
-    <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo _('Manage account'); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a>
+<p><a href="<?php echo ROOT_URL; ?>"><?php echo _('Info'); ?></a> | <?php echo _('Register'); ?> | <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo _('Manage account'); ?></a> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo _('SquirrelMail'); ?></a>  | <a href="<?php echo ROOT_URL; ?>snappymail/" target="_blank"><?php echo _('SnappyMail'); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a>
 </p>
 <?php echo "<p>$msg</p>"; ?>
 <form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token"
