@@ -239,13 +239,13 @@ if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?>
             printf(_('Logged in as %s'), htmlspecialchars( $_SESSION[ 'email_user' ] ) );
 		} else { ?>
             <a href="<?php echo ROOT_URL; ?>register.php"><?php echo _('Register'); ?></a>
-		<?php } ?> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo _('Webmail-Login'); ?></a> <?php
+		<?php }
 		if ( ! empty( $_SESSION[ 'email_user' ] ) ) { ?>
             |
             <button name="action" value="logout" type="submit"><?php echo _('Logout'); ?></button>
 		<?php } else { ?>
             | <?php echo _('Manage account');
-		} ?> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a></p>
+		} ?> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo _('SquirrelMail'); ?></a> | <a href="<?php echo ROOT_URL; ?>snappymail/" target="_blank"><?php echo _('SnappyMail'); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo _('Web-XMPP'); ?></a></p>
 	<?php if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?></form><?php }
 echo "<p>$msg</p>";
 if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
