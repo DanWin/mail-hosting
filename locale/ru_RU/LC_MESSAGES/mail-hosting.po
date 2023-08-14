@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 13:08+0100\n"
-"PO-Revision-Date: 2023-07-17 16:08+0000\n"
+"PO-Revision-Date: 2023-08-14 07:26+0000\n"
 "Last-Translator: Goatli <goatli@porcod.io>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/ru/>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 4.18.2\n"
 
 #: www/index.php:6 www/index.php:15
 msgid "E-Mail and XMPP"
-msgstr ""
+msgstr "Почта + Jabber"
 
 #: www/index.php:10 www/index.php:16
 msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
@@ -906,7 +906,7 @@ msgid ""
 "I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
 "Policy</a>"
 msgstr ""
-"Я прочитал и согласен с <a href=\"%s\" target=\"_blank\">Политикой "
+"Я прочитал и согласен с <a href=\"%s\" target=\"_blank\">политикой "
 "конфиденциальности</a>"
 
 #: cron.php:11 common_config.php:87 setup.php:20 setup.php:23
