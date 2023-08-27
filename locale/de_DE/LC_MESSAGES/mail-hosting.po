@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-01 13:08+0100\n"
+"POT-Creation-Date: 2023-08-27 16:07+0200\n"
 "PO-Revision-Date: 2023-01-08 18:29+0000\n"
 "Last-Translator: Weblate Admin <daniel@danwin1210.de>\n"
-"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/"
-"mail-hosting/de/>\n"
+"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/mail-"
+"hosting/de/>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,41 +19,189 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.15\n"
 
-#: www/index.php:6 www/index.php:15
+#: tools/delete_leftover_files.php:14
+#, php-format
+msgid ""
+"%s does not seem to have any accounts, but has a directory. Consider "
+"deleting it."
+msgstr ""
+"%s scheint keine Konten zu haben, aber ein Verzeichnis. Denk darüber nach es "
+"zu löschen."
+
+#: tools/delete_leftover_files.php:20
+#, php-format
+msgid "Deleted: %s"
+msgstr "Gelöscht: %s"
+
+#: tools/delete_leftover_files.php:22
+#, php-format
+msgid "File found in mail directory location: \"%s\". Consider deleting it."
+msgstr ""
+"Datei im Mailverzeichnis \"%s\" gefunden. Denke darüber nach diese zu "
+"löschen."
+
+#: common_config.php:91 setup.php:20 setup.php:23 cron.php:11
+msgid "No Connection to MySQL database!"
+msgstr "Keine Verbindung zur MySQL Datenbank!"
+
+#: common_config.php:140
+msgid "Copy:"
+msgstr "Kopiere:"
+
+#: common_config.php:259
+#, php-format
+msgid ""
+"Oops, the email \"%s\" doesn' look like a valid email address and thus "
+"wasn't added to the forwarding list."
+msgstr ""
+"Ups, die E-Mail \"%s\" sieht nicht nach einer gültigen E-Mail Adresse aus "
+"und wurde deshalb nicht zur Weiterleitungsliste hinzugefügt."
+
+#: common_config.php:285
+msgid "You are not allowed to manage this domain."
+msgstr "Du darfst diese Domain nicht verwalten."
+
+#: common_config.php:296
+msgid "Invalid email address."
+msgstr "Ungültige E-Mail Adresse."
+
+#: setup.php:8
+#, php-format
+msgid "The %s extension of PHP is required. Please install it first."
+msgstr "Die %s PHP-Erweiterung wird benötigt. Bitte installiere diese zuerst."
+
+#: setup.php:35
+msgid "Database has successfully been updated."
+msgstr "Datenbank wurde erfolgreich aktualisiert."
+
+#: setup.php:37
+msgid "Database is already up-to-date."
+msgstr "Datenbank ist bereits aktuell."
+
+#: setup.php:40
+msgid "Error updating database:"
+msgstr "Fehler beim Aktualisieren der Datenbank:"
+
+#: setup.php:57
+msgid "Database has successfully been set up."
+msgstr "Datenbank wurde erfolgreich erstellt."
+
+#: setup.php:59
+msgid "Error setting up database:"
+msgstr "Fehler beim Erstellen der Datenbank:"
+
+#: www/register.php:18
+msgid "Invalid CSRF token"
+msgstr "Ungültiger CSRF Token"
+
+#: www/register.php:22 www/manage_account.php:43
+msgid "Invalid captcha"
+msgstr "Ungültiges Captcha"
+
+#: www/register.php:27
+msgid "Invalid username. It may not contain a +, ', \" or /."
+msgstr "Ungültiger Nutzername. Dieser darf keine +, ', \" oder / enthalten."
+
+#: www/register.php:33 www/manage_account.php:100 www/admin.php:175
+#: www/admin.php:343
+msgid "Passwords empty or don't match"
+msgstr "Passwörter leer oder stimmen nicht überein"
+
+#: www/register.php:44
+msgid "The domain you specified is not allowed"
+msgstr "Die angegebene Domain ist nicht erlaubt"
+
+#: www/register.php:49
+msgid "The email address you specified is not valid"
+msgstr "Deine angegebene E-Mail Adresse ist nicht gültig"
+
+#: www/register.php:52
+msgid "The username you specified is reserved"
+msgstr "Dein eingegebener Nutzername ist reserviert"
+
+#: www/register.php:62 www/admin.php:311
+msgid "Sorry, this user already exists"
+msgstr "Sorry, dieser Nutzer existiert bereits"
+
+#: www/register.php:70 www/admin.php:333
+msgid "Successfully created new mailbox!"
+msgstr "Neue Mailbox erfolgreich erstellt!"
+
+#: www/register.php:78 www/register.php:87 www/register.php:91
+msgid "E-Mail and XMPP - Register"
+msgstr "E-Mail und XMPP - Registreiren"
+
+#: www/register.php:82 www/register.php:88 www/register.php:91
+msgid ""
+"Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
+msgstr ""
+"Registriere dich für eine kostenloses und anonyme E-Mail Adresse und ein "
+"XMPP/Jabber Konto"
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:237
+msgid "Info"
+msgstr "Info"
+
+#: www/register.php:95 www/register.php:121 www/index.php:22
+#: www/manage_account.php:241
+msgid "Register"
+msgstr "Registrieren"
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:247
+msgid "Manage account"
+msgstr "Konto verwalten"
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+msgid "SquirrelMail"
+msgstr ""
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+msgid "SnappyMail"
+msgstr ""
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+msgid "Web-XMPP"
+msgstr "Web-XMPP"
+
+#: www/register.php:101 www/manage_account.php:255 www/admin.php:407
+#: www/admin.php:583 www/admin.php:913 www/admin.php:942
+msgid "Username"
+msgstr "Nutzername"
+
+#: www/register.php:106 www/manage_account.php:260 www/manage_account.php:323
+#: www/admin.php:411 www/admin.php:504 www/admin.php:587 www/admin.php:946
+#: www/admin.php:1031
+msgid "Password"
+msgstr "Passwort"
+
+#: www/register.php:110 www/manage_account.php:328 www/admin.php:509
+#: www/admin.php:592 www/admin.php:950 www/admin.php:1036
+msgid "Password again"
+msgstr "Passwort erneut"
+
+#: www/register.php:114
+#, php-format
+msgid ""
+"I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
+"Policy</a>"
+msgstr ""
+"Ich habe die <a href=\"%s\" target=\"_blank\">Datenschutzerklärung</a> "
+"gelesen und akzeptiere diese"
+
+#: www/index.php:6 www/index.php:15 www/index.php:19
 msgid "E-Mail and XMPP"
 msgstr "E-Mail und XMPP"
 
-#: www/index.php:10 www/index.php:16
+#: www/index.php:10 www/index.php:16 www/index.php:19
 msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
 msgstr ""
 "Bekomme eine kostenlose und anonyme E-Mail Adresse und ein XMPP/Jabber Konto"
 
-#: www/index.php:21 www/manage_account.php:236 www/register.php:94
-msgid "Info"
-msgstr "Info"
-
-#: www/index.php:21 www/manage_account.php:240 www/register.php:94
-#: www/register.php:121
-msgid "Register"
-msgstr "Registrieren"
-
-#: www/index.php:21 www/manage_account.php:241 www/register.php:94
-msgid "Webmail-Login"
-msgstr "Webmail-Anmeldung"
-
-#: www/index.php:21 www/manage_account.php:246 www/register.php:95
-msgid "Manage account"
-msgstr "Konto verwalten"
-
-#: www/index.php:21 www/manage_account.php:247 www/register.php:95
-msgid "Web-XMPP"
-msgstr "Web-XMPP"
-
-#: www/index.php:22
+#: www/index.php:23
 msgid "What you will get"
 msgstr "Was du bekommst"
 
-#: www/index.php:23
+#: www/index.php:24
 #, php-format
 msgid ""
 "You get a free anonymous E-Mail address and an XMPP/Jabber account using the "
@@ -64,7 +212,7 @@ msgstr ""
 "Konto mit den gleichen Daten. Deine Jabber ID ist user@%1$s und kann direkt "
 "über Clearnet zu verbunden werden, oder über den Tor hidden service (%2$s)."
 
-#: www/index.php:24
+#: www/index.php:25
 #, php-format
 msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
@@ -74,45 +222,64 @@ msgstr ""
 "brauchst, <a href=\"%1$s\">schreib mir</a> einfach. Deine E-Mail Adresse "
 "wird %2$s sein"
 
-#: www/index.php:25
+#: www/index.php:26
 msgid ""
 "For privacy, please use PGP mail encryption, if you can. This prevents "
-"others from reading your mails (including me and/or LEA). GnuPGs official "
-"home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb.org"
-"\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</a>"
+"others from reading your mails to protect your privacy. You can <a href="
+"\"https://gnupg.org/download/index.html\" target=\"_blank\" rel=\"noopener "
+"noreferrer\">download GnuPG</a> or similar software for it. Once you have "
+"generated your PGP key, you can <a href=\"manage_account.php\">add it to "
+"your account</a> to make use of WKD automatic discovery for mail clients."
 msgstr ""
-"Für Privatsphäre, nutze bitte PGP Mail Verschlüsselung, wenn du kannst. Dies "
-"hindert andere am Lesen deiner E-Mails (inklusive mir und/oder "
-"Strafverfolgungsbehörden). Die offizielle GnuPG Seite: <a href=\"https://"
-"gnupg.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gnupg.org</"
-"a> Windows GUI: <a href=\"https://gpg4usb.org\" target=\"_blank\" rel="
-"\"noopener noreferrer\">https://gpg4usb.org</a>"
 
-#: www/index.php:26
+#: www/index.php:27
+msgid ""
+"You can choose between two Web-Mail clients installed on the server. <a href="
+"\"squirrelmail/src/login.php\">SquirrelMail</a> is a very old mail client "
+"which works without any JavaScript and is thus the most popular mail client "
+"among darknet users. However, it hasn't been under development for many "
+"years and does not support all features that mail has to offer. You may see "
+"strange attachments that should have been inlined in your email, such as PGP/"
+"MIME encrypted email messages. A more modern client is <a href=\"snappymail/"
+"\">SnappyMail</a>, which also supports PGP encryption within your browser "
+"and is more similar to what you may be used to from other mail services. "
+"SnappyMail requires JavaScript though, so SquirrelMail is for you if you do "
+"not trust executing JavaScript in your browser. Alternatively, you can "
+"simply use your favourite desktop mail client and configure it with the "
+"settings given below."
+msgstr ""
+
+#: www/index.php:28
+msgid ""
+"The XMPP service provides message archiving and HTTP upload, which can keep "
+"your messages and files for up to 1 week. Up to 100MB of file storage is "
+"available per user."
+msgstr ""
+
+#: www/index.php:29
 msgid "E-Mail Setup"
 msgstr "E-Mail Einrichtung"
 
-#: www/index.php:28
+#: www/index.php:31
 #, php-format
 msgid "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
 msgstr "SMTP: %s Port 465 (SSL/TLS) oder 587 (StartTLS)"
 
-#: www/index.php:29
+#: www/index.php:32
 #, php-format
 msgid "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
 msgstr "IMAP: %s Port 993 (SSL/TLS) oder 143 (StartTLS)"
 
-#: www/index.php:30
+#: www/index.php:33
 #, php-format
 msgid "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
 msgstr "POP3: %s Port 995 (SSL/TLS) oder 110 (StartTLS)"
 
-#: www/index.php:31
+#: www/index.php:34
 msgid "Authentication: PLAIN, LOGIN"
 msgstr "Authentifizierung: PLAIN, LOGIN"
 
-#: www/index.php:33
+#: www/index.php:36
 #, php-format
 msgid ""
 "You can also connect on the same ports via the Tor onion address %s, but you "
@@ -122,26 +289,26 @@ msgstr ""
 "verbinden, aber du wirst ein Zertifikat akzeptieren müssen, welches nur für "
 "die Clearnet-Domain gültig ist."
 
-#: www/index.php:34
+#: www/index.php:37
 msgid "XMPP setup"
 msgstr "XMPP-Einrichtung"
 
-#: www/index.php:35
+#: www/index.php:38
 #, php-format
 msgid "Domain: %s"
 msgstr "Domain: %s"
 
-#: www/index.php:36
+#: www/index.php:39
 #, php-format
 msgid "Connect server: %s (optional for torification)"
 msgstr "Verbindungs-Server: %s (Optional für Torifzierung)"
 
-#: www/index.php:37
+#: www/index.php:40
 #, php-format
 msgid "File transfer proxy: %s"
 msgstr "Datentransfer-Proxy: %s"
 
-#: www/index.php:38
+#: www/index.php:41
 #, php-format
 msgid ""
 "BOSH URL: %s (only enable if you have to, as it is slower than directly "
@@ -162,10 +329,6 @@ msgstr "Falscher 2FA Code"
 msgid "Successfully logged out"
 msgstr "Erfolgreich abgemeldet"
 
-#: www/manage_account.php:43 www/register.php:22
-msgid "Invalid captcha"
-msgstr "Ungültiges Captcha"
-
 #: www/manage_account.php:47 www/admin.php:37
 msgid "Invalid username"
 msgstr "Ungültiger Nutzername"
@@ -174,11 +337,6 @@ msgstr "Ungültiger Nutzername"
 #: www/admin.php:55
 msgid "Incorrect username or password"
 msgstr "Ungültiger Nutzername oder Passwort"
-
-#: www/manage_account.php:100 www/admin.php:175 www/admin.php:343
-#: www/register.php:33
-msgid "Passwords empty or don't match"
-msgstr "Passwörter leer oder stimmen nicht überein"
 
 #: www/manage_account.php:105 www/admin.php:348
 msgid "Successfully updated password"
@@ -251,10 +409,12 @@ msgid "Successfully enabled 2FA"
 msgstr "2FA erfolgreich aktiviert"
 
 #: www/manage_account.php:181 www/manage_account.php:191
+#: www/manage_account.php:195
 msgid "E-Mail and XMPP - Manage account"
 msgstr "E-Mail und XMPP - Konto verwalten"
 
 #: www/manage_account.php:186 www/manage_account.php:192
+#: www/manage_account.php:195
 msgid ""
 "Manage your free and anonymous E-Mail address and an XMPP/Jabber account. "
 "Add forwarding addresses, change your password or disable/delete your "
@@ -264,14 +424,14 @@ msgstr ""
 "Konto. Füge eine Weiterleitungsadresse hinzu, ändere dein Passwort oder "
 "deaktiviere/lösche dein Konto."
 
-#: www/manage_account.php:213
+#: www/manage_account.php:214
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
 msgstr ""
 "Um dich anzumelden, gib bitte folgenden Code zur Bestätigung ein, um den "
 "Besitz deines Schlüssels zu bestätigen:"
 
-#: www/manage_account.php:215
+#: www/manage_account.php:216
 msgid ""
 "To login, please decrypt the following PGP encrypted message and confirm the "
 "code:"
@@ -279,47 +439,36 @@ msgstr ""
 "Um dich anzumelden, entschlüssel bitte die folgende PGP-verschlüsselte "
 "Nachricht und bestätige den Code:"
 
-#: www/manage_account.php:221 www/manage_account.php:370
+#: www/manage_account.php:222 www/manage_account.php:371
 msgid "2FA code"
 msgstr "2FA Code"
 
-#: www/manage_account.php:223 www/manage_account.php:372
+#: www/manage_account.php:224 www/manage_account.php:373
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: www/manage_account.php:238 www/admin.php:388
+#: www/manage_account.php:239 www/admin.php:389
 #, php-format
 msgid "Logged in as %s"
 msgstr "Angemeldet als %s"
 
-#: www/manage_account.php:244 www/admin.php:389
+#: www/manage_account.php:245 www/admin.php:390
 msgid "Logout"
 msgstr "Abmelden"
 
-#: www/manage_account.php:254 www/admin.php:406 www/admin.php:582
-#: www/admin.php:912 www/admin.php:941 www/register.php:101
-msgid "Username"
-msgstr "Nutzername"
-
-#: www/manage_account.php:259 www/manage_account.php:322 www/admin.php:410
-#: www/admin.php:503 www/admin.php:586 www/admin.php:945 www/admin.php:1030
-#: www/register.php:106
-msgid "Password"
-msgstr "Passwort"
-
-#: www/manage_account.php:265 www/admin.php:415
+#: www/manage_account.php:266 www/admin.php:416
 msgid "Login"
 msgstr "Anmelden"
 
-#: www/manage_account.php:282
+#: www/manage_account.php:283
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: www/manage_account.php:283
+#: www/manage_account.php:284
 msgid "Delivery"
 msgstr "Zustellung"
 
-#: www/manage_account.php:284
+#: www/manage_account.php:285
 msgid ""
 "Change how your mail is delivered. You can add forwarding addresses one per "
 "line, or comma seperated. When you disable the \"keep a local copy\" "
@@ -330,19 +479,19 @@ msgstr ""
 "\"Lokale Kopie behalten\" deaktivierst, wird deine E-Mail nur an die "
 "Weiterleitungsadressen gesendet."
 
-#: www/manage_account.php:287 www/admin.php:953 www/admin.php:994
+#: www/manage_account.php:288 www/admin.php:954 www/admin.php:995
 msgid "Forward to"
 msgstr "Weiterleiten an"
 
-#: www/manage_account.php:292 www/admin.php:957 www/admin.php:999
+#: www/manage_account.php:293 www/admin.php:958 www/admin.php:1000
 msgid "Keep a local copy"
 msgstr "Lokale Kopie behalten"
 
-#: www/manage_account.php:297
+#: www/manage_account.php:298
 msgid "Encryption"
 msgstr "Verschlüsselung"
 
-#: www/manage_account.php:298
+#: www/manage_account.php:299
 msgid ""
 "If you are having issues sending or receiving mails with some other "
 "provider, you can try disabling forced encryption here. But be aware, that "
@@ -357,33 +506,28 @@ msgstr ""
 "Falle, dass sie von ihrem E-Mail Provider Unterstützung für Verschlüsselung, "
 "für ein sichereres Internet, einfordern sollen."
 
-#: www/manage_account.php:300 www/admin.php:964 www/admin.php:1011
+#: www/manage_account.php:301 www/admin.php:965 www/admin.php:1012
 msgid "Enforce encryption for incoming mail"
 msgstr "Verschlüsselung für eingehende E-Mails erzwingen"
 
-#: www/manage_account.php:306 www/admin.php:968 www/admin.php:1016
+#: www/manage_account.php:307 www/admin.php:969 www/admin.php:1017
 msgid "Enforce encryption for outgoing mail"
 msgstr "Verschlüsselung für ausgehende E-Mails erzwingen"
 
-#: www/manage_account.php:313
+#: www/manage_account.php:314
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
-#: www/manage_account.php:318 www/manage_account.php:333 www/admin.php:1025
-#: www/admin.php:1041
+#: www/manage_account.php:319 www/manage_account.php:334 www/admin.php:1026
+#: www/admin.php:1042
 msgid "Change password"
 msgstr "Passwort ändern"
 
-#: www/manage_account.php:327 www/admin.php:508 www/admin.php:591
-#: www/admin.php:949 www/admin.php:1035 www/register.php:110
-msgid "Password again"
-msgstr "Passwort erneut"
-
-#: www/manage_account.php:344
+#: www/manage_account.php:345
 msgid "Yay, PGP based 2FA is enabled!"
 msgstr "Yay, PGP basierende 2FA ist aktiviert!"
 
-#: www/manage_account.php:354
+#: www/manage_account.php:355
 msgid ""
 "Sorry, this key can't be used to encrypt a message to you. Your key may have "
 "expired or has been revoked."
@@ -392,7 +536,7 @@ msgstr ""
 "dich zu verschlüsseln. Dein Schlüssel ist vielleicht abgelaufen oder wurde "
 "widerrufen."
 
-#: www/manage_account.php:362
+#: www/manage_account.php:363
 msgid ""
 "To enable 2FA, please enter the following code to confirm ownership of your "
 "key:"
@@ -400,11 +544,11 @@ msgstr ""
 "Um 2FA zu aktivieren, gib bitte folgenden Code ein, um zu bestätigen, dass "
 "der Schlüssel dir gehört:"
 
-#: www/manage_account.php:363
+#: www/manage_account.php:364
 msgid "Enable 2FA"
 msgstr "2FA aktivieren"
 
-#: www/manage_account.php:364
+#: www/manage_account.php:365
 msgid ""
 "To enable 2FA using your PGP key, please decrypt the following PGP encrypted "
 "message and confirm the code:"
@@ -412,23 +556,23 @@ msgstr ""
 "Um 2FA mit deinem PGP-Schlüssel zu aktivieren, entschlüssle bitte folgende "
 "PGP-verschlüsselte Nachricht und bestätige den Code:"
 
-#: www/manage_account.php:383
+#: www/manage_account.php:384
 msgid "Add PGP key for 2FA and end-to-end encryption"
 msgstr "Füge einen PGP-Schlüssel für 2FA und End-to-End Verschlüsselung hinzu"
 
-#: www/manage_account.php:388
+#: www/manage_account.php:389
 msgid "PGP key"
 msgstr "PGP-Schlüssel"
 
-#: www/manage_account.php:393
+#: www/manage_account.php:394
 msgid "Update PGP key"
 msgstr "PGP-Schlüssel aktualisieren"
 
-#: www/manage_account.php:399
+#: www/manage_account.php:400
 msgid "Disable/Delete account"
 msgstr "Konto deaktivieren/löschen"
 
-#: www/manage_account.php:400
+#: www/manage_account.php:401
 msgid ""
 "Warning, this is permanent and cannot be undone. Disabling an account will "
 "delete your email data from the server, but leave the account blocked in the "
@@ -442,11 +586,11 @@ msgstr ""
 "nutzen kann. Löschen entfernt dein Konto komplett und es ist wieder "
 "verfügbar zur Registrierung."
 
-#: www/manage_account.php:404
+#: www/manage_account.php:405
 msgid "Disable account"
 msgstr "Konto deaktivieren"
 
-#: www/manage_account.php:409
+#: www/manage_account.php:410
 msgid "Delete account"
 msgstr "Konto löschen"
 
@@ -618,51 +762,43 @@ msgstr "Alias erfolgreich aktualisiert."
 msgid "Successfully updated mailbox."
 msgstr "Mailbox erfolgreich aktualisiert."
 
-#: www/admin.php:311 www/register.php:62
-msgid "Sorry, this user already exists"
-msgstr "Sorry, dieser Nutzer existiert bereits"
-
-#: www/admin.php:333 www/register.php:70
-msgid "Successfully created new mailbox!"
-msgstr "Neue Mailbox erfolgreich erstellt!"
-
 #: www/admin.php:359
 msgid "Successfully disabled two-factor authentication"
 msgstr "Zwei-Faktor Authentifizierung erfolgreich deaktiviert"
 
-#: www/admin.php:369 www/admin.php:378 www/admin.php:384
+#: www/admin.php:369 www/admin.php:378 www/admin.php:382 www/admin.php:385
 msgid "E-Mail and XMPP - Admin management"
 msgstr "E-Mail und XMPP - Admin Verwaltung"
 
-#: www/admin.php:373 www/admin.php:379
+#: www/admin.php:373 www/admin.php:379 www/admin.php:382
 msgid "Lets domain owners manage their email domain and user accounts."
 msgstr "Lässt Domain-Inhaber ihre E-Mail Domain und Nutzer-Konten verwalten."
 
-#: www/admin.php:391
+#: www/admin.php:392
 msgid "Manage admins"
 msgstr "Admins verwalten"
 
-#: www/admin.php:392
+#: www/admin.php:393
 msgid "Manage alias domains"
 msgstr "Alias-Domains verwalten"
 
-#: www/admin.php:394
+#: www/admin.php:395
 msgid "Manage your admin account"
 msgstr "Verwalte dein Konto"
 
-#: www/admin.php:396
+#: www/admin.php:397
 msgid "Manage domains"
 msgstr "Domains verwalten"
 
-#: www/admin.php:397
+#: www/admin.php:398
 msgid "Manage aliases"
 msgstr "Aliase verwalten"
 
-#: www/admin.php:398
+#: www/admin.php:399
 msgid "Manage mailboxes"
 msgstr "Mailboxen verwalten"
 
-#: www/admin.php:421
+#: www/admin.php:422
 msgid ""
 "Welcome to the admin management interface. You can configure your domain(s) "
 "and accounts here. Please select an option from the menu."
@@ -670,7 +806,7 @@ msgstr ""
 "Wilkommen in der Admin-Verwaltungsoberfläche. Hier kannst du deine Domain(s) "
 "und Konten konfigurieren. Bitte wähle eine Option vom Menü."
 
-#: www/admin.php:453
+#: www/admin.php:454
 msgid ""
 "Oops, it looks like the page you tried to access does not exist or you do "
 "not have permission to access it."
@@ -678,314 +814,221 @@ msgstr ""
 "Ups, es scheint dass die Seite, auf die du versucht hast zuzugreifen "
 "entweder nicht existiert, oder du keine Berechtigung hast darauf zuzugreifen."
 
-#: www/admin.php:466 www/admin.php:485
+#: www/admin.php:467 www/admin.php:486
 msgid "Create new admin"
 msgstr "Neuen Admin erstellen"
 
-#: www/admin.php:471
+#: www/admin.php:472
 msgid "Admin"
 msgstr "Admin"
 
-#: www/admin.php:472 www/admin.php:521 www/admin.php:534 www/admin.php:600
-#: www/admin.php:624 www/admin.php:656 www/admin.php:680 www/admin.php:714
-#: www/admin.php:748 www/admin.php:778 www/admin.php:811 www/admin.php:843
-#: www/admin.php:877 www/admin.php:913 www/admin.php:961 www/admin.php:1006
+#: www/admin.php:473 www/admin.php:522 www/admin.php:535 www/admin.php:601
+#: www/admin.php:625 www/admin.php:657 www/admin.php:681 www/admin.php:715
+#: www/admin.php:749 www/admin.php:779 www/admin.php:812 www/admin.php:844
+#: www/admin.php:878 www/admin.php:914 www/admin.php:962 www/admin.php:1007
 msgid "Active"
 msgstr "Aktiv"
 
-#: www/admin.php:473 www/admin.php:625 www/admin.php:715 www/admin.php:812
-#: www/admin.php:914
+#: www/admin.php:474 www/admin.php:626 www/admin.php:716 www/admin.php:813
+#: www/admin.php:915
 msgid "Last modified"
 msgstr "Zuletzt geändert"
 
-#: www/admin.php:474
+#: www/admin.php:475
 msgid "Edit account"
 msgstr "Konto bearbeiten"
 
-#: www/admin.php:482 www/admin.php:636 www/admin.php:724 www/admin.php:821
-#: www/admin.php:927
+#: www/admin.php:483 www/admin.php:637 www/admin.php:725 www/admin.php:822
+#: www/admin.php:928
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: www/admin.php:497
+#: www/admin.php:498
 #, php-format
 msgid "Edit admin account %s"
 msgstr "Adminkonto %s bearbeiten"
 
-#: www/admin.php:515 www/admin.php:528 www/admin.php:596
+#: www/admin.php:516 www/admin.php:529 www/admin.php:597
 msgid "Superadmin"
 msgstr "Superadmin"
 
-#: www/admin.php:517 www/admin.php:529 www/admin.php:597
+#: www/admin.php:518 www/admin.php:530 www/admin.php:598
 msgid "Superadmins can manage other admins"
 msgstr "Superadmins können andere Admins verwalten"
 
-#: www/admin.php:538
+#: www/admin.php:539
 msgid "Managed domains"
 msgstr "Domains verwalten"
 
-#: www/admin.php:558 www/admin.php:685 www/admin.php:783 www/admin.php:886
+#: www/admin.php:559 www/admin.php:686 www/admin.php:784 www/admin.php:887
 msgid "Save changes"
 msgstr "Änderungen speichern"
 
-#: www/admin.php:564
+#: www/admin.php:565
 msgid "Delete admin"
 msgstr "Admin löschen"
 
-#: www/admin.php:571 www/admin.php:696
+#: www/admin.php:572 www/admin.php:697
 msgid "Oops, this admin doesn't seem to exist."
 msgstr "Ups, dieser Admin scheint nicht zu existieren."
 
-#: www/admin.php:578
+#: www/admin.php:579
 msgid "Create new admin account"
 msgstr "Neues Admin-Konto erstellen"
 
-#: www/admin.php:604
+#: www/admin.php:605
 msgid "Add admin"
 msgstr "Admin hinzufügen"
 
-#: www/admin.php:617 www/admin.php:640 www/admin.php:648
+#: www/admin.php:618 www/admin.php:641 www/admin.php:649
 msgid "Create new domain"
 msgstr "Neue Domain erstellen"
 
-#: www/admin.php:623 www/admin.php:652
+#: www/admin.php:624 www/admin.php:653
 msgid "Domain"
 msgstr "Domain"
 
-#: www/admin.php:626
+#: www/admin.php:627
 msgid "Edit domain"
 msgstr "Domain bearbeiten"
 
-#: www/admin.php:660
+#: www/admin.php:661
 msgid "Add domain"
 msgstr "Domain hinzufügen"
 
-#: www/admin.php:674
+#: www/admin.php:675
 #, php-format
 msgid "Edit domain %s"
 msgstr "Domain %s bearbeiten"
 
-#: www/admin.php:690
+#: www/admin.php:691
 msgid "Delete domain"
 msgstr "Domain löschen"
 
-#: www/admin.php:706 www/admin.php:728 www/admin.php:736
+#: www/admin.php:707 www/admin.php:729 www/admin.php:737
 msgid "Create new alias domain"
 msgstr "Neue Alias-Domain erstellen"
 
-#: www/admin.php:712 www/admin.php:740
+#: www/admin.php:713 www/admin.php:741
 msgid "Alias Domain"
 msgstr "Alias-Domain"
 
-#: www/admin.php:713 www/admin.php:744 www/admin.php:772
+#: www/admin.php:714 www/admin.php:745 www/admin.php:773
 msgid "Target Domain"
 msgstr "Ziel-Domain"
 
-#: www/admin.php:716
+#: www/admin.php:717
 msgid "Edit alias domain"
 msgstr "Alias-Domain bearbeiten"
 
-#: www/admin.php:752
+#: www/admin.php:753
 msgid "Add alias domain"
 msgstr "Alias-Domain hinzufügen"
 
-#: www/admin.php:766
+#: www/admin.php:767
 #, php-format
 msgid "Edit alias domain %s"
 msgstr "Alias-Domain %s bearbeiten"
 
-#: www/admin.php:788
+#: www/admin.php:789
 msgid "Delete alias domain"
 msgstr "Alias-Domain löschen"
 
-#: www/admin.php:794
+#: www/admin.php:795
 msgid "Oops, this alias domain doesn't seem to exist."
 msgstr "Ups, diese Alias-Domain schient nicht zu existieren."
 
-#: www/admin.php:804 www/admin.php:824 www/admin.php:831
+#: www/admin.php:805 www/admin.php:825 www/admin.php:832
 msgid "Create new alias"
 msgstr "Neuen Alias erstellen"
 
-#: www/admin.php:809 www/admin.php:835
+#: www/admin.php:810 www/admin.php:836
 msgid "Alias"
 msgstr "Alias"
 
-#: www/admin.php:810 www/admin.php:839 www/admin.php:870
+#: www/admin.php:811 www/admin.php:840 www/admin.php:871
 msgid "Target"
 msgstr "Ziel"
 
-#: www/admin.php:813
+#: www/admin.php:814
 msgid "Edit alias"
 msgstr "Alias bearbeiten"
 
-#: www/admin.php:846 www/admin.php:882
+#: www/admin.php:847 www/admin.php:883
 msgid "Enforce encryption"
 msgstr "Verschlüsselung erzwingen"
 
-#: www/admin.php:851
+#: www/admin.php:852
 msgid "Add alias"
 msgstr "Alias hinzufügen"
 
-#: www/admin.php:865
+#: www/admin.php:866
 #, php-format
 msgid "Edit alias %s"
 msgstr "Alias %s bearbeiten"
 
-#: www/admin.php:891
+#: www/admin.php:892
 msgid "Delete alias"
 msgstr "Alias löschen"
 
-#: www/admin.php:897
+#: www/admin.php:898
 msgid "Oops, this alias doesn't seem to exist."
 msgstr "Ups, dieses Alias schient nicht zu existieren."
 
-#: www/admin.php:907 www/admin.php:930 www/admin.php:937
+#: www/admin.php:908 www/admin.php:931 www/admin.php:938
 msgid "Create new mailbox"
 msgstr "Neue Mailbox erstellen"
 
-#: www/admin.php:915
+#: www/admin.php:916
 msgid "Edit mailbox"
 msgstr "Mailbox bearbeiten"
 
-#: www/admin.php:973
+#: www/admin.php:974
 msgid "Add mailbox"
 msgstr "Mailbox hinzufügen"
 
-#: www/admin.php:989
+#: www/admin.php:990
 #, php-format
 msgid "Edit mailbox %s"
 msgstr "Mailbox %s bearbeiten"
 
-#: www/admin.php:1021
+#: www/admin.php:1022
 msgid "Save mailbox"
 msgstr "Mailbox speichern"
 
-#: www/admin.php:1045
+#: www/admin.php:1046
 msgid "Delete mailbox / Disable two-factor authentication"
 msgstr "Mailbox löschen / Zwei-Faktor Autorisierung deaktivieren"
 
-#: www/admin.php:1051
+#: www/admin.php:1052
 msgid "Disable two-factor authentication"
 msgstr "Zwei-Faktor Autorisierung deaktivieren"
 
-#: www/admin.php:1056
+#: www/admin.php:1057
 msgid "Delete mailbox"
 msgstr "Mailbox löschen"
 
-#: www/admin.php:1062
+#: www/admin.php:1063
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr "Ups, diese Mailbox schient nicht zu existieren."
 
-#: www/register.php:18
-msgid "Invalid CSRF token"
-msgstr "Ungültiger CSRF Token"
+#~ msgid "Webmail-Login"
+#~ msgstr "Webmail-Anmeldung"
 
-#: www/register.php:27
-msgid "Invalid username. It may not contain a +, ', \" or /."
-msgstr "Ungültiger Nutzername. Dieser darf keine +, ', \" oder / enthalten."
-
-#: www/register.php:44
-msgid "The domain you specified is not allowed"
-msgstr "Die angegebene Domain ist nicht erlaubt"
-
-#: www/register.php:49
-msgid "The email address you specified is not valid"
-msgstr "Deine angegebene E-Mail Adresse ist nicht gültig"
-
-#: www/register.php:52
-msgid "The username you specified is reserved"
-msgstr "Dein eingegebener Nutzername ist reserviert"
-
-#: www/register.php:78 www/register.php:87
-msgid "E-Mail and XMPP - Register"
-msgstr "E-Mail und XMPP - Registreiren"
-
-#: www/register.php:82 www/register.php:88
-msgid ""
-"Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr ""
-"Registriere dich für eine kostenloses und anonyme E-Mail Adresse und ein "
-"XMPP/Jabber Konto"
-
-#: www/register.php:114
-#, php-format
-msgid ""
-"I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
-"Policy</a>"
-msgstr ""
-"Ich habe die <a href=\"%s\" target=\"_blank\">Datenschutzerklärung</a> "
-"gelesen und akzeptiere diese"
-
-#: cron.php:11 common_config.php:87 setup.php:20 setup.php:23
-msgid "No Connection to MySQL database!"
-msgstr "Keine Verbindung zur MySQL Datenbank!"
-
-#: tools/delete_leftover_files.php:14
-#, php-format
-msgid ""
-"%s does not seem to have any accounts, but has a directory. Consider "
-"deleting it."
-msgstr ""
-"%s scheint keine Konten zu haben, aber ein Verzeichnis. Denk darüber nach es "
-"zu löschen."
-
-#: tools/delete_leftover_files.php:20
-#, php-format
-msgid "Deleted: %s"
-msgstr "Gelöscht: %s"
-
-#: tools/delete_leftover_files.php:22
-#, php-format
-msgid "File found in mail directory location: \"%s\". Consider deleting it."
-msgstr ""
-"Datei im Mailverzeichnis \"%s\" gefunden. Denke darüber nach diese zu "
-"löschen."
-
-#: common_config.php:136
-msgid "Copy:"
-msgstr "Kopiere:"
-
-#: common_config.php:255
-#, php-format
-msgid ""
-"Oops, the email \"%s\" doesn' look like a valid email address and thus "
-"wasn't added to the forwarding list."
-msgstr ""
-"Ups, die E-Mail \"%s\" sieht nicht nach einer gültigen E-Mail Adresse aus "
-"und wurde deshalb nicht zur Weiterleitungsliste hinzugefügt."
-
-#: common_config.php:281
-msgid "You are not allowed to manage this domain."
-msgstr "Du darfst diese Domain nicht verwalten."
-
-#: common_config.php:292
-msgid "Invalid email address."
-msgstr "Ungültige E-Mail Adresse."
-
-#: setup.php:8
-#, php-format
-msgid "The %s extension of PHP is required. Please install it first."
-msgstr "Die %s PHP-Erweiterung wird benötigt. Bitte installiere diese zuerst."
-
-#: setup.php:35
-msgid "Database has successfully been updated."
-msgstr "Datenbank wurde erfolgreich aktualisiert."
-
-#: setup.php:37
-msgid "Database is already up-to-date."
-msgstr "Datenbank ist bereits aktuell."
-
-#: setup.php:40
-msgid "Error updating database:"
-msgstr "Fehler beim Aktualisieren der Datenbank:"
-
-#: setup.php:57
-msgid "Database has successfully been set up."
-msgstr "Datenbank wurde erfolgreich erstellt."
-
-#: setup.php:59
-msgid "Error setting up database:"
-msgstr "Fehler beim Erstellen der Datenbank:"
+#~ msgid ""
+#~ "For privacy, please use PGP mail encryption, if you can. This prevents "
+#~ "others from reading your mails (including me and/or LEA). GnuPGs official "
+#~ "home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
+#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
+#~ "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</"
+#~ "a>"
+#~ msgstr ""
+#~ "Für Privatsphäre, nutze bitte PGP Mail Verschlüsselung, wenn du kannst. "
+#~ "Dies hindert andere am Lesen deiner E-Mails (inklusive mir und/oder "
+#~ "Strafverfolgungsbehörden). Die offizielle GnuPG Seite: <a href=\"https://"
+#~ "gnupg.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gnupg."
+#~ "org</a> Windows GUI: <a href=\"https://gpg4usb.org\" target=\"_blank\" "
+#~ "rel=\"noopener noreferrer\">https://gpg4usb.org</a>"
 
 #~ msgid "Invalid username."
 #~ msgstr "Ungültiger Nutzername"
