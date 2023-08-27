@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-01 13:08+0100\n"
+"POT-Creation-Date: 2023-08-27 16:07+0200\n"
 "PO-Revision-Date: 2023-02-13 20:20+0000\n"
 "Last-Translator: Zdeněk Grůza <me@zgruza.me>\n"
-"Language-Team: Czech <https://weblate.danwin1210.de/projects/DanWin/"
-"mail-hosting/cs/>\n"
+"Language-Team: Czech <https://weblate.danwin1210.de/projects/DanWin/mail-"
+"hosting/cs/>\n"
 "Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,40 +19,184 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 4.15.2\n"
 
-#: www/index.php:6 www/index.php:15
-msgid "E-Mail and XMPP"
-msgstr "E-mail a XMPP"
+#: tools/delete_leftover_files.php:14
+#, php-format
+msgid ""
+"%s does not seem to have any accounts, but has a directory. Consider "
+"deleting it."
+msgstr "Zdá se, že %s nemá žádné účty, ale má adresář. Zvažte jeho smazání."
 
-#: www/index.php:10 www/index.php:16
-msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr "Získej bezplatnou a anonymní e-mailovou adresu a účet XMPP/Jabber"
+#: tools/delete_leftover_files.php:20
+#, php-format
+msgid "Deleted: %s"
+msgstr "Odstraněno: %s"
 
-#: www/index.php:21 www/manage_account.php:236 www/register.php:94
+#: tools/delete_leftover_files.php:22
+#, php-format
+msgid "File found in mail directory location: \"%s\". Consider deleting it."
+msgstr "Soubor nalezen v umístění adresáře pošty: \"%s\". Zvažte jeho smazání."
+
+#: common_config.php:91 setup.php:20 setup.php:23 cron.php:11
+msgid "No Connection to MySQL database!"
+msgstr "Žádné připojení k databázi MySQL!"
+
+#: common_config.php:140
+msgid "Copy:"
+msgstr "Přepiš:"
+
+#: common_config.php:259
+#, php-format
+msgid ""
+"Oops, the email \"%s\" doesn' look like a valid email address and thus "
+"wasn't added to the forwarding list."
+msgstr ""
+"Jejda, e-mail „%s“ nevypadá jako platná e-mailová adresa, a proto nebyl "
+"přidán do seznamu pro přeposílání."
+
+#: common_config.php:285
+msgid "You are not allowed to manage this domain."
+msgstr "Nemáš oprávnění spravovat tuto doménu."
+
+#: common_config.php:296
+msgid "Invalid email address."
+msgstr "Neplatná emailová adresa."
+
+#: setup.php:8
+#, php-format
+msgid "The %s extension of PHP is required. Please install it first."
+msgstr "Je vyžadováno rozšíření %s PHP. Nejprve jej prosím nainstalujte."
+
+#: setup.php:35
+msgid "Database has successfully been updated."
+msgstr "Databáze byla úspěšně aktualizována."
+
+#: setup.php:37
+msgid "Database is already up-to-date."
+msgstr "Databáze je již aktuální."
+
+#: setup.php:40
+msgid "Error updating database:"
+msgstr "Chyba při aktualizaci databáze:"
+
+#: setup.php:57
+msgid "Database has successfully been set up."
+msgstr "Databáze byla úspěšně nastavena."
+
+#: setup.php:59
+msgid "Error setting up database:"
+msgstr "Chyba při nastavování databáze:"
+
+#: www/register.php:18
+msgid "Invalid CSRF token"
+msgstr "Neplatný token CSRF"
+
+#: www/register.php:22 www/manage_account.php:43
+msgid "Invalid captcha"
+msgstr "Neplatný obrázek captcha"
+
+#: www/register.php:27
+msgid "Invalid username. It may not contain a +, ', \" or /."
+msgstr "Neplatné uživatelské jméno. Nesmí obsahovat +, ', \" nebo /."
+
+#: www/register.php:33 www/manage_account.php:100 www/admin.php:175
+#: www/admin.php:343
+msgid "Passwords empty or don't match"
+msgstr "Hesla jsou prázdná nebo se neshodují"
+
+#: www/register.php:44
+msgid "The domain you specified is not allowed"
+msgstr "Zadaná doména není povolena"
+
+#: www/register.php:49
+msgid "The email address you specified is not valid"
+msgstr "Zadaná e-mailová adresa není platná"
+
+#: www/register.php:52
+msgid "The username you specified is reserved"
+msgstr "Zadané uživatelské jméno je rezervováno"
+
+#: www/register.php:62 www/admin.php:311
+msgid "Sorry, this user already exists"
+msgstr "Omlouvám se, tento uživatel již existuje"
+
+#: www/register.php:70 www/admin.php:333
+msgid "Successfully created new mailbox!"
+msgstr "Nová poštovní schránka byla úspěšně vytvořena!"
+
+#: www/register.php:78 www/register.php:87 www/register.php:91
+msgid "E-Mail and XMPP - Register"
+msgstr "E-mail a XMPP - Registrace"
+
+#: www/register.php:82 www/register.php:88 www/register.php:91
+msgid ""
+"Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
+msgstr ""
+"Zaregistruj se a získejte bezplatnou a anonymní e-mailovou adresu a účet "
+"XMPP/Jabber"
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:237
 msgid "Info"
 msgstr "Info"
 
-#: www/index.php:21 www/manage_account.php:240 www/register.php:94
-#: www/register.php:121
+#: www/register.php:95 www/register.php:121 www/index.php:22
+#: www/manage_account.php:241
 msgid "Register"
 msgstr "Registrovat"
 
-#: www/index.php:21 www/manage_account.php:241 www/register.php:94
-msgid "Webmail-Login"
-msgstr "Webmail-Přihlášení"
-
-#: www/index.php:21 www/manage_account.php:246 www/register.php:95
+#: www/register.php:95 www/index.php:22 www/manage_account.php:247
 msgid "Manage account"
 msgstr "Spravovat účet"
 
-#: www/index.php:21 www/manage_account.php:247 www/register.php:95
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+msgid "SquirrelMail"
+msgstr ""
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+msgid "SnappyMail"
+msgstr ""
+
+#: www/register.php:95 www/index.php:22 www/manage_account.php:248
 msgid "Web-XMPP"
 msgstr "Web-XMPP"
 
-#: www/index.php:22
+#: www/register.php:101 www/manage_account.php:255 www/admin.php:407
+#: www/admin.php:583 www/admin.php:913 www/admin.php:942
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: www/register.php:106 www/manage_account.php:260 www/manage_account.php:323
+#: www/admin.php:411 www/admin.php:504 www/admin.php:587 www/admin.php:946
+#: www/admin.php:1031
+msgid "Password"
+msgstr "Heslo"
+
+#: www/register.php:110 www/manage_account.php:328 www/admin.php:509
+#: www/admin.php:592 www/admin.php:950 www/admin.php:1036
+msgid "Password again"
+msgstr "Heslo znovu"
+
+#: www/register.php:114
+#, php-format
+msgid ""
+"I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
+"Policy</a>"
+msgstr ""
+"Přečetl jsem si <a href=\"%s\" target=\"_blank\">Zásady ochrany osobních "
+"údajů</a> a souhlasím s nimi"
+
+#: www/index.php:6 www/index.php:15 www/index.php:19
+msgid "E-Mail and XMPP"
+msgstr "E-mail a XMPP"
+
+#: www/index.php:10 www/index.php:16 www/index.php:19
+msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
+msgstr "Získej bezplatnou a anonymní e-mailovou adresu a účet XMPP/Jabber"
+
+#: www/index.php:23
 msgid "What you will get"
 msgstr "Co získáš"
 
-#: www/index.php:23
+#: www/index.php:24
 #, php-format
 msgid ""
 "You get a free anonymous E-Mail address and an XMPP/Jabber account using the "
@@ -63,7 +207,7 @@ msgstr ""
 "stejných údajů. Tvoje Jabber ID je user@%1$s a lze se k němu připojit přímo "
 "z clearnetu nebo přes skrytou službu Tor (%2$s)."
 
-#: www/index.php:24
+#: www/index.php:25
 #, php-format
 msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
@@ -73,45 +217,64 @@ msgstr ""
 "potřebuješ více místa, <a href=\"%1$s\">kontaktuj mě</a>. Tvoje e-mailová "
 "adresa bude %2$s"
 
-#: www/index.php:25
+#: www/index.php:26
 msgid ""
 "For privacy, please use PGP mail encryption, if you can. This prevents "
-"others from reading your mails (including me and/or LEA). GnuPGs official "
-"home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
-"org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</a>"
+"others from reading your mails to protect your privacy. You can <a href="
+"\"https://gnupg.org/download/index.html\" target=\"_blank\" rel=\"noopener "
+"noreferrer\">download GnuPG</a> or similar software for it. Once you have "
+"generated your PGP key, you can <a href=\"manage_account.php\">add it to "
+"your account</a> to make use of WKD automatic discovery for mail clients."
 msgstr ""
-"Pokud můžeš, použij pro ochranu soukromí šifrování pošty PGP. To brání "
-"ostatním ve čtení tvých e-mailů (včetně mě a/nebo LEA). Oficiální domov "
-"GnuPGs: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">https://gnupg.org</a> GUI systému Windows: <a href=\"https: "
-"//gpg4usb.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb"
-".org</a>"
 
-#: www/index.php:26
+#: www/index.php:27
+msgid ""
+"You can choose between two Web-Mail clients installed on the server. <a href="
+"\"squirrelmail/src/login.php\">SquirrelMail</a> is a very old mail client "
+"which works without any JavaScript and is thus the most popular mail client "
+"among darknet users. However, it hasn't been under development for many "
+"years and does not support all features that mail has to offer. You may see "
+"strange attachments that should have been inlined in your email, such as PGP/"
+"MIME encrypted email messages. A more modern client is <a href=\"snappymail/"
+"\">SnappyMail</a>, which also supports PGP encryption within your browser "
+"and is more similar to what you may be used to from other mail services. "
+"SnappyMail requires JavaScript though, so SquirrelMail is for you if you do "
+"not trust executing JavaScript in your browser. Alternatively, you can "
+"simply use your favourite desktop mail client and configure it with the "
+"settings given below."
+msgstr ""
+
+#: www/index.php:28
+msgid ""
+"The XMPP service provides message archiving and HTTP upload, which can keep "
+"your messages and files for up to 1 week. Up to 100MB of file storage is "
+"available per user."
+msgstr ""
+
+#: www/index.php:29
 msgid "E-Mail Setup"
 msgstr "Nastavení e-mailu"
 
-#: www/index.php:28
+#: www/index.php:31
 #, php-format
 msgid "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
 msgstr "SMTP: %s Port 465 (SSL/TLS) nebo 587 (StartTLS)"
 
-#: www/index.php:29
+#: www/index.php:32
 #, php-format
 msgid "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
 msgstr "IMAP: %s Port 993 (SSL/TLS) nebo 143 (StartTLS)"
 
-#: www/index.php:30
+#: www/index.php:33
 #, php-format
 msgid "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
 msgstr "POP3: %s Port 995 (SSL/TLS) nebo 110 (StartTLS)"
 
-#: www/index.php:31
+#: www/index.php:34
 msgid "Authentication: PLAIN, LOGIN"
 msgstr "Autentizace: PLAIN, LOGIN"
 
-#: www/index.php:33
+#: www/index.php:36
 #, php-format
 msgid ""
 "You can also connect on the same ports via the Tor onion address %s, but you "
@@ -120,26 +283,26 @@ msgstr ""
 "Můžeš se také připojit na stejné porty přes adresu Tor onion %s, ale budeš "
 "muset přijmout certifikát SSL platný pouze pro doménu clearnet."
 
-#: www/index.php:34
+#: www/index.php:37
 msgid "XMPP setup"
 msgstr "Nastavení XMPP"
 
-#: www/index.php:35
+#: www/index.php:38
 #, php-format
 msgid "Domain: %s"
 msgstr "Doména: %s"
 
-#: www/index.php:36
+#: www/index.php:39
 #, php-format
 msgid "Connect server: %s (optional for torification)"
 msgstr "Připojit server: %s (volitelné pro torifikaci)"
 
-#: www/index.php:37
+#: www/index.php:40
 #, php-format
 msgid "File transfer proxy: %s"
 msgstr "Proxy přenosu souborů: %s"
 
-#: www/index.php:38
+#: www/index.php:41
 #, php-format
 msgid ""
 "BOSH URL: %s (only enable if you have to, as it is slower than directly "
@@ -160,10 +323,6 @@ msgstr "Špatný kód 2FA"
 msgid "Successfully logged out"
 msgstr "Úspěšně odhlášeno"
 
-#: www/manage_account.php:43 www/register.php:22
-msgid "Invalid captcha"
-msgstr "Neplatný obrázek captcha"
-
 #: www/manage_account.php:47 www/admin.php:37
 msgid "Invalid username"
 msgstr "Neplatné uživatelské jméno"
@@ -172,11 +331,6 @@ msgstr "Neplatné uživatelské jméno"
 #: www/admin.php:55
 msgid "Incorrect username or password"
 msgstr "Nesprávné uživatelské jméno nebo heslo"
-
-#: www/manage_account.php:100 www/admin.php:175 www/admin.php:343
-#: www/register.php:33
-msgid "Passwords empty or don't match"
-msgstr "Hesla jsou prázdná nebo se neshodují"
 
 #: www/manage_account.php:105 www/admin.php:348
 msgid "Successfully updated password"
@@ -249,10 +403,12 @@ msgid "Successfully enabled 2FA"
 msgstr "Úspěšně povoleno 2FA"
 
 #: www/manage_account.php:181 www/manage_account.php:191
+#: www/manage_account.php:195
 msgid "E-Mail and XMPP - Manage account"
 msgstr "E-mail a XMPP – Správa účtu"
 
 #: www/manage_account.php:186 www/manage_account.php:192
+#: www/manage_account.php:195
 msgid ""
 "Manage your free and anonymous E-Mail address and an XMPP/Jabber account. "
 "Add forwarding addresses, change your password or disable/delete your "
@@ -261,14 +417,14 @@ msgstr ""
 "Spravuj svou bezplatnou a anonymní e-mailovou adresu a účet XMPP/Jabber. "
 "Přidej adresy pro přeposílání, změň heslo nebo deaktivuj/smaž svůj účet."
 
-#: www/manage_account.php:213
+#: www/manage_account.php:214
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
 msgstr ""
 "Chcete-li se přihlásit, zadejte následující kód pro potvrzení vlastnictví "
 "vašeho klíče:"
 
-#: www/manage_account.php:215
+#: www/manage_account.php:216
 msgid ""
 "To login, please decrypt the following PGP encrypted message and confirm the "
 "code:"
@@ -276,47 +432,36 @@ msgstr ""
 "Chcete-li se přihlásit, dešifrujte následující šifrovanou zprávu PGP a "
 "potvrďte kód:"
 
-#: www/manage_account.php:221 www/manage_account.php:370
+#: www/manage_account.php:222 www/manage_account.php:371
 msgid "2FA code"
 msgstr "2FA kód"
 
-#: www/manage_account.php:223 www/manage_account.php:372
+#: www/manage_account.php:224 www/manage_account.php:373
 msgid "Confirm"
 msgstr "Potvrdit"
 
-#: www/manage_account.php:238 www/admin.php:388
+#: www/manage_account.php:239 www/admin.php:389
 #, php-format
 msgid "Logged in as %s"
 msgstr "Přihlášen jako %s"
 
-#: www/manage_account.php:244 www/admin.php:389
+#: www/manage_account.php:245 www/admin.php:390
 msgid "Logout"
 msgstr "Odhlásit"
 
-#: www/manage_account.php:254 www/admin.php:406 www/admin.php:582
-#: www/admin.php:912 www/admin.php:941 www/register.php:101
-msgid "Username"
-msgstr "Uživatelské jméno"
-
-#: www/manage_account.php:259 www/manage_account.php:322 www/admin.php:410
-#: www/admin.php:503 www/admin.php:586 www/admin.php:945 www/admin.php:1030
-#: www/register.php:106
-msgid "Password"
-msgstr "Heslo"
-
-#: www/manage_account.php:265 www/admin.php:415
+#: www/manage_account.php:266 www/admin.php:416
 msgid "Login"
 msgstr "Přihlásit se"
 
-#: www/manage_account.php:282
+#: www/manage_account.php:283
 msgid "Settings"
 msgstr "Nastavení"
 
-#: www/manage_account.php:283
+#: www/manage_account.php:284
 msgid "Delivery"
 msgstr "Doručení"
 
-#: www/manage_account.php:284
+#: www/manage_account.php:285
 msgid ""
 "Change how your mail is delivered. You can add forwarding addresses one per "
 "line, or comma seperated. When you disable the \"keep a local copy\" "
@@ -326,19 +471,19 @@ msgstr ""
 "řádek nebo oddělené čárkami. Když zaškrtneš políčko „uchovat místní kopii“, "
 "tvoje pošta bude zasílána pouze na tvé přesměrovací adresy."
 
-#: www/manage_account.php:287 www/admin.php:953 www/admin.php:994
+#: www/manage_account.php:288 www/admin.php:954 www/admin.php:995
 msgid "Forward to"
 msgstr "Předat na"
 
-#: www/manage_account.php:292 www/admin.php:957 www/admin.php:999
+#: www/manage_account.php:293 www/admin.php:958 www/admin.php:1000
 msgid "Keep a local copy"
 msgstr "Ponechte si místní kopii"
 
-#: www/manage_account.php:297
+#: www/manage_account.php:298
 msgid "Encryption"
 msgstr "Šifrování"
 
-#: www/manage_account.php:298
+#: www/manage_account.php:299
 msgid ""
 "If you are having issues sending or receiving mails with some other "
 "provider, you can try disabling forced encryption here. But be aware, that "
@@ -352,33 +497,28 @@ msgstr ""
 "požádat svého korespondenta, aby od svého poskytovatele požadoval podporu "
 "šifrování pro bezpečnější internet."
 
-#: www/manage_account.php:300 www/admin.php:964 www/admin.php:1011
+#: www/manage_account.php:301 www/admin.php:965 www/admin.php:1012
 msgid "Enforce encryption for incoming mail"
 msgstr "Vynutit šifrování pro příchozí poštu"
 
-#: www/manage_account.php:306 www/admin.php:968 www/admin.php:1016
+#: www/manage_account.php:307 www/admin.php:969 www/admin.php:1017
 msgid "Enforce encryption for outgoing mail"
 msgstr "Vynutit šifrování pro odchozí poštu"
 
-#: www/manage_account.php:313
+#: www/manage_account.php:314
 msgid "Update settings"
 msgstr "Aktualizovat nastavení"
 
-#: www/manage_account.php:318 www/manage_account.php:333 www/admin.php:1025
-#: www/admin.php:1041
+#: www/manage_account.php:319 www/manage_account.php:334 www/admin.php:1026
+#: www/admin.php:1042
 msgid "Change password"
 msgstr "Změnit heslo"
 
-#: www/manage_account.php:327 www/admin.php:508 www/admin.php:591
-#: www/admin.php:949 www/admin.php:1035 www/register.php:110
-msgid "Password again"
-msgstr "Heslo znovu"
-
-#: www/manage_account.php:344
+#: www/manage_account.php:345
 msgid "Yay, PGP based 2FA is enabled!"
 msgstr "Hurá, 2FA založená na PGP je povolena!"
 
-#: www/manage_account.php:354
+#: www/manage_account.php:355
 msgid ""
 "Sorry, this key can't be used to encrypt a message to you. Your key may have "
 "expired or has been revoked."
@@ -386,7 +526,7 @@ msgstr ""
 "Je mi líto, ale tento klíč nelze použít k zašifrování zprávy. Platnost "
 "vašeho klíče možná vypršela nebo byl odvolán."
 
-#: www/manage_account.php:362
+#: www/manage_account.php:363
 msgid ""
 "To enable 2FA, please enter the following code to confirm ownership of your "
 "key:"
@@ -394,11 +534,11 @@ msgstr ""
 "Chceš-li aktivovat 2FA, zadej prosím následující kód pro potvrzení "
 "vlastnictví tvého klíče:"
 
-#: www/manage_account.php:363
+#: www/manage_account.php:364
 msgid "Enable 2FA"
 msgstr "Povolit 2FA"
 
-#: www/manage_account.php:364
+#: www/manage_account.php:365
 msgid ""
 "To enable 2FA using your PGP key, please decrypt the following PGP encrypted "
 "message and confirm the code:"
@@ -406,23 +546,23 @@ msgstr ""
 "Chceš-li povolit 2FA pomocí tvého klíče PGP, dešifruj následující šifrovanou "
 "zprávu PGP a potvrď kód:"
 
-#: www/manage_account.php:383
+#: www/manage_account.php:384
 msgid "Add PGP key for 2FA and end-to-end encryption"
 msgstr "Přidej klíč PGP pro 2FA a end-to-end šifrování"
 
-#: www/manage_account.php:388
+#: www/manage_account.php:389
 msgid "PGP key"
 msgstr "PGP klíč"
 
-#: www/manage_account.php:393
+#: www/manage_account.php:394
 msgid "Update PGP key"
 msgstr "Aktualizovat klíč PGP"
 
-#: www/manage_account.php:399
+#: www/manage_account.php:400
 msgid "Disable/Delete account"
 msgstr "Deaktivovat/smazat účet"
 
-#: www/manage_account.php:400
+#: www/manage_account.php:401
 msgid ""
 "Warning, this is permanent and cannot be undone. Disabling an account will "
 "delete your email data from the server, but leave the account blocked in the "
@@ -436,11 +576,11 @@ msgstr ""
 "Smazáním účtu zcela vymažete všechny jeho záznamy a bude opět k dispozici "
 "pro nové registrace."
 
-#: www/manage_account.php:404
+#: www/manage_account.php:405
 msgid "Disable account"
 msgstr "Deaktivovat účet"
 
-#: www/manage_account.php:409
+#: www/manage_account.php:410
 msgid "Delete account"
 msgstr "Odstranit účet"
 
@@ -612,53 +752,45 @@ msgstr "Alias byl úspěšně aktualizován."
 msgid "Successfully updated mailbox."
 msgstr "Poštovní schránka byla úspěšně aktualizována."
 
-#: www/admin.php:311 www/register.php:62
-msgid "Sorry, this user already exists"
-msgstr "Omlouvám se, tento uživatel již existuje"
-
-#: www/admin.php:333 www/register.php:70
-msgid "Successfully created new mailbox!"
-msgstr "Nová poštovní schránka byla úspěšně vytvořena!"
-
 #: www/admin.php:359
 msgid "Successfully disabled two-factor authentication"
 msgstr "Dvoufaktorové ověřování bylo úspěšně zakázáno"
 
-#: www/admin.php:369 www/admin.php:378 www/admin.php:384
+#: www/admin.php:369 www/admin.php:378 www/admin.php:382 www/admin.php:385
 msgid "E-Mail and XMPP - Admin management"
 msgstr "E-mail a XMPP - správa administrace"
 
-#: www/admin.php:373 www/admin.php:379
+#: www/admin.php:373 www/admin.php:379 www/admin.php:382
 msgid "Lets domain owners manage their email domain and user accounts."
 msgstr ""
 "Umožnit vlastníkům domén spravovat jejich e-mailovou doménu a uživatelské "
 "účty."
 
-#: www/admin.php:391
+#: www/admin.php:392
 msgid "Manage admins"
 msgstr "Spravovat administrátory"
 
-#: www/admin.php:392
+#: www/admin.php:393
 msgid "Manage alias domains"
 msgstr "Spravovat alias domén"
 
-#: www/admin.php:394
+#: www/admin.php:395
 msgid "Manage your admin account"
 msgstr "Spravovat svůj účet správce"
 
-#: www/admin.php:396
+#: www/admin.php:397
 msgid "Manage domains"
 msgstr "Spravovat domény"
 
-#: www/admin.php:397
+#: www/admin.php:398
 msgid "Manage aliases"
 msgstr "Správa aliasů"
 
-#: www/admin.php:398
+#: www/admin.php:399
 msgid "Manage mailboxes"
 msgstr "Správa poštovních schránek"
 
-#: www/admin.php:421
+#: www/admin.php:422
 msgid ""
 "Welcome to the admin management interface. You can configure your domain(s) "
 "and accounts here. Please select an option from the menu."
@@ -666,7 +798,7 @@ msgstr ""
 "Vítejte v rozhraní pro správu správce. Zde můžete nakonfigurovat své domény "
 "a účty. Vyberte možnost z nabídky."
 
-#: www/admin.php:453
+#: www/admin.php:454
 msgid ""
 "Oops, it looks like the page you tried to access does not exist or you do "
 "not have permission to access it."
@@ -674,307 +806,218 @@ msgstr ""
 "Jejda, zdá se, že stránka, kterou jsi se pokusil otevřít, neexistuje nebo k "
 "ní nemáš oprávnění."
 
-#: www/admin.php:466 www/admin.php:485
+#: www/admin.php:467 www/admin.php:486
 msgid "Create new admin"
 msgstr "Vytvořit nového správce"
 
-#: www/admin.php:471
+#: www/admin.php:472
 msgid "Admin"
 msgstr "Administrátor"
 
-#: www/admin.php:472 www/admin.php:521 www/admin.php:534 www/admin.php:600
-#: www/admin.php:624 www/admin.php:656 www/admin.php:680 www/admin.php:714
-#: www/admin.php:748 www/admin.php:778 www/admin.php:811 www/admin.php:843
-#: www/admin.php:877 www/admin.php:913 www/admin.php:961 www/admin.php:1006
+#: www/admin.php:473 www/admin.php:522 www/admin.php:535 www/admin.php:601
+#: www/admin.php:625 www/admin.php:657 www/admin.php:681 www/admin.php:715
+#: www/admin.php:749 www/admin.php:779 www/admin.php:812 www/admin.php:844
+#: www/admin.php:878 www/admin.php:914 www/admin.php:962 www/admin.php:1007
 msgid "Active"
 msgstr "Aktivní"
 
-#: www/admin.php:473 www/admin.php:625 www/admin.php:715 www/admin.php:812
-#: www/admin.php:914
+#: www/admin.php:474 www/admin.php:626 www/admin.php:716 www/admin.php:813
+#: www/admin.php:915
 msgid "Last modified"
 msgstr "Naposledy změněno"
 
-#: www/admin.php:474
+#: www/admin.php:475
 msgid "Edit account"
 msgstr "Upravit účet"
 
-#: www/admin.php:482 www/admin.php:636 www/admin.php:724 www/admin.php:821
-#: www/admin.php:927
+#: www/admin.php:483 www/admin.php:637 www/admin.php:725 www/admin.php:822
+#: www/admin.php:928
 msgid "Edit"
 msgstr "Upravit"
 
-#: www/admin.php:497
+#: www/admin.php:498
 #, php-format
 msgid "Edit admin account %s"
 msgstr "Upravit účet správce %s"
 
-#: www/admin.php:515 www/admin.php:528 www/admin.php:596
+#: www/admin.php:516 www/admin.php:529 www/admin.php:597
 msgid "Superadmin"
 msgstr "Superadmin"
 
-#: www/admin.php:517 www/admin.php:529 www/admin.php:597
+#: www/admin.php:518 www/admin.php:530 www/admin.php:598
 msgid "Superadmins can manage other admins"
 msgstr "Superadministrátoři mohou spravovat ostatní administrátory"
 
-#: www/admin.php:538
+#: www/admin.php:539
 msgid "Managed domains"
 msgstr "Spravované domény"
 
-#: www/admin.php:558 www/admin.php:685 www/admin.php:783 www/admin.php:886
+#: www/admin.php:559 www/admin.php:686 www/admin.php:784 www/admin.php:887
 msgid "Save changes"
 msgstr "Uložit"
 
-#: www/admin.php:564
+#: www/admin.php:565
 msgid "Delete admin"
 msgstr "Smazat administrátora"
 
-#: www/admin.php:571 www/admin.php:696
+#: www/admin.php:572 www/admin.php:697
 msgid "Oops, this admin doesn't seem to exist."
 msgstr "Jejda, zdá se, že tento správce neexistuje."
 
-#: www/admin.php:578
+#: www/admin.php:579
 msgid "Create new admin account"
 msgstr "Vytvořit nový účet správce"
 
-#: www/admin.php:604
+#: www/admin.php:605
 msgid "Add admin"
 msgstr "Přidat správce"
 
-#: www/admin.php:617 www/admin.php:640 www/admin.php:648
+#: www/admin.php:618 www/admin.php:641 www/admin.php:649
 msgid "Create new domain"
 msgstr "Vytvořit novou doménu"
 
-#: www/admin.php:623 www/admin.php:652
+#: www/admin.php:624 www/admin.php:653
 msgid "Domain"
 msgstr "Doména"
 
-#: www/admin.php:626
+#: www/admin.php:627
 msgid "Edit domain"
 msgstr "Upravit doménu"
 
-#: www/admin.php:660
+#: www/admin.php:661
 msgid "Add domain"
 msgstr "Přidat doménu"
 
-#: www/admin.php:674
+#: www/admin.php:675
 #, php-format
 msgid "Edit domain %s"
 msgstr "Upravit doménu %s"
 
-#: www/admin.php:690
+#: www/admin.php:691
 msgid "Delete domain"
 msgstr "Odstranit doménu"
 
-#: www/admin.php:706 www/admin.php:728 www/admin.php:736
+#: www/admin.php:707 www/admin.php:729 www/admin.php:737
 msgid "Create new alias domain"
 msgstr "Vytvořte nový alias domény"
 
-#: www/admin.php:712 www/admin.php:740
+#: www/admin.php:713 www/admin.php:741
 msgid "Alias Domain"
 msgstr "Alias Domény"
 
-#: www/admin.php:713 www/admin.php:744 www/admin.php:772
+#: www/admin.php:714 www/admin.php:745 www/admin.php:773
 msgid "Target Domain"
 msgstr "Cílová doména"
 
-#: www/admin.php:716
+#: www/admin.php:717
 msgid "Edit alias domain"
 msgstr "Upravit alias domény"
 
-#: www/admin.php:752
+#: www/admin.php:753
 msgid "Add alias domain"
 msgstr "Přidat alias domény"
 
-#: www/admin.php:766
+#: www/admin.php:767
 #, php-format
 msgid "Edit alias domain %s"
 msgstr "Upravit alias domény %s"
 
-#: www/admin.php:788
+#: www/admin.php:789
 msgid "Delete alias domain"
 msgstr "Odstranit alias domény"
 
-#: www/admin.php:794
+#: www/admin.php:795
 msgid "Oops, this alias domain doesn't seem to exist."
 msgstr "Jejda, tento alias domény zřejmě neexistuje."
 
-#: www/admin.php:804 www/admin.php:824 www/admin.php:831
+#: www/admin.php:805 www/admin.php:825 www/admin.php:832
 msgid "Create new alias"
 msgstr "Vytvořit nový alias"
 
-#: www/admin.php:809 www/admin.php:835
+#: www/admin.php:810 www/admin.php:836
 msgid "Alias"
 msgstr "Alias"
 
-#: www/admin.php:810 www/admin.php:839 www/admin.php:870
+#: www/admin.php:811 www/admin.php:840 www/admin.php:871
 msgid "Target"
 msgstr "Cíl"
 
-#: www/admin.php:813
+#: www/admin.php:814
 msgid "Edit alias"
 msgstr "Upravit alias"
 
-#: www/admin.php:846 www/admin.php:882
+#: www/admin.php:847 www/admin.php:883
 msgid "Enforce encryption"
 msgstr "Vynutit šifrování"
 
-#: www/admin.php:851
+#: www/admin.php:852
 msgid "Add alias"
 msgstr "Přidat alias"
 
-#: www/admin.php:865
+#: www/admin.php:866
 #, php-format
 msgid "Edit alias %s"
 msgstr "Upravit alias %s"
 
-#: www/admin.php:891
+#: www/admin.php:892
 msgid "Delete alias"
 msgstr "Odstranit alias"
 
-#: www/admin.php:897
+#: www/admin.php:898
 msgid "Oops, this alias doesn't seem to exist."
 msgstr "Jejda, zdá se, že tento alias neexistuje."
 
-#: www/admin.php:907 www/admin.php:930 www/admin.php:937
+#: www/admin.php:908 www/admin.php:931 www/admin.php:938
 msgid "Create new mailbox"
 msgstr "Vytvořit novou poštovní schránku"
 
-#: www/admin.php:915
+#: www/admin.php:916
 msgid "Edit mailbox"
 msgstr "Upravit poštovní schránku"
 
-#: www/admin.php:973
+#: www/admin.php:974
 msgid "Add mailbox"
 msgstr "Přidat poštovní schránku"
 
-#: www/admin.php:989
+#: www/admin.php:990
 #, php-format
 msgid "Edit mailbox %s"
 msgstr "Upravit poštovní schránku %s"
 
-#: www/admin.php:1021
+#: www/admin.php:1022
 msgid "Save mailbox"
 msgstr "Uložit schránku"
 
-#: www/admin.php:1045
+#: www/admin.php:1046
 msgid "Delete mailbox / Disable two-factor authentication"
 msgstr "Odstranit schránku / Zakázat dvoufaktorové ověřování"
 
-#: www/admin.php:1051
+#: www/admin.php:1052
 msgid "Disable two-factor authentication"
 msgstr "Zakázat dvoufaktorové ověřování"
 
-#: www/admin.php:1056
+#: www/admin.php:1057
 msgid "Delete mailbox"
 msgstr "Odstranit poštovní schránku"
 
-#: www/admin.php:1062
+#: www/admin.php:1063
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr "Jejda, zdá se, že tato poštovní schránka neexistuje."
 
-#: www/register.php:18
-msgid "Invalid CSRF token"
-msgstr "Neplatný token CSRF"
+#~ msgid "Webmail-Login"
+#~ msgstr "Webmail-Přihlášení"
 
-#: www/register.php:27
-msgid "Invalid username. It may not contain a +, ', \" or /."
-msgstr "Neplatné uživatelské jméno. Nesmí obsahovat +, ', \" nebo /."
-
-#: www/register.php:44
-msgid "The domain you specified is not allowed"
-msgstr "Zadaná doména není povolena"
-
-#: www/register.php:49
-msgid "The email address you specified is not valid"
-msgstr "Zadaná e-mailová adresa není platná"
-
-#: www/register.php:52
-msgid "The username you specified is reserved"
-msgstr "Zadané uživatelské jméno je rezervováno"
-
-#: www/register.php:78 www/register.php:87
-msgid "E-Mail and XMPP - Register"
-msgstr "E-mail a XMPP - Registrace"
-
-#: www/register.php:82 www/register.php:88
-msgid ""
-"Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr ""
-"Zaregistruj se a získejte bezplatnou a anonymní e-mailovou adresu a účet "
-"XMPP/Jabber"
-
-#: www/register.php:114
-#, php-format
-msgid ""
-"I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
-"Policy</a>"
-msgstr ""
-"Přečetl jsem si <a href=\"%s\" target=\"_blank\">Zásady ochrany osobních "
-"údajů</a> a souhlasím s nimi"
-
-#: cron.php:11 common_config.php:87 setup.php:20 setup.php:23
-msgid "No Connection to MySQL database!"
-msgstr "Žádné připojení k databázi MySQL!"
-
-#: tools/delete_leftover_files.php:14
-#, php-format
-msgid ""
-"%s does not seem to have any accounts, but has a directory. Consider "
-"deleting it."
-msgstr "Zdá se, že %s nemá žádné účty, ale má adresář. Zvažte jeho smazání."
-
-#: tools/delete_leftover_files.php:20
-#, php-format
-msgid "Deleted: %s"
-msgstr "Odstraněno: %s"
-
-#: tools/delete_leftover_files.php:22
-#, php-format
-msgid "File found in mail directory location: \"%s\". Consider deleting it."
-msgstr "Soubor nalezen v umístění adresáře pošty: \"%s\". Zvažte jeho smazání."
-
-#: common_config.php:136
-msgid "Copy:"
-msgstr "Přepiš:"
-
-#: common_config.php:255
-#, php-format
-msgid ""
-"Oops, the email \"%s\" doesn' look like a valid email address and thus "
-"wasn't added to the forwarding list."
-msgstr ""
-"Jejda, e-mail „%s“ nevypadá jako platná e-mailová adresa, a proto nebyl "
-"přidán do seznamu pro přeposílání."
-
-#: common_config.php:281
-msgid "You are not allowed to manage this domain."
-msgstr "Nemáš oprávnění spravovat tuto doménu."
-
-#: common_config.php:292
-msgid "Invalid email address."
-msgstr "Neplatná emailová adresa."
-
-#: setup.php:8
-#, php-format
-msgid "The %s extension of PHP is required. Please install it first."
-msgstr "Je vyžadováno rozšíření %s PHP. Nejprve jej prosím nainstalujte."
-
-#: setup.php:35
-msgid "Database has successfully been updated."
-msgstr "Databáze byla úspěšně aktualizována."
-
-#: setup.php:37
-msgid "Database is already up-to-date."
-msgstr "Databáze je již aktuální."
-
-#: setup.php:40
-msgid "Error updating database:"
-msgstr "Chyba při aktualizaci databáze:"
-
-#: setup.php:57
-msgid "Database has successfully been set up."
-msgstr "Databáze byla úspěšně nastavena."
-
-#: setup.php:59
-msgid "Error setting up database:"
-msgstr "Chyba při nastavování databáze:"
+#~ msgid ""
+#~ "For privacy, please use PGP mail encryption, if you can. This prevents "
+#~ "others from reading your mails (including me and/or LEA). GnuPGs official "
+#~ "home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
+#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
+#~ "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</"
+#~ "a>"
+#~ msgstr ""
+#~ "Pokud můžeš, použij pro ochranu soukromí šifrování pošty PGP. To brání "
+#~ "ostatním ve čtení tvých e-mailů (včetně mě a/nebo LEA). Oficiální domov "
+#~ "GnuPGs: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
+#~ "noreferrer\">https://gnupg.org</a> GUI systému Windows: <a href="
+#~ "\"https: //gpg4usb.org\" target=\"_blank\" rel=\"noopener noreferrer"
+#~ "\">https://gpg4usb.org</a>"
