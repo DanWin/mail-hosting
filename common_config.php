@@ -293,7 +293,7 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 {
 	$validator = new EmailValidator();
 	if ( ! $validator->isValid( $email, new NoRFCWarningsValidation() ) ) {
-		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid email address.)').'</div>';
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid email address.')).'</div>';
 		return false;
 	}
 	return true;
