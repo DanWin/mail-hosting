@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 20:01+0200\n"
+"POT-Creation-Date: 2023-09-12 20:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -204,7 +204,7 @@ msgstr ""
 #, php-format
 msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
-"space, %s. Your E-Mail address will be %2$s"
+"space, %1$s. Your E-Mail address will be %2$s"
 msgstr ""
 
 #: www/index.php:25
