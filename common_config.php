@@ -256,7 +256,7 @@ function validate_email_list( array $targets, string &$msg = '' ): string
 		if ( $validator->isValid( $email, new NoRFCWarningsValidation() ) ) {
 			$alias_goto .= ",$email";
 		} else {
-			$msg .= '<div class="red" role="alert">'.sprintf(_('Oops, the email "%s" doesn\' look like a valid email address and thus wasn\'t added to the forwarding list.'), htmlspecialchars( $email ) ) . '</div>';
+			$msg .= '<div class="red" role="alert">'.sprintf(htmlspecialchars(_('Oops, the email "%s" doesn\' look like a valid email address and thus wasn\'t added to the forwarding list.')), htmlspecialchars( $email ) ) . '</div>';
 		}
 	}
 	return ltrim( $alias_goto, ',' );
@@ -282,7 +282,7 @@ function check_domain_access( string &$email, string &$msg = '' ): bool
 			$managed_domains [] = $tmp[ 'domain' ];
 		}
 		if ( ! in_array( $domain, $managed_domains, true ) ) {
-			$msg .= '<div class="red" role="alert">'._('You are not allowed to manage this domain.').'</div>';
+			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('You are not allowed to manage this domain.')).'</div>';
 			return false;
 		}
 	}
@@ -293,7 +293,7 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 {
 	$validator = new EmailValidator();
 	if ( ! $validator->isValid( $email, new NoRFCWarningsValidation() ) ) {
-		$msg .= '<div class="red" role="alert">'._('Invalid email address.').'</div>';
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid email address.)').'</div>';
 		return false;
 	}
 	return true;
