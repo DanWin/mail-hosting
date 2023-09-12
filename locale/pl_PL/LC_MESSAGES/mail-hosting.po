@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-27 16:07+0200\n"
+"POT-Creation-Date: 2023-09-12 19:48+0200\n"
 "PO-Revision-Date: 2023-05-01 02:04+0000\n"
 "Last-Translator: big cat <biggiecat@danwin1210.de>\n"
 "Language-Team: Polish <https://weblate.danwin1210.de/projects/DanWin/mail-"
@@ -57,7 +57,9 @@ msgid "You are not allowed to manage this domain."
 msgstr ""
 
 #: common_config.php:296
-msgid "Invalid email address."
+#, fuzzy
+#| msgid "Invalid email address."
+msgid "Invalid email address.)"
 msgstr "Nieprawidłowy adres email."
 
 #: setup.php:8
@@ -144,11 +146,13 @@ msgstr "Zarejestruj się"
 msgid "Manage account"
 msgstr "Zarządzaj kontem"
 
-#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+#: www/register.php:95 www/index.php:22 www/index.php:27
+#: www/manage_account.php:248
 msgid "SquirrelMail"
 msgstr ""
 
-#: www/register.php:95 www/index.php:22 www/manage_account.php:248
+#: www/register.php:95 www/index.php:22 www/index.php:27
+#: www/manage_account.php:248
 msgid "SnappyMail"
 msgstr ""
 
@@ -157,26 +161,28 @@ msgid "Web-XMPP"
 msgstr "Web-XMPP"
 
 #: www/register.php:101 www/manage_account.php:255 www/admin.php:407
-#: www/admin.php:583 www/admin.php:913 www/admin.php:942
+#: www/admin.php:580 www/admin.php:907 www/admin.php:936
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
 #: www/register.php:106 www/manage_account.php:260 www/manage_account.php:323
-#: www/admin.php:411 www/admin.php:504 www/admin.php:587 www/admin.php:946
-#: www/admin.php:1031
+#: www/admin.php:411 www/admin.php:501 www/admin.php:584 www/admin.php:940
+#: www/admin.php:1025
 msgid "Password"
 msgstr "Hasło"
 
-#: www/register.php:110 www/manage_account.php:328 www/admin.php:509
-#: www/admin.php:592 www/admin.php:950 www/admin.php:1036
+#: www/register.php:110 www/manage_account.php:328 www/admin.php:506
+#: www/admin.php:589 www/admin.php:944 www/admin.php:1030
 msgid "Password again"
 msgstr "Powtórz hasło"
 
 #: www/register.php:114
 #, php-format
-msgid ""
-"I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
-"Policy</a>"
+msgid "I have read and agreed to the %s"
+msgstr ""
+
+#: www/register.php:114
+msgid "Privacy Policy"
 msgstr ""
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
@@ -203,39 +209,55 @@ msgstr ""
 "połączyć poprzez clearnet lub Tor (%2$s)."
 
 #: www/index.php:25
-#, php-format
+#, fuzzy, php-format
+#| msgid ""
+#| "You will have 50MB of disk space available for your mails. If you need "
+#| "more space, just <a href=\"%1$s\">contact me</a>. Your E-Mail address "
+#| "will be %2$s"
 msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
-"space, just <a href=\"%1$s\">contact me</a>. Your E-Mail address will be %2$s"
+"space, %s. Your E-Mail address will be %2$s"
 msgstr ""
 "Otrzymasz 50MB miejsca na twoje maile. Jeżeli potrzebujesz więcej miejsca, "
 "<a href=\"%1$s\">skontaktuj się ze mną</a>. Twój adres E-Mail będzie na %2$s"
 
-#: www/index.php:26
-msgid ""
-"For privacy, please use PGP mail encryption, if you can. This prevents "
-"others from reading your mails to protect your privacy. You can <a href="
-"\"https://gnupg.org/download/index.html\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">download GnuPG</a> or similar software for it. Once you have "
-"generated your PGP key, you can <a href=\"manage_account.php\">add it to "
-"your account</a> to make use of WKD automatic discovery for mail clients."
+#: www/index.php:25
+msgid "contact me"
 msgstr ""
 
-#: www/index.php:27
+#: www/index.php:26
+#, php-format
 msgid ""
-"You can choose between two Web-Mail clients installed on the server. <a href="
-"\"squirrelmail/src/login.php\">SquirrelMail</a> is a very old mail client "
-"which works without any JavaScript and is thus the most popular mail client "
-"among darknet users. However, it hasn't been under development for many "
-"years and does not support all features that mail has to offer. You may see "
-"strange attachments that should have been inlined in your email, such as PGP/"
-"MIME encrypted email messages. A more modern client is <a href=\"snappymail/"
-"\">SnappyMail</a>, which also supports PGP encryption within your browser "
-"and is more similar to what you may be used to from other mail services. "
-"SnappyMail requires JavaScript though, so SquirrelMail is for you if you do "
-"not trust executing JavaScript in your browser. Alternatively, you can "
-"simply use your favourite desktop mail client and configure it with the "
-"settings given below."
+"For privacy, please use PGP mail encryption, if you can. This prevents "
+"others from reading your mails to protect your privacy. You can %1$s or "
+"similar software for it. Once you have generated your PGP key, you can %2$s "
+"to make use of WKD automatic discovery for mail clients."
+msgstr ""
+
+#: www/index.php:26
+msgid "download GnuPG"
+msgstr ""
+
+#: www/index.php:26
+#, fuzzy
+#| msgid "Edit account"
+msgid "add it to your account"
+msgstr "Edytuj konto"
+
+#: www/index.php:27
+#, php-format
+msgid ""
+"You can choose between two Web-Mail clients installed on the server. %1$s is "
+"a very old mail client which works without any JavaScript and is thus the "
+"most popular mail client among darknet users. However, it hasn't been under "
+"development for many years and does not support all features that mail has "
+"to offer. You may see strange attachments that should have been inlined in "
+"your email, such as PGP/MIME encrypted email messages. A more modern client "
+"is %2$s, which also supports PGP encryption within your browser and is more "
+"similar to what you may be used to from other mail services. SnappyMail "
+"requires JavaScript though, so SquirrelMail is for you if you do not trust "
+"executing JavaScript in your browser. Alternatively, you can simply use your "
+"favourite desktop mail client and configure it with the settings given below."
 msgstr ""
 
 #: www/index.php:28
@@ -458,11 +480,11 @@ msgid ""
 "checkbox, your mail will only be sent to your forwarding addresses."
 msgstr ""
 
-#: www/manage_account.php:288 www/admin.php:954 www/admin.php:995
+#: www/manage_account.php:288 www/admin.php:948 www/admin.php:989
 msgid "Forward to"
 msgstr "Przekieruj do"
 
-#: www/manage_account.php:293 www/admin.php:958 www/admin.php:1000
+#: www/manage_account.php:293 www/admin.php:952 www/admin.php:994
 msgid "Keep a local copy"
 msgstr ""
 
@@ -479,11 +501,11 @@ msgid ""
 "provider for a safer internet."
 msgstr ""
 
-#: www/manage_account.php:301 www/admin.php:965 www/admin.php:1012
+#: www/manage_account.php:301 www/admin.php:959 www/admin.php:1006
 msgid "Enforce encryption for incoming mail"
 msgstr "Wymuś szyfrowanie dla przychodzących maili"
 
-#: www/manage_account.php:307 www/admin.php:969 www/admin.php:1017
+#: www/manage_account.php:307 www/admin.php:963 www/admin.php:1011
 msgid "Enforce encryption for outgoing mail"
 msgstr "Wymuś szyfrowanie dla wychodzących maili"
 
@@ -491,8 +513,8 @@ msgstr "Wymuś szyfrowanie dla wychodzących maili"
 msgid "Update settings"
 msgstr "Zaktualizuj ustawienia"
 
-#: www/manage_account.php:319 www/manage_account.php:334 www/admin.php:1026
-#: www/admin.php:1042
+#: www/manage_account.php:319 www/manage_account.php:334 www/admin.php:1020
+#: www/admin.php:1036
 msgid "Change password"
 msgstr "Zmień hasło"
 
@@ -762,7 +784,7 @@ msgid ""
 "not have permission to access it."
 msgstr ""
 
-#: www/admin.php:467 www/admin.php:486
+#: www/admin.php:467 www/admin.php:483
 msgid "Create new admin"
 msgstr "Stwórz nowego admina"
 
@@ -770,15 +792,17 @@ msgstr "Stwórz nowego admina"
 msgid "Admin"
 msgstr "Admin"
 
-#: www/admin.php:473 www/admin.php:522 www/admin.php:535 www/admin.php:601
-#: www/admin.php:625 www/admin.php:657 www/admin.php:681 www/admin.php:715
-#: www/admin.php:749 www/admin.php:779 www/admin.php:812 www/admin.php:844
-#: www/admin.php:878 www/admin.php:914 www/admin.php:962 www/admin.php:1007
+#: www/admin.php:473 www/admin.php:479 www/admin.php:519 www/admin.php:532
+#: www/admin.php:598 www/admin.php:622 www/admin.php:630 www/admin.php:654
+#: www/admin.php:678 www/admin.php:712 www/admin.php:718 www/admin.php:743
+#: www/admin.php:773 www/admin.php:806 www/admin.php:814 www/admin.php:838
+#: www/admin.php:872 www/admin.php:908 www/admin.php:916 www/admin.php:956
+#: www/admin.php:1001
 msgid "Active"
 msgstr "Aktywny"
 
-#: www/admin.php:474 www/admin.php:626 www/admin.php:716 www/admin.php:813
-#: www/admin.php:915
+#: www/admin.php:474 www/admin.php:623 www/admin.php:713 www/admin.php:807
+#: www/admin.php:909
 msgid "Last modified"
 msgstr "Ostatnio zmodyfikowany"
 
@@ -786,178 +810,194 @@ msgstr "Ostatnio zmodyfikowany"
 msgid "Edit account"
 msgstr "Edytuj konto"
 
-#: www/admin.php:483 www/admin.php:637 www/admin.php:725 www/admin.php:822
-#: www/admin.php:928
+#: www/admin.php:479 www/admin.php:628 www/admin.php:718 www/admin.php:812
+#, fuzzy
+#| msgid "Disable account"
+msgid "Disabled"
+msgstr "Wyłącz konto"
+
+#: www/admin.php:480 www/admin.php:634 www/admin.php:719 www/admin.php:816
+#: www/admin.php:922
 msgid "Edit"
 msgstr "Edytuj"
 
-#: www/admin.php:498
+#: www/admin.php:495
 #, php-format
 msgid "Edit admin account %s"
 msgstr "Edytuj konto admin %s"
 
-#: www/admin.php:516 www/admin.php:529 www/admin.php:597
+#: www/admin.php:513 www/admin.php:526 www/admin.php:594
 msgid "Superadmin"
 msgstr "Superadmin"
 
-#: www/admin.php:518 www/admin.php:530 www/admin.php:598
+#: www/admin.php:515 www/admin.php:527 www/admin.php:595
 msgid "Superadmins can manage other admins"
 msgstr "Superadmini mogą zarządzać innymi adminami"
 
-#: www/admin.php:539
+#: www/admin.php:536
 msgid "Managed domains"
 msgstr ""
 
-#: www/admin.php:559 www/admin.php:686 www/admin.php:784 www/admin.php:887
+#: www/admin.php:556 www/admin.php:683 www/admin.php:778 www/admin.php:881
 msgid "Save changes"
 msgstr "Zapisz zmiany"
 
-#: www/admin.php:565
+#: www/admin.php:562
 msgid "Delete admin"
 msgstr "Usuń admina"
 
-#: www/admin.php:572 www/admin.php:697
+#: www/admin.php:569 www/admin.php:694
 msgid "Oops, this admin doesn't seem to exist."
 msgstr ""
 
-#: www/admin.php:579
+#: www/admin.php:576
 msgid "Create new admin account"
 msgstr ""
 
-#: www/admin.php:605
+#: www/admin.php:602
 #, fuzzy
 msgid "Add admin"
 msgstr "Dodaj admina"
 
-#: www/admin.php:618 www/admin.php:641 www/admin.php:649
+#: www/admin.php:615 www/admin.php:638 www/admin.php:646
 msgid "Create new domain"
 msgstr ""
 
-#: www/admin.php:624 www/admin.php:653
+#: www/admin.php:621 www/admin.php:650
 msgid "Domain"
 msgstr "Domena"
 
-#: www/admin.php:627
+#: www/admin.php:624
 msgid "Edit domain"
 msgstr "Edytuj domenę"
 
-#: www/admin.php:661
+#: www/admin.php:632 www/admin.php:920
+#, fuzzy
+#| msgid "Delete admin"
+msgid "Deleting"
+msgstr "Usuń admina"
+
+#: www/admin.php:658
 msgid "Add domain"
 msgstr "Dodaj domenę"
 
-#: www/admin.php:675
+#: www/admin.php:672
 #, php-format
 msgid "Edit domain %s"
 msgstr "Edytuj domenę %s"
 
-#: www/admin.php:691
+#: www/admin.php:688
 msgid "Delete domain"
 msgstr "Usuń domenę"
 
-#: www/admin.php:707 www/admin.php:729 www/admin.php:737
+#: www/admin.php:704 www/admin.php:723 www/admin.php:731
 msgid "Create new alias domain"
 msgstr ""
 
-#: www/admin.php:713 www/admin.php:741
+#: www/admin.php:710 www/admin.php:735
 msgid "Alias Domain"
 msgstr ""
 
-#: www/admin.php:714 www/admin.php:745 www/admin.php:773
+#: www/admin.php:711 www/admin.php:739 www/admin.php:767
 msgid "Target Domain"
 msgstr ""
 
-#: www/admin.php:717
+#: www/admin.php:714
 msgid "Edit alias domain"
 msgstr ""
 
-#: www/admin.php:753
+#: www/admin.php:747
 msgid "Add alias domain"
 msgstr ""
 
-#: www/admin.php:767
+#: www/admin.php:761
 #, php-format
 msgid "Edit alias domain %s"
 msgstr ""
 
-#: www/admin.php:789
+#: www/admin.php:783
 msgid "Delete alias domain"
 msgstr ""
 
-#: www/admin.php:795
+#: www/admin.php:789
 msgid "Oops, this alias domain doesn't seem to exist."
 msgstr ""
 
-#: www/admin.php:805 www/admin.php:825 www/admin.php:832
+#: www/admin.php:799 www/admin.php:819 www/admin.php:826
 msgid "Create new alias"
 msgstr "Stwórz nowy alias"
 
-#: www/admin.php:810 www/admin.php:836
+#: www/admin.php:804 www/admin.php:830
 msgid "Alias"
 msgstr "Alias"
 
-#: www/admin.php:811 www/admin.php:840 www/admin.php:871
+#: www/admin.php:805 www/admin.php:834 www/admin.php:865
 msgid "Target"
 msgstr ""
 
-#: www/admin.php:814
+#: www/admin.php:808
 msgid "Edit alias"
 msgstr "Edytuj alias"
 
-#: www/admin.php:847 www/admin.php:883
+#: www/admin.php:841 www/admin.php:877
 msgid "Enforce encryption"
 msgstr ""
 
-#: www/admin.php:852
+#: www/admin.php:846
 msgid "Add alias"
 msgstr "Dodaj alias"
 
-#: www/admin.php:866
+#: www/admin.php:860
 #, php-format
 msgid "Edit alias %s"
 msgstr "Edytuj alias %s"
 
-#: www/admin.php:892
+#: www/admin.php:886
 msgid "Delete alias"
 msgstr "Usuń alias"
 
-#: www/admin.php:898
+#: www/admin.php:892
 msgid "Oops, this alias doesn't seem to exist."
 msgstr ""
 
-#: www/admin.php:908 www/admin.php:931 www/admin.php:938
+#: www/admin.php:902 www/admin.php:925 www/admin.php:932
 msgid "Create new mailbox"
 msgstr ""
 
-#: www/admin.php:916
+#: www/admin.php:910
 msgid "Edit mailbox"
 msgstr ""
 
-#: www/admin.php:974
+#: www/admin.php:918
+msgid "Disabling"
+msgstr ""
+
+#: www/admin.php:968
 msgid "Add mailbox"
 msgstr ""
 
-#: www/admin.php:990
+#: www/admin.php:984
 #, php-format
 msgid "Edit mailbox %s"
 msgstr ""
 
-#: www/admin.php:1022
+#: www/admin.php:1016
 msgid "Save mailbox"
 msgstr ""
 
-#: www/admin.php:1046
+#: www/admin.php:1040
 msgid "Delete mailbox / Disable two-factor authentication"
 msgstr ""
 
-#: www/admin.php:1052
+#: www/admin.php:1046
 msgid "Disable two-factor authentication"
 msgstr ""
 
-#: www/admin.php:1057
+#: www/admin.php:1051
 msgid "Delete mailbox"
 msgstr ""
 
-#: www/admin.php:1063
+#: www/admin.php:1057
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr ""
 
