@@ -95,12 +95,10 @@ if ( isset( $_POST[ 'user' ] ) ) {
 <p><a href="<?php echo ROOT_URL; ?>"><?php echo htmlspecialchars(_('Info')); ?></a> | <?php echo htmlspecialchars(_('Register')); ?> | <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo htmlspecialchars(_('Manage account')); ?></a> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo htmlspecialchars(_('SquirrelMail')); ?></a>  | <a href="<?php echo ROOT_URL; ?>snappymail/" target="_blank"><?php echo htmlspecialchars(_('SnappyMail')); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars(_('Web-XMPP')); ?></a>
 </p>
 <?php echo "<p>$msg</p>"; ?>
-<form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token"
-                                                                    value="<?php echo $_SESSION[ 'csrf_token' ] ?>">
+<form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ] ?>">
     <div class="row">
         <div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
-        <div class="col"><input type="text" name="user" id="user" autocomplete="username" required
-                                value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
+        <div class="col"><input type="text" name="user" id="user" autocomplete="username" required value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
     </div>
     <div class="row">
         <div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
@@ -111,9 +109,12 @@ if ( isset( $_POST[ 'user' ] ) ) {
         <div class="col"><input type="password" name="pwd2" id="pwd2" autocomplete="new-password" required></div>
     </div>
     <div class="row">
-        <div class="col"><label for="accept_privacy"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.PRIVACY_POLICY_URL.'" target="_blank">'.htmlspecialchars(_('Privacy Policy')).'</a>'); ?></label>
-        </div>
+        <div class="col"><label for="accept_privacy"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.PRIVACY_POLICY_URL.'" target="_blank">'.htmlspecialchars(_('Privacy Policy')).'</a>'); ?></label></div>
         <div class="col"><input type="checkbox" id="accept_privacy" name="accept_privacy" required></div>
+    </div>
+	<div class="row">
+        <div class="col"><label for="accept_terms"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.ROOT_URL.'terms.php" target="_blank">'.htmlspecialchars(_('Terms of Service')).'</a>'); ?></label></div>
+        <div class="col"><input type="checkbox" id="accept_terms" name="accept_terms" required></div>
     </div>
 	<?php send_captcha(); ?>
     <div class="row">
