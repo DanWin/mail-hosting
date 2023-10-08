@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-08 21:46+0200\n"
-"PO-Revision-Date: 2023-09-15 23:44+0000\n"
+"PO-Revision-Date: 2023-10-08 20:29+0000\n"
 "Last-Translator: Weblate Admin <daniel@danwin1210.de>\n"
-"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/mail-"
-"hosting/de/>\n"
+"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/de/>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -91,14 +91,12 @@ msgid "Error setting up database:"
 msgstr "Fehler beim Erstellen der Datenbank:"
 
 #: www/terms.php:6 www/terms.php:15 www/terms.php:19
-#, fuzzy
-#| msgid "E-Mail and XMPP - Register"
 msgid "E-Mail and XMPP - Terms of Service"
-msgstr "E-Mail und XMPP - Registreiren"
+msgstr "E-Mail und XMPP - Nutzungsbedingungen"
 
 #: www/terms.php:10 www/terms.php:16 www/terms.php:19
 msgid "Terms of Service for E-Mail and XMPP accounts"
-msgstr ""
+msgstr "Nutzungsbedingungen für E-Mail und XMPP Konten"
 
 #: www/terms.php:22 www/register.php:95 www/index.php:22
 #: www/manage_account.php:237
@@ -133,21 +131,26 @@ msgstr "Web-XMPP"
 #: www/terms.php:24
 msgid "I provide this service as is. I do not offer any uptime guarantee."
 msgstr ""
+"Ich stelle diesen Dienst wie er ist bereit. Ich biete keine garantierte "
+"Verfügbarkeit an."
 
 #: www/terms.php:25
 msgid ""
 "Inactive accounts get automatically deleted after one year of inactivity."
 msgstr ""
+"Inaktive Konten werden nach einem Jahr der Inaktivität automatisch gelöscht."
 
 #: www/terms.php:26
 msgid "Spamming is not allowed, and you will be blocked if you do."
-msgstr ""
+msgstr "Spamming ist nicht erlaubt, und du wirst blockiert, wenn du es tust."
 
 #: www/terms.php:27
 msgid ""
 "Using your account for illegal purposes is not allowed, and you will be "
 "blocked if you do."
 msgstr ""
+"Die Nutzung deines Kontos für illegale Zwecke ist nicht erlaubt und du wirst "
+"gesperrt, wenn du es tust."
 
 #: www/terms.php:28
 msgid ""
@@ -155,10 +158,14 @@ msgid ""
 "ownership of the account. You could do so by signing an email with the same "
 "PGP key that you use in your account."
 msgstr ""
+"Wenn du dein Passwort verlierst, werde ich es nicht zurücksetzen, es sei "
+"denn, du kannst beweisen, dass das Konto dir gehört. Du könntest dies tun, "
+"indem du eine E-Mail mit dem gleichen PGP-Schlüssel signierst, den du in "
+"Ihrem Konto verwendest."
 
 #: www/terms.php:29
 msgid "You are responsible for the security of your account and password."
-msgstr ""
+msgstr "Du bist für die Sicherheit deines Kontos und Passworts verantwortlich."
 
 #: www/terms.php:30
 #, php-format
@@ -166,6 +173,8 @@ msgid ""
 "Your email account only has 50MB of disk space by default. If you need more, "
 "you can %s, and I will increase it for free."
 msgstr ""
+"Dein E-Mail-Konto hat standardmäßig nur 50MB Speicherplatz. Wenn du mehr "
+"benötigst, kannst du %s, und ich werde es kostenlos erhöhen."
 
 #: www/terms.php:30 www/index.php:25
 msgid "contact me"
@@ -177,15 +186,22 @@ msgid ""
 "your messages and files for up to 1 week. Up to 100MB of file storage is "
 "available per user."
 msgstr ""
+"Der XMPP-Service bietet eine Nachrichtenarchivierung und HTTP-Upload, die "
+"deine Nachrichten und Dateien für bis zu 1 Woche halten können. Bis zu 100 "
+"MB Dateispeicher ist pro Benutzer verfügbar."
 
 #: www/terms.php:32
 msgid ""
 "I reserve the right to block or delete your account without prior notice."
 msgstr ""
+"Ich behalte das Recht vor, dein Konto ohne vorherige Ankündigung zu "
+"blockieren oder zu löschen."
 
 #: www/terms.php:33
 msgid "I reserve the right to change these terms without prior notice."
 msgstr ""
+"Ich behalte das Recht vor, diese Bedingungen ohne vorherige Ankündigung zu "
+"ändern."
 
 #: www/register.php:18
 msgid "Invalid CSRF token"
@@ -262,7 +278,7 @@ msgstr "Datenschutzerklärung"
 
 #: www/register.php:116
 msgid "Terms of Service"
-msgstr ""
+msgstr "Nutzungsbedingungen"
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
 msgid "E-Mail and XMPP"
@@ -334,6 +350,19 @@ msgid ""
 "executing JavaScript in your browser. Alternatively, you can simply use your "
 "favourite desktop mail client and configure it with the settings given below."
 msgstr ""
+"Du kannst zwischen zwei auf dem Server installierten Web-Mail-Clients "
+"wählen. %1$s ist ein sehr alter Mail-Client, der ohne JavaScript "
+"funktioniert und damit der beliebteste Mail-Client unter den Darknet-"
+"Benutzern ist. Allerdings wird dieser seit vielen Jahren nicht mehr "
+"weiterentwickelt und unterstützt nicht alle Funktionen, die Mail zu bieten "
+"hat. Du könntest seltsame Anhänge sehen, die in deiner E-Mail angezeigt "
+"werden sollten, wie PGP/MIME verschlüsselte E-Mail-Nachrichten. Ein moderner "
+"Client ist %2$s, der auch die PGP-Verschlüsselung in deinem Browser "
+"unterstützt und ähnlicher zu dem ist, was du von anderen E-Mail Providern "
+"gewohnt bist. SnappyMail erfordert allerdings JavaScript, deshalb ist "
+"SquirrelMail für dich, wenn du nicht JavaScript in Ihrem Browser nicht "
+"vertraust. Alternativ kannst du einfach deinen Lieblings Desktop Mail-Client "
+"verwenden und mit den unten angegebenen Einstellungen konfigurieren."
 
 #: www/index.php:28
 msgid "E-Mail Setup"
