@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 20:05+0200\n"
+"POT-Creation-Date: 2023-10-08 21:46+0200\n"
 "PO-Revision-Date: 2023-08-14 07:26+0000\n"
 "Last-Translator: Goatli <goatli@porcod.io>\n"
 "Language-Team: Russian <https://weblate.danwin1210.de/projects/DanWin/mail-"
@@ -85,6 +85,103 @@ msgstr ""
 msgid "Error setting up database:"
 msgstr ""
 
+#: www/terms.php:6 www/terms.php:15 www/terms.php:19
+#, fuzzy
+#| msgid "E-Mail and XMPP - Register"
+msgid "E-Mail and XMPP - Terms of Service"
+msgstr "Регистрация аккаунта"
+
+#: www/terms.php:10 www/terms.php:16 www/terms.php:19
+msgid "Terms of Service for E-Mail and XMPP accounts"
+msgstr ""
+
+#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/manage_account.php:237
+msgid "Info"
+msgstr "Инфо"
+
+#: www/terms.php:22 www/register.php:95 www/register.php:122 www/index.php:22
+#: www/manage_account.php:241
+msgid "Register"
+msgstr "Регистрация"
+
+#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/manage_account.php:247
+msgid "Manage account"
+msgstr "Настройки учетной записи"
+
+#: www/terms.php:22 www/register.php:95 www/index.php:22 www/index.php:27
+#: www/manage_account.php:248
+msgid "SquirrelMail"
+msgstr ""
+
+#: www/terms.php:22 www/register.php:95 www/index.php:22 www/index.php:27
+#: www/manage_account.php:248
+msgid "SnappyMail"
+msgstr ""
+
+#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/manage_account.php:248
+msgid "Web-XMPP"
+msgstr ""
+
+#: www/terms.php:24
+msgid "I provide this service as is. I do not offer any uptime guarantee."
+msgstr ""
+
+#: www/terms.php:25
+msgid ""
+"Inactive accounts get automatically deleted after one year of inactivity."
+msgstr ""
+
+#: www/terms.php:26
+msgid "Spamming is not allowed, and you will be blocked if you do."
+msgstr ""
+
+#: www/terms.php:27
+msgid ""
+"Using your account for illegal purposes is not allowed, and you will be "
+"blocked if you do."
+msgstr ""
+
+#: www/terms.php:28
+msgid ""
+"If you lose your password, I will not reset it unless you can prove "
+"ownership of the account. You could do so by signing an email with the same "
+"PGP key that you use in your account."
+msgstr ""
+
+#: www/terms.php:29
+msgid "You are responsible for the security of your account and password."
+msgstr ""
+
+#: www/terms.php:30
+#, php-format
+msgid ""
+"Your email account only has 50MB of disk space by default. If you need more, "
+"you can %s, and I will increase it for free."
+msgstr ""
+
+#: www/terms.php:30 www/index.php:25
+msgid "contact me"
+msgstr ""
+
+#: www/terms.php:31
+msgid ""
+"The XMPP service provides message archiving and HTTP upload, which can keep "
+"your messages and files for up to 1 week. Up to 100MB of file storage is "
+"available per user."
+msgstr ""
+
+#: www/terms.php:32
+msgid ""
+"I reserve the right to block or delete your account without prior notice."
+msgstr ""
+
+#: www/terms.php:33
+msgid "I reserve the right to change these terms without prior notice."
+msgstr ""
+
 #: www/register.php:18
 msgid "Invalid CSRF token"
 msgstr ""
@@ -131,56 +228,33 @@ msgid ""
 "Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
 msgstr ""
 
-#: www/register.php:95 www/index.php:22 www/manage_account.php:237
-msgid "Info"
-msgstr "Инфо"
-
-#: www/register.php:95 www/register.php:121 www/index.php:22
-#: www/manage_account.php:241
-msgid "Register"
-msgstr "Регистрация"
-
-#: www/register.php:95 www/index.php:22 www/manage_account.php:247
-msgid "Manage account"
-msgstr "Настройки учетной записи"
-
-#: www/register.php:95 www/index.php:22 www/index.php:27
-#: www/manage_account.php:248
-msgid "SquirrelMail"
-msgstr ""
-
-#: www/register.php:95 www/index.php:22 www/index.php:27
-#: www/manage_account.php:248
-msgid "SnappyMail"
-msgstr ""
-
-#: www/register.php:95 www/index.php:22 www/manage_account.php:248
-msgid "Web-XMPP"
-msgstr ""
-
-#: www/register.php:101 www/manage_account.php:255 www/admin.php:407
+#: www/register.php:100 www/manage_account.php:255 www/admin.php:407
 #: www/admin.php:580 www/admin.php:907 www/admin.php:936
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: www/register.php:106 www/manage_account.php:260 www/manage_account.php:323
+#: www/register.php:104 www/manage_account.php:260 www/manage_account.php:323
 #: www/admin.php:411 www/admin.php:501 www/admin.php:584 www/admin.php:940
 #: www/admin.php:1025
 msgid "Password"
 msgstr "Пароль"
 
-#: www/register.php:110 www/manage_account.php:328 www/admin.php:506
+#: www/register.php:108 www/manage_account.php:328 www/admin.php:506
 #: www/admin.php:589 www/admin.php:944 www/admin.php:1030
 msgid "Password again"
 msgstr "Повторите пароль"
 
-#: www/register.php:114
+#: www/register.php:112 www/register.php:116
 #, php-format
 msgid "I have read and agreed to the %s"
 msgstr ""
 
-#: www/register.php:114
+#: www/register.php:112
 msgid "Privacy Policy"
+msgstr ""
+
+#: www/register.php:116
+msgid "Terms of Service"
 msgstr ""
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
@@ -222,10 +296,6 @@ msgstr ""
 "понадобится больше места, пожалуйста <a href=\"%1$s\">свяжитесь со мной</a>. "
 "Ваш домен E-Mail будет выглядеть как %2$s"
 
-#: www/index.php:25
-msgid "contact me"
-msgstr ""
-
 #: www/index.php:26
 #, php-format
 msgid ""
@@ -260,36 +330,29 @@ msgid ""
 msgstr ""
 
 #: www/index.php:28
-msgid ""
-"The XMPP service provides message archiving and HTTP upload, which can keep "
-"your messages and files for up to 1 week. Up to 100MB of file storage is "
-"available per user."
-msgstr ""
-
-#: www/index.php:29
 msgid "E-Mail Setup"
 msgstr "Настройки E-Mail"
 
-#: www/index.php:31
+#: www/index.php:30
 #, php-format
 msgid "SMTP: %s Port 465 (SSL/TLS) or 587 (StartTLS)"
 msgstr "SMTP: %s Port 465 (SSL/TLS) или 587 (StartTLS)"
 
-#: www/index.php:32
+#: www/index.php:31
 #, php-format
 msgid "IMAP: %s Port 993 (SSL/TLS) or 143 (StartTLS)"
 msgstr "IMAP: %s Port 993 (SSL/TLS) или 143 (StartTLS)"
 
-#: www/index.php:33
+#: www/index.php:32
 #, php-format
 msgid "POP3: %s Port 995 (SSL/TLS) or 110 (StartTLS)"
 msgstr "POP3: %s Port 995 (SSL/TLS) или 110 (StartTLS)"
 
-#: www/index.php:34
+#: www/index.php:33
 msgid "Authentication: PLAIN, LOGIN"
 msgstr "Аутентификация: ОБЫЧНАЯ, ЛОГИН"
 
-#: www/index.php:36
+#: www/index.php:35
 #, php-format
 msgid ""
 "You can also connect on the same ports via the Tor onion address %s, but you "
@@ -299,26 +362,26 @@ msgstr ""
 "необходимо будет принять SSL-сертификат как для обычного интернета "
 "(clearnet)."
 
-#: www/index.php:37
+#: www/index.php:36
 msgid "XMPP setup"
 msgstr "Настройки XMPP"
 
-#: www/index.php:38
+#: www/index.php:37
 #, php-format
 msgid "Domain: %s"
 msgstr "Домен: %s"
 
-#: www/index.php:39
+#: www/index.php:38
 #, php-format
 msgid "Connect server: %s (optional for torification)"
 msgstr ""
 
-#: www/index.php:40
+#: www/index.php:39
 #, php-format
 msgid "File transfer proxy: %s"
 msgstr ""
 
-#: www/index.php:41
+#: www/index.php:40
 #, php-format
 msgid ""
 "BOSH URL: %s (only enable if you have to, as it is slower than directly "
