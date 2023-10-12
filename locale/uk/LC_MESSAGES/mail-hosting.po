@@ -8,13 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-08 21:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-10-12 22:51+0000\n"
+"Last-Translator: Анонім <g2014test@yandex.com>\n"
+"Language-Team: Ukrainian <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -22,24 +26,28 @@ msgid ""
 "%s does not seem to have any accounts, but has a directory. Consider "
 "deleting it."
 msgstr ""
+"Здається, у %s немає облікових записів, але є каталог. Подумайте про те, щоб "
+"видалити його."
 
 #: tools/delete_leftover_files.php:20
 #, php-format
 msgid "Deleted: %s"
-msgstr ""
+msgstr "Видалено: %s"
 
 #: tools/delete_leftover_files.php:22
 #, php-format
 msgid "File found in mail directory location: \"%s\". Consider deleting it."
 msgstr ""
+"Файл знайдено в поштовому каталозі за адресою: \"%s\". Подумайте про те, щоб "
+"видалити його."
 
 #: common_config.php:91 setup.php:20 setup.php:23 cron.php:11
 msgid "No Connection to MySQL database!"
-msgstr ""
+msgstr "Немає підключення до бази даних MySQL!"
 
 #: common_config.php:140
 msgid "Copy:"
-msgstr ""
+msgstr "Перепишіть:"
 
 #: common_config.php:259
 #, php-format
@@ -47,62 +55,64 @@ msgid ""
 "Oops, the email \"%s\" doesn' look like a valid email address and thus "
 "wasn't added to the forwarding list."
 msgstr ""
+"На жаль, «%s» не схоже на дійсну адресу електронної пошти і, отже, не було "
+"додане до списку переадресації."
 
 #: common_config.php:285
 msgid "You are not allowed to manage this domain."
-msgstr ""
+msgstr "Вам заборонено керувати цим доменом."
 
 #: common_config.php:296
 msgid "Invalid email address."
-msgstr ""
+msgstr "Неправильна адреса електронної пошти."
 
 #: setup.php:8
 #, php-format
 msgid "The %s extension of PHP is required. Please install it first."
-msgstr ""
+msgstr "Потрібне розширення %s для PHP. Будь ласка, спочатку встановіть його."
 
 #: setup.php:35
 msgid "Database has successfully been updated."
-msgstr ""
+msgstr "База даних успішно оновлена."
 
 #: setup.php:37
 msgid "Database is already up-to-date."
-msgstr ""
+msgstr "База даних вже оновлена."
 
 #: setup.php:40
 msgid "Error updating database:"
-msgstr ""
+msgstr "Помилка оновлення бази даних:"
 
 #: setup.php:57
 msgid "Database has successfully been set up."
-msgstr ""
+msgstr "База даних успішно налаштована."
 
 #: setup.php:59
 msgid "Error setting up database:"
-msgstr ""
+msgstr "Помилка під час налаштування бази даних:"
 
 #: www/terms.php:6 www/terms.php:15 www/terms.php:19
 msgid "E-Mail and XMPP - Terms of Service"
-msgstr ""
+msgstr "E-Mail і XMPP – Умови надання послуг"
 
 #: www/terms.php:10 www/terms.php:16 www/terms.php:19
 msgid "Terms of Service for E-Mail and XMPP accounts"
-msgstr ""
+msgstr "Умови надання послуг для облікових записів електронної пошти та XMPP"
 
 #: www/terms.php:22 www/register.php:95 www/index.php:22
 #: www/manage_account.php:237
 msgid "Info"
-msgstr ""
+msgstr "Інфо"
 
 #: www/terms.php:22 www/register.php:95 www/register.php:122 www/index.php:22
 #: www/manage_account.php:241
 msgid "Register"
-msgstr ""
+msgstr "Реєстрація"
 
 #: www/terms.php:22 www/register.php:95 www/index.php:22
 #: www/manage_account.php:247
 msgid "Manage account"
-msgstr ""
+msgstr "Управління обліковим записом"
 
 #: www/terms.php:22 www/register.php:95 www/index.php:22 www/index.php:27
 #: www/manage_account.php:248
@@ -121,22 +131,26 @@ msgstr ""
 
 #: www/terms.php:24
 msgid "I provide this service as is. I do not offer any uptime guarantee."
-msgstr ""
+msgstr "Я надаю цю послугу як є. Я не даю жодних гарантій безвідмовної роботи."
 
 #: www/terms.php:25
 msgid ""
 "Inactive accounts get automatically deleted after one year of inactivity."
 msgstr ""
+"Неактивні облікові записи автоматично видаляються після одного року "
+"бездіяльності."
 
 #: www/terms.php:26
 msgid "Spamming is not allowed, and you will be blocked if you do."
-msgstr ""
+msgstr "Розсилання спаму заборонене, і Ви будете заблоковані, якщо це зробите."
 
 #: www/terms.php:27
 msgid ""
 "Using your account for illegal purposes is not allowed, and you will be "
 "blocked if you do."
 msgstr ""
+"Використання облікового запису в незаконних цілях заборонене, і в цьому "
+"випадку Ви будете заблоковані."
 
 #: www/terms.php:28
 msgid ""
@@ -144,10 +158,15 @@ msgid ""
 "ownership of the account. You could do so by signing an email with the same "
 "PGP key that you use in your account."
 msgstr ""
+"Якщо Ви втратите свій пароль, я не буду його скидати, поки Ви не зможете "
+"довести право власності на обліковий запис. Ви можете зробити це, підписавши "
+"електронний лист тим самим ключем PGP, який Ви використовуєте у своєму "
+"обліковому записі."
 
 #: www/terms.php:29
 msgid "You are responsible for the security of your account and password."
 msgstr ""
+"Ви несете відповідальність за безпеку свого облікового запису та пароля."
 
 #: www/terms.php:30
 #, php-format
@@ -155,10 +174,13 @@ msgid ""
 "Your email account only has 50MB of disk space by default. If you need more, "
 "you can %s, and I will increase it for free."
 msgstr ""
+"За замовчуванням в обліковому записі електронної пошти доступно лише 50 МБ "
+"дискового простору. Якщо Вам потрібно більше, Ви можете %s, і я збільшу його "
+"безкоштовно."
 
 #: www/terms.php:30 www/index.php:25
 msgid "contact me"
-msgstr ""
+msgstr "зв'язатися зі мною"
 
 #: www/terms.php:31
 msgid ""
@@ -166,102 +188,110 @@ msgid ""
 "your messages and files for up to 1 week. Up to 100MB of file storage is "
 "available per user."
 msgstr ""
+"Служба XMPP забезпечує архівування повідомлень і завантаження по протоколу "
+"HTTP, що дозволяє зберігати Ваші повідомлення і файли до 1 тижня. Кожному "
+"користувачу доступно до 100 МБ файлового сховища."
 
 #: www/terms.php:32
 msgid ""
 "I reserve the right to block or delete your account without prior notice."
 msgstr ""
+"Я залишаю за собою право заблокувати або видалити Ваш обліковий запис без "
+"попереднього повідомлення."
 
 #: www/terms.php:33
 msgid "I reserve the right to change these terms without prior notice."
 msgstr ""
+"Я залишаю за собою право змінювати ці умови без попереднього повідомлення."
 
 #: www/register.php:18
 msgid "Invalid CSRF token"
-msgstr ""
+msgstr "Недійсний CSRF-токен"
 
 #: www/register.php:22 www/manage_account.php:43
 msgid "Invalid captcha"
-msgstr ""
+msgstr "Неправильна капча"
 
 #: www/register.php:27
 msgid "Invalid username. It may not contain a +, ', \" or /."
-msgstr ""
+msgstr "Неправильне ім'я користувача. Воно може не містити +, ', \" або /."
 
 #: www/register.php:33 www/manage_account.php:100 www/admin.php:175
 #: www/admin.php:343
 msgid "Passwords empty or don't match"
-msgstr ""
+msgstr "Паролі порожні або не збігаються"
 
 #: www/register.php:44
 msgid "The domain you specified is not allowed"
-msgstr ""
+msgstr "Вказаний Вами домен не дозволений"
 
 #: www/register.php:49
 msgid "The email address you specified is not valid"
-msgstr ""
+msgstr "Вказана Вами адреса електронної пошти неправильна"
 
 #: www/register.php:52
 msgid "The username you specified is reserved"
-msgstr ""
+msgstr "Вказане Вами ім'я користувача зарезервовано"
 
 #: www/register.php:62 www/admin.php:311
 msgid "Sorry, this user already exists"
-msgstr ""
+msgstr "Вибачте, такий користувач вже існує"
 
 #: www/register.php:70 www/admin.php:333
 msgid "Successfully created new mailbox!"
-msgstr ""
+msgstr "Нову поштову скриньку успішно створено!"
 
 #: www/register.php:78 www/register.php:87 www/register.php:91
 msgid "E-Mail and XMPP - Register"
-msgstr ""
+msgstr "E-mail та XMPP – Реєстрація"
 
 #: www/register.php:82 www/register.php:88 www/register.php:91
 msgid ""
 "Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
 msgstr ""
+"Зареєструйтесь для отримання безплатної та анонімної електронної пошти та "
+"XMPP/Jabber"
 
 #: www/register.php:100 www/manage_account.php:255 www/admin.php:407
 #: www/admin.php:580 www/admin.php:907 www/admin.php:936
 msgid "Username"
-msgstr ""
+msgstr "Ім'я користувача"
 
 #: www/register.php:104 www/manage_account.php:260 www/manage_account.php:323
 #: www/admin.php:411 www/admin.php:501 www/admin.php:584 www/admin.php:940
 #: www/admin.php:1025
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: www/register.php:108 www/manage_account.php:328 www/admin.php:506
 #: www/admin.php:589 www/admin.php:944 www/admin.php:1030
 msgid "Password again"
-msgstr ""
+msgstr "Повторіть пароль"
 
 #: www/register.php:112 www/register.php:116
 #, php-format
 msgid "I have read and agreed to the %s"
-msgstr ""
+msgstr "Я прочитав і погоджуюсь із %s"
 
 #: www/register.php:112
 msgid "Privacy Policy"
-msgstr ""
+msgstr "політикою конфіденційності"
 
 #: www/register.php:116
 msgid "Terms of Service"
-msgstr ""
+msgstr "умовами використання"
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
 msgid "E-Mail and XMPP"
-msgstr ""
+msgstr "E-mail + XMPP"
 
 #: www/index.php:10 www/index.php:16 www/index.php:19
 msgid "Get a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr ""
+msgstr "Отримайте безплатну та анонімну електронну пошту та XMPP/Jabber"
 
 #: www/index.php:23
 msgid "What you will get"
-msgstr ""
+msgstr "Що Ви отримаєте"
 
 #: www/index.php:24
 #, php-format
@@ -270,6 +300,10 @@ msgid ""
 "same details. Your Jabber ID is user@%1$s and can be connected to directly "
 "from clearnet or via Tor hidden service (%2$s)."
 msgstr ""
+"Ви отримаєте безкоштовну анонімну електронну адресу та акаунт XMPP/Jabber, "
+"використовуючи ті самі дані. Ваш ідентифікатор Jabber – user@%1$s, і до "
+"нього можна підключитися безпосередньо з clearnet або через приховану службу "
+"Tor (%2$s)."
 
 #: www/index.php:25
 #, php-format
@@ -277,6 +311,8 @@ msgid ""
 "You will have 50MB of disk space available for your mails. If you need more "
 "space, %1$s. Your E-Mail address will be %2$s"
 msgstr ""
+"Вам буде доступно 50 МБ дискового простору для Ваших листів. Якщо Вам "
+"потрібно більше місця, %1$s. Ваша електронна адреса буде на @%2$s"
 
 #: www/index.php:26
 #, php-format
@@ -286,14 +322,19 @@ msgid ""
 "similar software for it. Once you have generated your PGP key, you can %2$s "
 "to make use of WKD automatic discovery for mail clients."
 msgstr ""
+"Щоб захистити вашу конфіденційність, будь ласка, використовуйте шифрування "
+"пошти PGP, якщо можете. Це заважає іншим користувачам читати Ваші електронні "
+"листи. Ви можете %1$s або подібне програмне забезпечення для цього. Після "
+"створення ключа PGP Ви можете %2$s, щоб використовувати автоматичне "
+"виявлення WKD для поштових клієнтів."
 
 #: www/index.php:26
 msgid "download GnuPG"
-msgstr ""
+msgstr "завантажити GnuPG"
 
 #: www/index.php:26
 msgid "add it to your account"
-msgstr ""
+msgstr "додати його до свого облікового запису"
 
 #: www/index.php:27
 #, php-format
