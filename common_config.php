@@ -34,6 +34,7 @@ const LANGUAGES = [
 	'pl' => ['name' => 'Polski', 'locale' => 'pl_PL', 'flag' => '🇵🇱', 'show_in_menu' => true, 'dir' => 'ltr'],
 	'ru' => ['name' => 'Русский', 'locale' => 'ru_RU', 'flag' => '🇷🇺', 'show_in_menu' => true, 'dir' => 'ltr'],
 	'tr' => ['name' => 'Türkçe', 'locale' => 'tr_TR', 'flag' => '🇹🇷', 'show_in_menu' => true, 'dir' => 'ltr'],
+	'uk' => ['name' => 'Українська', 'locale' => 'uk_UA', 'flag' => '🇺🇦', 'show_in_menu' => true, 'dir' => 'ltr'],
 ];
 $language = 'en';
 $locale = 'en_GB';
