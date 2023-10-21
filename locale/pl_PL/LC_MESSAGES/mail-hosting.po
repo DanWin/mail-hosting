@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-08 21:46+0200\n"
+"POT-Creation-Date: 2023-10-21 11:56+0200\n"
 "PO-Revision-Date: 2023-05-01 02:04+0000\n"
 "Last-Translator: big cat <biggiecat@danwin1210.de>\n"
 "Language-Team: Polish <https://weblate.danwin1210.de/projects/DanWin/mail-"
@@ -37,26 +37,26 @@ msgstr "Usunięto: %s"
 msgid "File found in mail directory location: \"%s\". Consider deleting it."
 msgstr ""
 
-#: common_config.php:91 setup.php:20 setup.php:23 cron.php:11
+#: common_config.php:93 setup.php:20 setup.php:23 cron.php:11
 msgid "No Connection to MySQL database!"
 msgstr "Brak połączenia z bazą MySQL!"
 
-#: common_config.php:140
+#: common_config.php:142
 msgid "Copy:"
 msgstr "Kopiuj:"
 
-#: common_config.php:259
+#: common_config.php:261
 #, php-format
 msgid ""
 "Oops, the email \"%s\" doesn' look like a valid email address and thus "
 "wasn't added to the forwarding list."
 msgstr ""
 
-#: common_config.php:285
+#: common_config.php:287
 msgid "You are not allowed to manage this domain."
 msgstr ""
 
-#: common_config.php:296
+#: common_config.php:298
 #, fuzzy
 #| msgid "Invalid email address."
 msgid "Invalid email address."
@@ -97,32 +97,32 @@ msgstr "E-Mail i XMPP - Zarejestruj się"
 msgid "Terms of Service for E-Mail and XMPP accounts"
 msgstr ""
 
-#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/terms.php:22 www/register.php:99 www/index.php:22
 #: www/manage_account.php:237
 msgid "Info"
 msgstr "Info"
 
-#: www/terms.php:22 www/register.php:95 www/register.php:122 www/index.php:22
+#: www/terms.php:22 www/register.php:99 www/register.php:130 www/index.php:22
 #: www/manage_account.php:241
 msgid "Register"
 msgstr "Zarejestruj się"
 
-#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/terms.php:22 www/register.php:99 www/index.php:22
 #: www/manage_account.php:247
 msgid "Manage account"
 msgstr "Zarządzaj kontem"
 
-#: www/terms.php:22 www/register.php:95 www/index.php:22 www/index.php:27
+#: www/terms.php:22 www/register.php:99 www/index.php:22 www/index.php:27
 #: www/manage_account.php:248
 msgid "SquirrelMail"
 msgstr ""
 
-#: www/terms.php:22 www/register.php:95 www/index.php:22 www/index.php:27
+#: www/terms.php:22 www/register.php:99 www/index.php:22 www/index.php:27
 #: www/manage_account.php:248
 msgid "SnappyMail"
 msgstr ""
 
-#: www/terms.php:22 www/register.php:95 www/index.php:22
+#: www/terms.php:22 www/register.php:99 www/index.php:22
 #: www/manage_account.php:248
 msgid "Web-XMPP"
 msgstr "Web-XMPP"
@@ -147,116 +147,136 @@ msgid ""
 msgstr ""
 
 #: www/terms.php:28
+msgid "Mass mailing is not allowed, and you will be blocked if you do."
+msgstr ""
+
+#: www/terms.php:29
+msgid ""
+"Please refrain from sending threats of violence or any harmful content. "
+"Dealing with law enforcement requests related to such incidents consumes a "
+"significant amount of time."
+msgstr ""
+
+#: www/terms.php:30
 msgid ""
 "If you lose your password, I will not reset it unless you can prove "
 "ownership of the account. You could do so by signing an email with the same "
 "PGP key that you use in your account."
 msgstr ""
 
-#: www/terms.php:29
+#: www/terms.php:31
 msgid "You are responsible for the security of your account and password."
 msgstr ""
 
-#: www/terms.php:30
+#: www/terms.php:32
 #, php-format
 msgid ""
 "Your email account only has 50MB of disk space by default. If you need more, "
 "you can %s, and I will increase it for free."
 msgstr ""
 
-#: www/terms.php:30 www/index.php:25
+#: www/terms.php:32 www/index.php:25
 msgid "contact me"
 msgstr ""
 
-#: www/terms.php:31
+#: www/terms.php:33
 msgid ""
 "The XMPP service provides message archiving and HTTP upload, which can keep "
 "your messages and files for up to 1 week. Up to 100MB of file storage is "
 "available per user."
 msgstr ""
 
-#: www/terms.php:32
+#: www/terms.php:34
 msgid ""
 "I reserve the right to block or delete your account without prior notice."
 msgstr ""
 
-#: www/terms.php:33
+#: www/terms.php:35
 msgid "I reserve the right to change these terms without prior notice."
 msgstr ""
 
-#: www/register.php:18
+#: www/terms.php:36
+msgid "Continued violations may necessitate the closure of registration."
+msgstr ""
+
+#: www/register.php:18 www/register.php:103
+#, php-format
+msgid "Registration is disabled due to too many violations of the %s"
+msgstr ""
+
+#: www/register.php:18 www/register.php:103 www/register.php:124
+msgid "Terms of Service"
+msgstr ""
+
+#: www/register.php:22
 msgid "Invalid CSRF token"
 msgstr "Nieprawidłowy token CSRF"
 
-#: www/register.php:22 www/manage_account.php:43
+#: www/register.php:26 www/manage_account.php:43
 msgid "Invalid captcha"
 msgstr "Nieprawidłowa captcha"
 
-#: www/register.php:27
+#: www/register.php:31
 msgid "Invalid username. It may not contain a +, ', \" or /."
 msgstr "Nieprawidłowa nazwa użytkownika. Nie może zawierać + , ' , \" lub /."
 
-#: www/register.php:33 www/manage_account.php:100 www/admin.php:175
+#: www/register.php:37 www/manage_account.php:100 www/admin.php:175
 #: www/admin.php:343
 msgid "Passwords empty or don't match"
 msgstr "Hasła puste albo nie są takie same"
 
-#: www/register.php:44
+#: www/register.php:48
 msgid "The domain you specified is not allowed"
 msgstr ""
 
-#: www/register.php:49
+#: www/register.php:53
 msgid "The email address you specified is not valid"
 msgstr ""
 
-#: www/register.php:52
+#: www/register.php:56
 msgid "The username you specified is reserved"
 msgstr ""
 
-#: www/register.php:62 www/admin.php:311
+#: www/register.php:66 www/admin.php:311
 msgid "Sorry, this user already exists"
 msgstr "Ten użytkownik już istnieje"
 
-#: www/register.php:70 www/admin.php:333
+#: www/register.php:74 www/admin.php:333
 msgid "Successfully created new mailbox!"
 msgstr ""
 
-#: www/register.php:78 www/register.php:87 www/register.php:91
+#: www/register.php:82 www/register.php:91 www/register.php:95
 msgid "E-Mail and XMPP - Register"
 msgstr "E-Mail i XMPP - Zarejestruj się"
 
-#: www/register.php:82 www/register.php:88 www/register.php:91
+#: www/register.php:86 www/register.php:92 www/register.php:95
 msgid ""
 "Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
 msgstr ""
 
-#: www/register.php:100 www/manage_account.php:255 www/admin.php:407
+#: www/register.php:108 www/manage_account.php:255 www/admin.php:407
 #: www/admin.php:580 www/admin.php:907 www/admin.php:936
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
-#: www/register.php:104 www/manage_account.php:260 www/manage_account.php:323
+#: www/register.php:112 www/manage_account.php:260 www/manage_account.php:323
 #: www/admin.php:411 www/admin.php:501 www/admin.php:584 www/admin.php:940
 #: www/admin.php:1025
 msgid "Password"
 msgstr "Hasło"
 
-#: www/register.php:108 www/manage_account.php:328 www/admin.php:506
+#: www/register.php:116 www/manage_account.php:328 www/admin.php:506
 #: www/admin.php:589 www/admin.php:944 www/admin.php:1030
 msgid "Password again"
 msgstr "Powtórz hasło"
 
-#: www/register.php:112 www/register.php:116
+#: www/register.php:120 www/register.php:124
 #, php-format
 msgid "I have read and agreed to the %s"
 msgstr ""
 
-#: www/register.php:112
+#: www/register.php:120
 msgid "Privacy Policy"
-msgstr ""
-
-#: www/register.php:116
-msgid "Terms of Service"
 msgstr ""
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
