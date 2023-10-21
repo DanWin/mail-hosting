@@ -13,6 +13,10 @@ if ( empty( $_SESSION[ 'csrf_token' ] ) || $_SESSION[ 'UA' ] !== $_SERVER[ 'HTTP
 $msg = '';
 if ( isset( $_POST[ 'user' ] ) ) {
 	$ok = true;
+	if( ! REGISTRATION_ENABLED ) {
+		$ok = false;
+		$msg .= '<div class="red" role="alert">'.sprintf(htmlspecialchars(_('Registration is disabled due to too many violations of the %s')), '<a href="'.ROOT_URL.'terms.php" target="_blank">'.htmlspecialchars(_('Terms of Service')).'</a>').'</div>';
+	}
 	if ( $_SESSION[ 'csrf_token' ] !== $_POST[ 'csrf_token' ] ?? '' ) {
 		$ok = false;
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid CSRF token')).'</div>';
@@ -94,35 +98,40 @@ if ( isset( $_POST[ 'user' ] ) ) {
 <main>
 <p><a href="<?php echo ROOT_URL; ?>"><?php echo htmlspecialchars(_('Info')); ?></a> | <?php echo htmlspecialchars(_('Register')); ?> | <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo htmlspecialchars(_('Manage account')); ?></a> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo htmlspecialchars(_('SquirrelMail')); ?></a>  | <a href="<?php echo ROOT_URL; ?>snappymail/" target="_blank"><?php echo htmlspecialchars(_('SnappyMail')); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars(_('Web-XMPP')); ?></a>
 </p>
-<?php echo "<p>$msg</p>"; ?>
-<form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ] ?>">
-    <div class="row">
-        <div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
-        <div class="col"><input type="text" name="user" id="user" autocomplete="username" required value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
-    </div>
-    <div class="row">
-        <div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
-        <div class="col"><input type="password" name="pwd" id="pwd" autocomplete="new-password" required></div>
-    </div>
-    <div class="row">
-        <div class="col"><label for="pwd2"><?php echo htmlspecialchars(_('Password again')); ?></label></div>
-        <div class="col"><input type="password" name="pwd2" id="pwd2" autocomplete="new-password" required></div>
-    </div>
-    <div class="row">
-        <div class="col"><label for="accept_privacy"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.PRIVACY_POLICY_URL.'" target="_blank">'.htmlspecialchars(_('Privacy Policy')).'</a>'); ?></label></div>
-        <div class="col"><input type="checkbox" id="accept_privacy" name="accept_privacy" required></div>
-    </div>
-	<div class="row">
-        <div class="col"><label for="accept_terms"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.ROOT_URL.'terms.php" target="_blank">'.htmlspecialchars(_('Terms of Service')).'</a>'); ?></label></div>
-        <div class="col"><input type="checkbox" id="accept_terms" name="accept_terms" required></div>
-    </div>
-	<?php send_captcha(); ?>
-    <div class="row">
-        <div class="col">
-            <button type="submit"><?php echo htmlspecialchars(_('Register')); ?></button>
-        </div>
-    </div>
-</form>
+<?php echo "<p>$msg</p>";
+if( ! REGISTRATION_ENABLED ) {
+	echo '<p>'.sprintf(htmlspecialchars(_('Registration is disabled due to too many violations of the %s')), '<a href="'.ROOT_URL.'terms.php" target="_blank">'.htmlspecialchars(_('Terms of Service')).'</a>').'</p>';
+} else {
+?>
+	<form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ] ?>">
+		<div class="row">
+			<div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
+			<div class="col"><input type="text" name="user" id="user" autocomplete="username" required value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
+		</div>
+		<div class="row">
+			<div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
+			<div class="col"><input type="password" name="pwd" id="pwd" autocomplete="new-password" required></div>
+		</div>
+		<div class="row">
+			<div class="col"><label for="pwd2"><?php echo htmlspecialchars(_('Password again')); ?></label></div>
+			<div class="col"><input type="password" name="pwd2" id="pwd2" autocomplete="new-password" required></div>
+		</div>
+		<div class="row">
+			<div class="col"><label for="accept_privacy"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.PRIVACY_POLICY_URL.'" target="_blank">'.htmlspecialchars(_('Privacy Policy')).'</a>'); ?></label></div>
+			<div class="col"><input type="checkbox" id="accept_privacy" name="accept_privacy" required></div>
+		</div>
+		<div class="row">
+			<div class="col"><label for="accept_terms"><?php printf(htmlspecialchars(_('I have read and agreed to the %s')), '<a href="'.ROOT_URL.'terms.php" target="_blank">'.htmlspecialchars(_('Terms of Service')).'</a>'); ?></label></div>
+			<div class="col"><input type="checkbox" id="accept_terms" name="accept_terms" required></div>
+		</div>
+		<?php send_captcha(); ?>
+		<div class="row">
+			<div class="col">
+				<button type="submit"><?php echo htmlspecialchars(_('Register')); ?></button>
+			</div>
+		</div>
+	</form>
+<?php } ?>
 </main>
 </body>
 </html>
