@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-21 11:56+0200\n"
-"PO-Revision-Date: 2023-02-13 20:20+0000\n"
-"Last-Translator: Zdeněk Grůza <me@zgruza.me>\n"
-"Language-Team: Czech <https://weblate.danwin1210.de/projects/DanWin/mail-"
-"hosting/cs/>\n"
+"PO-Revision-Date: 2023-11-21 23:40+0000\n"
+"Last-Translator: Dai Duong Le <daiduonglebusiness@gmail.com>\n"
+"Language-Team: Czech <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/cs/>\n"
 "Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15.2\n"
+"X-Generator: Weblate 5.2\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -95,8 +95,9 @@ msgid "E-Mail and XMPP - Terms of Service"
 msgstr "E-mail a XMPP - Registrace"
 
 #: www/terms.php:10 www/terms.php:16 www/terms.php:19
+#, fuzzy
 msgid "Terms of Service for E-Mail and XMPP accounts"
-msgstr ""
+msgstr "Smluvní podmínky pro E-Mail a XMPP účty"
 
 #: www/terms.php:22 www/register.php:99 www/index.php:22
 #: www/manage_account.php:237
