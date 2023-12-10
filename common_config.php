@@ -11,7 +11,7 @@ const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
 const DBVERSION = 1; // Database schema version
 const PERSISTENT = true; // persistent database connection
-const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 3
+const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 4
 const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsbubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can mot be used on public registration
 const CANONICAL_URL = 'https://danwin1210.de/mail/'; // our preferred URL prefix for search engines
 const PRIVACY_POLICY_URL = '/privacy.php'; // URL to privacy policy
@@ -162,6 +162,45 @@ function send_captcha(): void
 			imagesetpixel( $im, mt_rand( 0, 55 ), mt_rand( 0, 24 ), $dots );
 		}
 		echo '<img alt="" width="55" height="24" src="data:image/gif;base64,';
+	} elseif (CAPTCHA_DIFFICULTY === 3){
+		$im = imagecreatetruecolor(55, 24);
+		$bg = imagecolorallocatealpha($im, 0, 0, 0, 127);
+		$fg = imagecolorallocate($im, 255, 255, 255);
+		$cc = imagecolorallocate($im, 200, 200, 200);
+		$cb = imagecolorallocatealpha($im, 0, 0, 0, 127);
+		imagefill($im, 0, 0, $bg);
+		$line = imagecolorallocate($im, 255, 255, 255);
+		$deg = (mt_rand(0,1)*2-1)*mt_rand(10, 20);
+
+		$background = imagecreatetruecolor(120, 80);
+		imagefill($background, 0, 0, $cb);
+
+		for ($i=0; $i<20; ++$i) {
+			$char = imagecreatetruecolor(12, 16);
+			imagestring($char, 5, 2, 2, $captchachars[mt_rand(0, $length)], $cc);
+			$char = imagerotate($char, (mt_rand(0,1)*2-1)*mt_rand(10, 20), $cb);
+			$char = imagescale($char, 24, 32);
+			imagefilter($char, IMG_FILTER_SMOOTH, 0.6);
+			imagecopy($background, $char, rand(0, 100), rand(0, 60), 0, 0, 24, 32);
+		}
+
+		imagestring($im, 5, 5, 5, $code, $fg);
+		$im = imagescale($im, 110, 48);
+		imagefilter($im, IMG_FILTER_SMOOTH, 0.5);
+		imagefilter($im, IMG_FILTER_GAUSSIAN_BLUR);
+		$im = imagerotate($im, $deg, $bg);
+		$im = imagecrop($im, array('x'=>0, 'y'=>0, 'width'=>120, 'height'=>80));
+		imagecopy($background, $im, 0, 0, 0, 0, 110, 80);
+		imagedestroy($im);
+		$im = $background;
+
+		for($i=0; $i<1000; ++$i){
+			$c = mt_rand(100,230);
+			$dots = imagecolorallocate($im, $c, $c, $c);
+			imagesetpixel($im, mt_rand(0, 120), mt_rand(0, 80), $dots);
+		}
+		imagedestroy($char);
+		echo '<img width="120" height="80" src="data:image/png;base64,';
 	} else {
 		$im = imagecreatetruecolor( 150, 200 );
 		$bg = imagecolorallocate( $im, 0, 0, 0 );
