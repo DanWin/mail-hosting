@@ -32,7 +32,7 @@ rm -rf rspamd_build
 ldconfig
 
 # install composer
-curl -sSL https://github.com/composer/composer/releases/download/2.3.8/composer.phar > /usr/bin/composer
+curl -sSL https://github.com/composer/composer/releases/download/2.6.6/composer.phar > /usr/bin/composer
 chmod +x /usr/bin/composer
 composer self-update
 
