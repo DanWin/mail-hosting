@@ -298,7 +298,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_mailbox' && ! empty( $_POST[ 'user' ] ) ) {
-				$email = $_POST[ 'user' ];
+				$email = mb_strtolower( $_POST[ 'user' ] );
 				$ok = check_email_valid( $email, $msg );
 				if ( $ok ) {
 					$ok = check_domain_access( $email, $msg );
