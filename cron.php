@@ -32,6 +32,10 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		if ( file_exists( $mail_files ) ) {
 			exec( 'rm -r ' . escapeshellarg( $mail_files ) );
 		}
+		$snapmail_files = '/var/local/snappymail/_data_/_default_/storage/' . $domain_basename . '/' . $local_basename;
+		if ( file_exists( $snapmail_files ) ) {
+			exec( 'rm -r ' . escapeshellarg( $snapmail_files ) );
+		}
 		$files = glob( '/var/local/squirrelmail/data/' . $local_basename . '@' . $domain_basename . '.{pref,abook,sig}', GLOB_BRACE );
 		if ( $tmp[ 'domain' ] === 'danwin1210.de' ) {
 			$files = array_merge( $files, glob( '/var/local/squirrelmail/data/' . $local_basename . '{@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion,}.{pref,abook,sig}', GLOB_BRACE ) );
@@ -65,6 +69,10 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$mail_files = '/var/mail/vmail/' . $domain_basename . '/';
 		if ( file_exists( $mail_files ) ) {
 			exec( 'rm -r ' . escapeshellarg( $mail_files ) );
+		}
+		$snapmail_files = '/var/local/snappymail/_data_/_default_/storage/' . $domain_basename . '/';
+		if ( file_exists( $snapmail_files ) ) {
+			exec( 'rm -r ' . escapeshellarg( $snapmail_files ) );
 		}
 		if ( is_array( $files ) ) {
 			foreach ( $files as $file ) {
