@@ -6,7 +6,7 @@ This is a setup for a Tor based email hosting server. It is provided as is and b
 Installation Instructions:
 --------------------------
 
-# Primary mail server with Tor:
+### Primary mail server with Tor:
 
 Uninstall packages that may interfere with this setup:
 ```
@@ -75,17 +75,6 @@ rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-rsa -b 4096 -t rsa -k /
 rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-ed25519 -t ed25519 -k /var/lib/rspamd/dkim/YOUR_DOMAIN-ed25519
 ```
 
-Also add the following DNS records to your domain, with the IPs of your proxy server:
-```
-@    IN    TXT    "v=spf1 ip4:your.ip.v4.address ip6:your:ip:v6:address -all"
-_dmarc    IN    TXT "v=DMARC1;p=quarantine;adkim=r;aspf=r;fo=1;rua=mailto:postmaster@yourdomain;ruf=mailto:postmaster@yourdomain;rf=afrf;ri=86400;pct=100"
-@		IN	MX	0 yourdomain.
-```
-
-Set the PTR record of your servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.
-
-Consider registering your domain with [DNSWL](https://www.dnswl.org/), [SNDS](https://sendersupport.olc.protection.outlook.com/snds/), [Google Postmaster Tools](https://postmaster.google.com/) and [YahooCFL](https://senders.yahooinc.com/complaint-feedback-loop/) for valuable insights into your delivery.
-
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:
 ```
 nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey
@@ -98,9 +87,23 @@ cd /var/www/mail && php setup.php && systemctl enable mail-cron.timer
 
 To send emails to the regular internet, it is necessary to have a static IP to retain a reputation with an IP+Domain mapping. If you try sending via Tor, your emails will most certainly get blocked by spam fitlers. For this reason we need to setup a proxy server which will hold no user data itself, but simply act as a gateway to reach the less anonymous part of the internet.
 
-# Proxy server:
+### Proxy server:
 
 TODO
+
+### General Domain settings
+
+Add the following DNS records to your domain, with the IPs of your proxy server:
+```
+@    IN    TXT    "v=spf1 ip4:your.ip.v4.address ip6:your:ip:v6:address -all"
+_dmarc    IN    TXT "v=DMARC1;p=quarantine;adkim=r;aspf=r;fo=1;rua=mailto:postmaster@yourdomain;ruf=mailto:postmaster@yourdomain;rf=afrf;ri=86400;pct=100"
+@	IN	MX	0 yourdomain.
+```
+
+Set the PTR record of your servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.
+
+Consider registering your domain with [DNSWL](https://www.dnswl.org/), [SNDS](https://sendersupport.olc.protection.outlook.com/snds/), [Google Postmaster Tools](https://postmaster.google.com/) and [YahooCFL](https://senders.yahooinc.com/complaint-feedback-loop/) for valuable insights into your delivery.
+
 
 Translating:
 ------------
