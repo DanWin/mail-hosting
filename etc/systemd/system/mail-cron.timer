@@ -1,7 +1,5 @@
 [Unit]
 Description=Mail cron
-After=srv.mount
-Requires=srv.mount
 
 [Timer]
 # Time to wait after booting before we run first time

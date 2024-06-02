@@ -35,6 +35,8 @@ fi
 #install scripts
 mkdir -p /var/www/mail
 mkdir -p /var/www/html
+mkdir -p /var/lib/rspamd/dkim
+chown _rspamd: /var/lib/rspamd/dkim
 if [ ! -e /var/www/html/mail ]; then
 	ln -s ../mail/www /var/www/html/mail
 fi
