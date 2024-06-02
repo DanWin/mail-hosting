@@ -1,0 +1,8 @@
+[Unit]
+Description=Mail cron
+After=srv.mount
+Requires=srv.mount
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php /srv/var/www/mail/cron.php
