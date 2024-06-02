@@ -80,9 +80,9 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey
 ```
 
-Create database tables and enable cron:
+Create database tables, activate firewall and enable cron:
 ```
-cd /var/www/mail && php setup.php && systemctl enable mail-cron.timer
+cd /var/www/mail && php setup.php && chmod +x /etc/rc.local && /etc/rc.local && systemctl enable mail-cron.timer
 ```
 
 To send emails to the regular internet, it is necessary to have a static IP to retain a reputation with an IP+Domain mapping. If you try sending via Tor, your emails will most certainly get blocked by spam fitlers. For this reason we need to setup a proxy server which will hold no user data itself, but simply act as a gateway to reach the less anonymous part of the internet.
