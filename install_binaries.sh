@@ -21,6 +21,16 @@ if [ ! -e /etc/mysql/encryption/keyfile.enc ]; then
 	openssl rand -hex 128 > /etc/mysql/encryption/keyfile.key
 	echo "1;"$(openssl rand -hex 32) | openssl enc -aes-256-cbc -md sha1 -pass file:/etc/mysql/encryption/keyfile.key -out /etc/mysql/encryption/keyfile.enc
 fi
+# dovecot encryption
+if [ ! -e /etc/dovecot/ecprivkey.pem ]; then
+	mkdir -p /etc/dovecot/
+	openssl ecparam -name secp521r1 -genkey | openssl pkey -out /etc/dovecot/ecprivkey.pem
+	openssl pkey -in /etc/dovecot/ecprivkey.pem -pubout -out /etc/dovecot/ecpubkey.pem
+fi
+# postifx certificates
+if [ ! -e /etc/postfix/danwin1210-mail.chain ]; then
+	openssl req -x509 -nodes -days 3650 -newkey ed448 -keyout /etc/postfix/danwin121-mail.key -out /etc/postfix/danwin1210-mail.crt && cat /etc/postfix/danwin1210-mail.key >> /etc/postfix/danwin1210-mail.chain && cat /etc/postfix/danwin1210-mail.crt >> /etc/postfix/danwin1210-mail.chain
+fi
 
 #install scripts
 mkdir -p /var/www/mail
@@ -45,6 +55,15 @@ else
 	git fetch --all
 	git pull
 fi
+
+# install snappymail
+mkdir -p /var/www/mail/www/snappymail
+cd /var/www/mail/www/snappymail
+VERSION=$(curl -s https://api.github.com/repos/the-djmaze/snappymail/releases/latest | grep tag_name | cut -d '"' -f 4)
+wget https://github.com/the-djmaze/snappymail/releases/download/${VERSION}/snappymail-${VERSION:1}.zip
+unzip -o snappymail-${VERSION:1}.zip
+mkdir -p /var/local/snappymail
+chown www-data:www-data -R /var/local/snappymail
 
 # copy configuration file
 cd $workingdir
