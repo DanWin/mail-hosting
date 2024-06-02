@@ -28,13 +28,13 @@ server {
 		add_header Cross-Origin-Opener-Policy same-origin always;
 		add_header Cross-Origin-Resource-Policy same-origin always;
 		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
 	location ~ \.php$ {
 		add_header Referrer-Policy no-referrer always;
 		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
 }
@@ -76,7 +76,7 @@ server {
 		add_header Cross-Origin-Opener-Policy same-origin always;
 		add_header Cross-Origin-Resource-Policy same-origin always;
 		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
 	location ~ \.php$ {
@@ -85,7 +85,7 @@ server {
 		add_header Expect-CT "max-age=86400, enforce" always;
 		add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
 }

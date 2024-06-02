@@ -96,7 +96,6 @@ modules_enabled = {
 		"conversejs";
 		"http_altconnect";
 		"external_services";
-		"conversejs";
 }
 
 -- These modules are auto-loaded, but should you want

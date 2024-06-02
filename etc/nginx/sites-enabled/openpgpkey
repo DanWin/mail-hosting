@@ -13,7 +13,7 @@ server {
 	rewrite /.well-known/openpgpkey/(.*)/hu /mail/openpgpkey_wkd.php?domain=$1 last;
 	location ~ \.php$ {
 		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
 	ssl_certificate /etc/acme.sh/danwin1210.de_ecc/fullchain.cer;
