@@ -8,7 +8,7 @@ workingdir=$(pwd)
 
 # install all required packages
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-pop3d git gnupg haveged iptables libsasl2-modules locales locales-all logrotate lsb-release mariadb-server mercurial nano nginx openssl php8.1-cli php8.1-curl php8.1-fpm php8.1-gd php8.1-gmp php8.1-gnupg php8.1-imap php8.1-intl php8.1-mbstring php8.1-mysql php8.1-pspell php8.1-readline postfix postfix-mysql prosody redis rspamd tor vim wget unzip wireguard wireguard-tools
+DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-pop3d git gnupg haveged iptables libsasl2-modules locales locales-all logrotate lsb-release mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rspamd tor vim wget unzip wireguard wireguard-tools
 
 # install composer
 curl -sSL https://github.com/composer/composer/releases/download/2.7.6/composer.phar > /usr/bin/composer
