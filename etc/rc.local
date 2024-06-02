@@ -1,0 +1,73 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+#flush iptables
+iptables -F
+ip6tables -F
+iptables -t nat -F
+ip6tables -t nat -F
+
+#accept already established connections
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+ip6tables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+ip6tables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#allow tor traffic
+for tor in bind debian-tor; do(
+iptables -t nat -A OUTPUT -m owner --uid-owner $tor -j RETURN
+ip6tables -t nat -A OUTPUT -m owner --uid-owner $tor -j RETURN
+iptables -A OUTPUT -m owner --uid-owner $tor -j ACCEPT
+ip6tables -A OUTPUT -m owner --uid-owner $tor -j ACCEPT
+)done
+
+#allow local communication
+iptables -A OUTPUT -o lo -j ACCEPT
+ip6tables -A OUTPUT -o lo -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+ip6tables -A INPUT -i lo -j ACCEPT
+#unrestricted access to these IPs
+for clearnet in 127.0.0.0/8; do(
+iptables -t nat -A OUTPUT -d $clearnet -j RETURN
+iptables -A OUTPUT -d $clearnet -j ACCEPT
+) done
+for clearnet in ::1; do(
+ip6tables -t nat -A OUTPUT -d $clearnet -j RETURN
+ip6tables -A OUTPUT -d $clearnet -j ACCEPT
+) done
+#accet IPv6 ICMP packages required for SLAAC
+ip6tables -A INPUT -p ipv6-icmp -j ACCEPT
+ip6tables -A OUTPUT -p ipv6-icmp -j ACCEPT
+#allow querriying ntp servers
+iptables -t nat -A OUTPUT -p udp --dport 123 -j RETURN
+iptables -A OUTPUT -p udp --dport 123 -j ACCEPT
+ip6tables -t nat -A OUTPUT -p udp --dport 123 -j RETURN
+ip6tables -A OUTPUT -p udp --dport 123  -j ACCEPT
+#redirect all outgoing DNS querries to our dns server
+iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53
+ip6tables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53
+#redirect all other TCP traffic through tor
+iptables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports 9040
+ip6tables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports 9040
+#reject everything else
+iptables -A OUTPUT -j REJECT
+ip6tables -A OUTPUT -j REJECT
+
+#uncomment to be able to directly connect with your own IP and allow no one else
+#for clearnet in YOUR_IP_HERE;do(
+#iptables -A INPUT -s $clearnet -j ACCEPT
+#)done
+#drop everything else (uncomment after adding your own IP above)
+#iptables -A INPUT -j DROP
+#ip6tables -A INPUT -j DROP
+
+exit 0
