@@ -49,10 +49,10 @@ smtp_tls_chain_files = /etc/postfix/danwin1210-mail.chain
 smtpd_tls_received_header = yes
 
 #lookup maps for domains and email addresses
-relay_domains = torbox.danwin1210.me torbox.danwin1210.de
-canonical_maps = inline:{{@mail2tor.onion=@mail2tor.com}, {@torbox3uiot6wchz.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.danwin1210.me=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.danwin1210.de=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}}
-sender_canonical_maps = inline:{{@localhost=@danwin1210.de}, {@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion=@danwin1210.de}, {@danwin1210.me=@danwin1210.de}}
-transport_maps = inline:{{torbox3uiot6wchz.onion=relay:[torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion]:25}, {.onion=smtp}, {mail2tor.com=relay:[xc7tgk2c5onxni2wsy76jslfsitxjbbptejnqhw6gy2ft7khpevhc7ad.onion]:25}, {blackhost.xyz=relay:[blackhost7pws76u6vohksdahnm6adf7riukgcmahrwt43wv2drvyxid.onion]:25}} proxy:mysql:/etc/postfix/sql/mysql_transport_maps.cf inline:{*=relay:[10.9.0.1]:1025}
+relay_domains = 
+canonical_maps = inline:{{@mail2tor.onion=@mail2tor.com}, {@torbox3uiot6wchz.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}, {@torbox.onion=@torbox36ijlcevujx7mjb4oiusvwgvmue7jfn2cvutwa6kl6to3uyqad.onion}}
+sender_canonical_maps = inline:{{@localhost=@danwin1210.de}, {@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion=@danwin1210.de}}
+transport_maps = inline:{{.onion=smtp}, {mail2tor.com=relay:[xc7tgk2c5onxni2wsy76jslfsitxjbbptejnqhw6gy2ft7khpevhc7ad.onion]:25}, {blackhost.xyz=relay:[blackhost7pws76u6vohksdahnm6adf7riukgcmahrwt43wv2drvyxid.onion]:25}} proxy:mysql:/etc/postfix/sql/mysql_transport_maps.cf inline:{*=relay:[10.9.0.1]:1025}
 virtual_alias_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_maps.cf
 virtual_mailbox_domains = proxy:mysql:/etc/postfix/sql/mysql_virtual_domains_maps.cf
 virtual_mailbox_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_mailbox_maps.cf
