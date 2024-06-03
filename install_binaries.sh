@@ -32,6 +32,11 @@ if [ ! -e /etc/postfix/danwin1210-mail.chain ]; then
 	openssl req -x509 -nodes -days 3650 -newkey ed448 -subj "/" -keyout /etc/postfix/danwin1210-mail.key -out /etc/postfix/danwin1210-mail.crt && cat /etc/postfix/danwin1210-mail.key >> /etc/postfix/danwin1210-mail.chain && cat /etc/postfix/danwin1210-mail.crt >> /etc/postfix/danwin1210-mail.chain
 fi
 
+# Nginx
+if [ ! -e /etc/nginx/dh4096.pem ]; then
+	openssl dhparam -out /etc/nginx/dh4096.pem 4096
+fi
+
 #install scripts
 mkdir -p /var/www/mail
 mkdir -p /var/www/html
