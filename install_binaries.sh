@@ -29,7 +29,7 @@ if [ ! -e /etc/dovecot/ecprivkey.pem ]; then
 fi
 # postifx certificates
 if [ ! -e /etc/postfix/danwin1210-mail.chain ]; then
-	openssl req -x509 -nodes -days 3650 -newkey ed448 -subj "/" -keyout /etc/postfix/danwin121-mail.key -out /etc/postfix/danwin1210-mail.crt && cat /etc/postfix/danwin1210-mail.key >> /etc/postfix/danwin1210-mail.chain && cat /etc/postfix/danwin1210-mail.crt >> /etc/postfix/danwin1210-mail.chain
+	openssl req -x509 -nodes -days 3650 -newkey ed448 -subj "/" -keyout /etc/postfix/danwin1210-mail.key -out /etc/postfix/danwin1210-mail.crt && cat /etc/postfix/danwin1210-mail.key >> /etc/postfix/danwin1210-mail.chain && cat /etc/postfix/danwin1210-mail.crt >> /etc/postfix/danwin1210-mail.chain
 fi
 
 #install scripts
