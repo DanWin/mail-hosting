@@ -79,6 +79,10 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 ```
 nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey
 ```
+After copying (and modifying) the posfix configuration, you need to create databases out of the mapping files (also each time you update those files) (DanWin will have to add these commands, I didn't find any more (DEAM0)):
+```
+postmap /etc/postfix/helo_checks
+```
 
 Create database tables, activate firewall and enable cron:
 ```
