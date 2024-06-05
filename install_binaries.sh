@@ -8,7 +8,7 @@ workingdir=$(pwd)
 
 # install all required packages
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-pop3d git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
+DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-mysql dovecot-pop3d git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
 
 # install composer
 curl -sSL https://github.com/composer/composer/releases/download/2.7.6/composer.phar > /usr/bin/composer
