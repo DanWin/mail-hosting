@@ -16,6 +16,6 @@ server {
 		fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 		expires off;
 	}
-	ssl_certificate /etc/acme.sh/danwin1210.de_ecc/fullchain.cer;
-	ssl_certificate_key /etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key;
+	ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+	ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
 }

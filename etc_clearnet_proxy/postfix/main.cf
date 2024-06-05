@@ -15,8 +15,8 @@ readme_directory = no
 compatibility_level=3.6
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/acme.sh/danwin1210.de_ecc/fullchain.cer
-smtpd_tls_key_file=/etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_tls_ciphers = HIGH

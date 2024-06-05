@@ -51,8 +51,8 @@ server {
 	add_header Cross-Origin-Opener-Policy same-origin always;
 	add_header Cross-Origin-Resource-Policy same-origin always;
         listen [::]:443 ssl proxy_protocol http2;
-	ssl_certificate /etc/acme.sh/danwin1210.de_ecc/fullchain.cer;
-	ssl_certificate_key /etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key;
+	ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+	ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
 	root /var/www/html;
 	index index.php;
 	server_name danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion danwin1210.de;
