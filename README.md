@@ -54,7 +54,7 @@ CREATE USER 'postfix'@'%' IDENTIFIED BY 'MY_PASSWORD';
 CREATE USER 'postfix_readonly'@'%' IDENTIFIED BY 'MY_PASSWORD';
 CREATE USER 'prosody'@'%' IDENTIFIED BY 'MY_PASSWORD';
 GRANT ALL PRIVILEGES ON postfix.* TO 'postfix'@'%';
-GRANT SELECT ON postifx.* TO 'postfix_readonly'@'%';
+GRANT SELECT ON postfix.* TO 'postfix_readonly'@'%';
 GRANT ALL PRIVILEGES ON prosody.* TO 'prosody'@'%';
 FLUSH PRIVILEGES;
 quit
