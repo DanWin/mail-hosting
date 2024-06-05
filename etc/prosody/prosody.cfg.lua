@@ -124,8 +124,8 @@ pidfile = "/run/prosody/prosody.pid";
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
 ssl = {
-	key = "/etc/acme.sh/danwin1210.de_ecc/danwin1210.de.key";
-	certificate = "/etc/acme.sh/danwin1210.de_ecc/fullchain.cer";
+	key = "/etc/ssl/private/ssl-cert-snakeoil.key";
+	certificate = "/etc/ssl/certs/ssl-cert-snakeoil.pem";
 	dhparam = "/etc/prosody/dh4096.pem";
 	curve = "X448:X25519:secp521r1:secp384r1:secp256k1";
 	ciphers = "HIGH+kEDH:HIGH+kEECDH:HIGH:!RSA:!PSK:!SRP:!3DES:!aNULL:!SHA:!MD5:!CAMELLIA:!ECDHE-RSA-AES256-SHA384:!ECDHE-RSA-AES128-SHA256:!DHE-RSA-AES128-SHA256:!DHE-RSA-AES256-SHA256";

@@ -22,7 +22,7 @@ rm /etc/resolv.conf && echo "nameserver 1.1.1.1" > /etc/resolv.conf
 Install git and clone this repository
 
 ```
-apt-get update && apt-get install git && git clone https://github.com/DanWin/mail-hosting && cd mail-hosting
+apt-get update && apt-get install git -y && git clone https://github.com/DanWin/mail-hosting && cd mail-hosting
 ```
 
 Install files and programs
@@ -32,7 +32,7 @@ Install files and programs
 
 Copy (and modify according to your needs) the site files in `etc` to `/etc` after installation has finished. Then restart some services:
 ```
-systemctl daemon-reload && systemctl restart bind9.service && systemctl restart tor@default.service
+systemctl daemon-reload && systemctl restart tor@default.service
 ```
 
 Replace the default .onion domain with your domain:
@@ -90,7 +90,30 @@ To send emails to the regular internet, it is necessary to have a static IP to r
 
 ### Proxy server:
 
-TODO
+Uninstall packages that may interfere with this setup:
+```
+DEBIAN_FRONTEND=noninteractive apt-get purge -y apache2* dnsmasq* eatmydata exim4* imagemagick-6-common mysql-client* mysql-server* nginx* libnginx-mod* php7* resolvconf && systemctl disable systemd-resolved.service && systemctl stop systemd-resolved.service
+```
+
+If you have problems resolving hostnames after this step, temporarily switch to a public nameserver like 1.1.1.1 (from CloudFlare) or 8.8.8.8 (from Google)
+
+```
+rm /etc/resolv.conf && echo "nameserver 1.1.1.1" > /etc/resolv.conf
+```
+
+Install git and clone this repository
+
+```
+apt-get update && apt-get install git -y && git clone https://github.com/DanWin/mail-hosting && cd mail-hosting
+```
+
+Install files and programs
+```
+./install_binaries_proxy.sh
+```
+
+Copy (and modify according to your needs) the site files in `etc_clearnet_proxy` to `/etc` after installation has finished.
+
 
 ### General Domain settings
 
@@ -101,7 +124,7 @@ _dmarc    IN    TXT "v=DMARC1;p=quarantine;adkim=r;aspf=r;fo=1;rua=mailto:postma
 @	IN	MX	0 yourdomain.
 ```
 
-Set the PTR record of your servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.
+Set the PTR record of your proxy servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.
 
 Consider registering your domain with [DNSWL](https://www.dnswl.org/), [SNDS](https://sendersupport.olc.protection.outlook.com/snds/), [Google Postmaster Tools](https://postmaster.google.com/) and [YahooCFL](https://senders.yahooinc.com/complaint-feedback-loop/) for valuable insights into your delivery.
 

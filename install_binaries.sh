@@ -8,7 +8,7 @@ workingdir=$(pwd)
 
 # install all required packages
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-pop3d git gnupg haveged iptables libsasl2-modules locales locales-all logrotate lsb-release mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rspamd tor vim wget unzip brotli wireguard wireguard-tools
+DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-pop3d git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
 
 # install composer
 curl -sSL https://github.com/composer/composer/releases/download/2.7.6/composer.phar > /usr/bin/composer
@@ -32,10 +32,17 @@ if [ ! -e /etc/postfix/danwin1210-mail.chain ]; then
 	openssl req -x509 -nodes -days 3650 -newkey ed448 -subj "/" -keyout /etc/postfix/danwin1210-mail.key -out /etc/postfix/danwin1210-mail.crt && cat /etc/postfix/danwin1210-mail.key >> /etc/postfix/danwin1210-mail.chain && cat /etc/postfix/danwin1210-mail.crt >> /etc/postfix/danwin1210-mail.chain
 fi
 
-# Nginx
-if [ ! -e /etc/nginx/dh4096.pem ]; then
-	openssl dhparam -out /etc/nginx/dh4096.pem 4096
-fi
+# dhparams
+for file in /etc/nginx/dh4096.pem /etc/dovecot/dh.pem /etc/prosody/dh4096.pem; do
+	if [ ! -e "$file" ]; then
+		openssl dhparam -out "$file" 4096
+	fi
+done
+
+# vmail user
+id -u vmail > /dev/null 2>&1 || (groupadd -g 5000 -r vmail && useradd -g 5000 -M -r -s /bin/false -u 5000 vmail -d /var/mail/vmail)
+mkdir -p /var/mail/vmail
+chown vmail: /var/mail/vmail
 
 #install scripts
 mkdir -p /var/www/mail
@@ -71,6 +78,14 @@ wget https://github.com/the-djmaze/snappymail/releases/download/${VERSION}/snapp
 unzip -o snappymail-${VERSION:1}.zip
 mkdir -p /var/local/snappymail
 chown www-data:www-data -R /var/local/snappymail
+
+# install prosody modules
+if [ ! -e /srv/prosody-modules ]; then
+	hg clone https://hg.prosody.im/prosody-modules/ /srv/prosody-modules
+else
+	cd /srv/prosody-modules
+	hg pull --update
+fi
 
 # copy configuration file
 cd $workingdir
