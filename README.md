@@ -82,6 +82,7 @@ nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf
 
 Create database tables, activate firewall and enable cron:
 ```
+postmap /etc/postfix/header_checks
 cd /var/www/mail && php setup.php && chmod +x /etc/rc.local && /etc/rc.local && systemctl enable mail-cron.timer
 ```
 

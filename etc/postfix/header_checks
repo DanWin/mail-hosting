@@ -1,2 +1,2 @@
-/^To:.*@[^@]*\.de-mail\.de/ REJECT "Sorry, you tried contacting a De-Mail Address. This is a special System by the German government, not compatible with E-Mail. More info here: https://www.cio.bund.de/Web/DE/Innovative-Vorhaben/De-Mail/de_mail_node.html"
+/^To:.*@[^@]*\.de-mail\.de/ REJECT "Sorry, you tried contacting a De-Mail Address. This is a special System by the German government, not compatible with E-Mail. More info here: https://de-mail.info/"
 /^(To|From).*@example\.com/    REJECT
