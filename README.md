@@ -82,10 +82,25 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey
 ```
 
+Add your other servers IP under `unrestricted access to these IPs` in `/etc/rc.local`
+
 Create database tables, activate firewall and enable cron:
 ```
 postmap /etc/postfix/header_checks
 cd /var/www/mail && php setup.php && chmod +x /etc/rc.local && /etc/rc.local && systemctl enable mail-cron.timer
+```
+
+Generate a wireguard keypair and add the public key generated here to the primary mail server wireguard config:
+```
+export PRIV=$(wg genkey)
+sed -i "s~YOUR_PRIVATE_KEY~$PRIV~g" /etc/wireguard/wg0.conf
+echo $PRIV | wg pubkey
+```
+
+Replace `YOUR_IP` with the IP of your other server, then enable and start wireguard:
+```
+nano /etc/wireguard/wg0.conf
+systemctl enable wg-quick@wg0 && systemctl start wg-quick@wg0
 ```
 
 Final step is to reboot the server and check that everything is working.
@@ -124,6 +139,20 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 nano /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/turnserver.conf
 ```
 
+Generate a wireguard keypair and add the public key generated here to the primary mail server wireguard config:
+```
+export PRIV=$(wg genkey)
+sed -i "s~YOUR_PRIVATE_KEY~$PRIV~g" /etc/wireguard/wg0.conf
+echo $PRIV | wg pubkey
+```
+
+Replace `YOUR_IP` with the IP of your other server and `ens3` with your network interface name, then enable and start wireguard:
+```
+nano /etc/wireguard/wg0.conf
+systemctl enable wg-quick@wg0 && systemctl start wg-quick@wg0
+```
+
+Final step is to reboot the server and check that everything is working.
 
 ### General Domain settings
 
