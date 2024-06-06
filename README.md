@@ -42,7 +42,7 @@ sed -i "s/danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion/`cat /v
 
 Replace the default clearnet domain with your domain:
 ```
-sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/* /var/www/mail/common_config.php
+sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/* /var/www/mail/common_config.php /var/www/mail/www/squirrelmail/config/config.php
 ```
 
 Create a mysql users and databases:
@@ -209,6 +209,11 @@ _xmppconnect	IN	TXT	"_xmpp-client-websocket=wss://yourdomain:5281/xmpp-websocket
 Set the PTR record of your proxy servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.
 
 Consider registering your domain with [DNSWL](https://www.dnswl.org/), [SNDS](https://sendersupport.olc.protection.outlook.com/snds/), [Google Postmaster Tools](https://postmaster.google.com/) and [YahooCFL](https://senders.yahooinc.com/complaint-feedback-loop/) for valuable insights into your delivery.
+
+### Final configuration steps
+
+Follow [SnappyMail installation instructions](https://github.com/the-djmaze/snappymail/wiki/Installation-instructions#now-access-the-admin-page) to finish setting it up at yourdomain/mail/snappymail/?admin
+
 
 
 Translating:

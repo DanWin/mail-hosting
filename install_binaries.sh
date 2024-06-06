@@ -8,7 +8,7 @@ workingdir=$(pwd)
 
 # install all required packages
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-mysql dovecot-pop3d git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
+DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-mysql dovecot-pop3d git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event mariadb-server mercurial nano nginx openssl php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline php8.2-tidy php8.2-uuid php8.2-xml php8.2-zip postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
 
 # install composer
 curl -sSL https://github.com/composer/composer/releases/download/2.7.6/composer.phar > /usr/bin/composer
@@ -64,6 +64,8 @@ if [ ! -e /var/www/mail/www/squirrelmail ]; then
 	git clone https://github.com/RealityRipple/squirrelmail .
 	mkdir -p /var/local/squirrelmail/data /var/local/squirrelmail/attach
 	chown www-data:www-data -R /var/local/squirrelmail
+	cd $workingdir
+	cp squirrelmail_config.php /var/www/mail/www/squirrelmail/config/config.php
 else
 	cd /var/www/mail/www/squirrelmail
 	git fetch --all
@@ -79,6 +81,11 @@ unzip -o snappymail-${VERSION:1}.zip
 rm snappymail-${VERSION:1}.zip
 mkdir -p /var/local/snappymail
 chown www-data:www-data -R /var/local/snappymail
+if [ ! -e include.php ]; then
+	cp _include.php include.php
+	echo "define('APP_DATA_FOLDER_PATH', '/var/local/snappymail/');" >> include.php
+	echo "define('SNAPPYMAIL_UPDATE_PLUGINS', 1);" >> include.php
+fi
 
 # install converse.js
 rm -rf /srv/conversejs
