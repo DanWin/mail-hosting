@@ -86,9 +86,11 @@ postmap /etc/postfix/header_checks
 cd /var/www/mail && php setup.php && chmod +x /etc/rc.local && /etc/rc.local && systemctl enable mail-cron.timer
 ```
 
-To send emails to the regular internet, it is necessary to have a static IP to retain a reputation with an IP+Domain mapping. If you try sending via Tor, your emails will most certainly get blocked by spam fitlers. For this reason we need to setup a proxy server which will hold no user data itself, but simply act as a gateway to reach the less anonymous part of the internet.
+Final step is to reboot the server and check that everything is working.
 
 ### Proxy server:
+
+To send emails to the regular internet, it is necessary to have a static IP to retain a reputation with an IP+Domain mapping. If you try sending via Tor, your emails will most certainly get blocked by spam filters. For this reason we need to setup a proxy server which will hold no user data itself, but simply act as a gateway to reach the less anonymous part of the internet.
 
 Uninstall packages that may interfere with this setup:
 ```
@@ -102,7 +104,6 @@ rm /etc/resolv.conf && echo "nameserver 1.1.1.1" > /etc/resolv.conf
 ```
 
 Install git and clone this repository
-
 ```
 apt-get update && apt-get install git -y && git clone https://github.com/DanWin/mail-hosting && cd mail-hosting
 ```
