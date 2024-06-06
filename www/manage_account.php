@@ -49,7 +49,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			if ( $ok ) {
 				$db = get_db_instance();
 				$user = $match[ 1 ];
-				$domain = $match[ 3 ] ?? 'danwin1210.de';
+				$domain = $match[ 3 ] ?? PRIMARY_DOMAIN;
 				$stmt = $db->prepare( 'SELECT target_domain FROM alias_domain WHERE alias_domain = ? AND active=1;' );
 				$stmt->execute( [ $domain ] );
 				if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {

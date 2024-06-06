@@ -27,6 +27,7 @@ const DBUSER_PROSODY = 'prosody'; // Database user
 const DBPASS_PROSODY = 'YOUR_PASSWORD'; // Database password
 const DBNAME_PROSODY = 'prosody'; // Database
 const REGISTRATION_ENABLED = true; // Whether registration is enabled
+const PRIMARY_DOMAIN='danwin1210.de'; // Primary domain to use when a username without domain part was specified
 
 const LANGUAGES = [
 	'cs' => ['name' => 'čeština', 'locale' => 'cs_CZ', 'flag' => '🇨🇿', 'show_in_menu' => true, 'dir' => 'ltr'],
