@@ -45,7 +45,6 @@ server {
 	add_header Referrer-Policy no-referrer always;
 	add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), geolocation=(), fullscreen=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), speaker-selection=(), conversion-measurement=(), focus-without-user-activation=(), hid=(), idle-detection=(), sync-script=(), vertical-scroll=(), serial=(), trust-token-redemption=(), interest-cohort=(), otp-credentials=()" always;
 	add_header Onion-Location http://danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion$request_uri always;
-	add_header Expect-CT "max-age=86400, enforce" always;
 	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 	add_header Cross-Origin-Embedder-Policy require-corp always;
 	add_header Cross-Origin-Opener-Policy same-origin always;
@@ -70,7 +69,6 @@ server {
 		add_header Referrer-Policy no-referrer always;
 		add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), geolocation=(), fullscreen=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), speaker-selection=(), conversion-measurement=(), focus-without-user-activation=(), hid=(), idle-detection=(), sync-script=(), vertical-scroll=(), serial=(), trust-token-redemption=(), interest-cohort=(), otp-credentials=()" always;
 		add_header Onion-Location http://danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion$request_uri always;
-		add_header Expect-CT "max-age=86400, enforce" always;
 		add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 		add_header Cross-Origin-Embedder-Policy require-corp always;
 		add_header Cross-Origin-Opener-Policy same-origin always;
@@ -82,7 +80,6 @@ server {
 	location ~ \.php$ {
 		add_header Referrer-Policy no-referrer always;
 		add_header Onion-Location http://danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion$request_uri always;
-		add_header Expect-CT "max-age=86400, enforce" always;
 		add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 		include snippets/fastcgi-php.conf;
 		fastcgi_pass unix:/run/php/php8.2-fpm.sock;

@@ -247,7 +247,7 @@ contact_info = {
   security = { "https://danwin1210.de/contact.php", "mailto:daniel@danwin1210.de" };
   support = { "https://danwin1210.de/contact.php", "mailto:daniel@danwin1210.de" };
 }
-data_path = "/srv/var/lib/prosody"
+data_path = "/var/lib/prosody"
 legacy_ssl_ports = {5223}
 external_services = {
     {
