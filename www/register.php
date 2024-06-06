@@ -31,7 +31,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid username. It may not contain a +, \', " or /.')).'</div>';
 	}
 	$user = mb_strtolower( $match[ 1 ] ?? '' );
-	$domain = $match[ 3 ] ?? PRIMARY_DOMAIN;
+	$domain = $match[ 3 ] ?? CLEARNET_SERVER;
 	if ( $ok && ( empty( $_POST[ 'pwd' ] ) || empty( $_POST[ 'pwd2' ] ) || $_POST[ 'pwd' ] !== $_POST[ 'pwd2' ] ) ) {
 		$ok = false;
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Passwords empty or don\'t match')).'</div>';

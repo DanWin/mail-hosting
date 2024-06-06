@@ -36,7 +36,7 @@ ip6tables -A OUTPUT -o lo -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 ip6tables -A INPUT -i lo -j ACCEPT
 #unrestricted access to these IPs
-for clearnet in 127.0.0.0/8; do(
+for clearnet in 127.0.0.0/8 10.9.0.0/24; do(
 iptables -t nat -A OUTPUT -d $clearnet -j RETURN
 iptables -A OUTPUT -d $clearnet -j ACCEPT
 ) done

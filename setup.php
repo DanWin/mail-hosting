@@ -60,3 +60,13 @@ try{
 		echo $e->getMessage() . PHP_EOL;
 	}
 }
+try {
+	$stmt = $db->prepare( 'INSERT IGNORE INTO domain (domain, created, modified) VALUES (?, NOW(), NOW())' );
+	$stmt->execute( [ CLEARNET_SERVER ] );
+	$stmt->execute( [ ONION_SERVER ] );
+	$stmt = $db->prepare( 'INSERT IGNORE INTO alias_domain (alias_domain, target_domain, created, modified) VALUES (?, ?, NOW(), NOW())' );
+	$stmt->execute( [ ONION_SERVER, CLEARNET_SERVER ] );
+} catch( PDOException $e ) {
+	echo _('Error adding primary domain:') . PHP_EOL;
+	echo $e->getMessage() . PHP_EOL;
+}
