@@ -160,6 +160,8 @@ nano /var/www/mail/tools/create_admin.php
 php /var/www/mail/tools/create_admin.php
 ```
 
+Copy the file `/etc/postfix/danwin1210-mail.crt` from your main server to the same location on the proxy server.
+
 Final step is to reboot the server and check that everything is working.
 
 ### General Domain settings
