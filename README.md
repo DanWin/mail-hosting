@@ -42,7 +42,7 @@ sed -i "s/danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion/`cat /v
 
 Replace the default clearnet domain with your domain:
 ```
-sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey /var/www/mail/common_config.php
+sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/* /var/www/mail/common_config.php
 ```
 
 Create a mysql users and databases:
@@ -74,6 +74,8 @@ Generate DKIM signing keys and add them to /etc/rspamd/local.d/arc.conf /etc/rsp
 rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-rsa -b 4096 -t rsa -k /var/lib/rspamd/dkim/YOUR_DOMAIN-rsa
 rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-ed25519 -t ed25519 -k /var/lib/rspamd/dkim/YOUR_DOMAIN-ed25519
 ```
+
+Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:
 ```
@@ -115,6 +117,13 @@ Install files and programs
 
 Copy (and modify according to your needs) the site files in `etc_clearnet_proxy` to `/etc` after installation has finished.
 
+Add the password for your TURN server you created for prosody in the main server and replace `YOUR_AUTH_SECRET` in `/etc/turnserver.conf` with it.
+
+Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:
+```
+nano /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/turnserver.conf
+```
+
 
 ### General Domain settings
 
@@ -122,7 +131,42 @@ Add the following DNS records to your domain, with the IPs of your proxy server:
 ```
 @    IN    TXT    "v=spf1 ip4:your.ip.v4.address ip6:your:ip:v6:address -all"
 _dmarc    IN    TXT "v=DMARC1;p=quarantine;adkim=r;aspf=r;fo=1;rua=mailto:postmaster@yourdomain;ruf=mailto:postmaster@yourdomain;rf=afrf;ri=86400;pct=100"
+_adsp._domainkey	IN	TXT	"dkim=all;"
+_domainkey	IN	TXT "o=-;r=postmaster@yourdomain"
+*._report._dmarc	IN	TXT "v=DMARC1"
+_mta-sts    IN  TXT "v=STSv1; id=2024060601"
+_smtp._tls  IN  TXT "v=TLSRPTv1; rua=mailto:postmaster@yourdomain"
+_imaps._tcp	IN	SRV	0 0 993 yourdomain.
+_submission._tcp	IN	SRV	0 0 465 yourdomain.
 @	IN	MX	0 yourdomain.
+@	IN	A	your.ip.v4.address
+@	IN	AAAA	your:ip:v6:address
+www	IN	A	your.ip.v4.address
+www	IN	AAAA	your:ip:v6:address
+mta-sts	IN	A	your.ip.v4.address
+mta-sts	IN	AAAA	your:ip:v6:address
+conference	IN	A	your.ip.v4.address
+conference	IN	AAAA	your:ip:v6:address
+proxy	IN	A	your.ip.v4.address
+proxy	IN	AAAA	your:ip:v6:address
+upload	IN	A	your.ip.v4.address
+upload	IN	AAAA	your:ip:v6:address
+_xmpp-server._tcp.conference	IN	SRV	5 0 5269 yourdomain.
+_xmpp-server._tcp.conference	IN	SRV	0 0 5269 your_onion_domain.
+_xmpp-client._tcp	IN	SRV	5 0 5222 yourdomain.
+_xmpp-client._tcp	IN	SRV	0 0 5222 your_onion_domain.
+_xmpps-client._tcp	IN	SRV	5 0 5223 yourdomain.
+_xmpps-client._tcp	IN	SRV	0 0 5223 your_onion_domain.
+_xmpp-server._tcp	IN	SRV	5 0 5269 yourdomain.
+_xmpp-server._tcp	IN	SRV	0 0 5269 your_onion_domain.
+_stun._udp	IN	SRV	0 0 3478 yourdomain.
+_turn._udp	IN	SRV	0 0 3478 yourdomain.
+_stun._tcp	IN	SRV	0 0 3478 yourdomain.
+_stuns._tcp	IN	SRV	0 0 3479 yourdomain.
+_turn._tcp	IN	SRV	0 0 3478 yourdomain.
+_turns._tcp	IN	SRV	0 0 5349 yourdomain.
+_xmppconnect	IN	TXT	"_xmpp-client-xbosh=https://yourdomain:5281/http-bind"
+_xmppconnect	IN	TXT	"_xmpp-client-websocket=wss://yourdomain:5281/xmpp-websocket"
 ```
 
 Set the PTR record of your proxy servers IPs to your domain. This can usually be done from your hosting panels configuration, but may not be available with every hosting provider, where you can then request them to do it via a support ticket.

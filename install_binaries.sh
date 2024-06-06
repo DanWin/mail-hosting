@@ -76,8 +76,20 @@ cd /var/www/mail/www/snappymail
 VERSION=$(curl -s https://api.github.com/repos/the-djmaze/snappymail/releases/latest | grep tag_name | cut -d '"' -f 4)
 wget https://github.com/the-djmaze/snappymail/releases/download/${VERSION}/snappymail-${VERSION:1}.zip
 unzip -o snappymail-${VERSION:1}.zip
+rm snappymail-${VERSION:1}.zip
 mkdir -p /var/local/snappymail
 chown www-data:www-data -R /var/local/snappymail
+
+# install converse.js
+rm -rf /srv/conversejs
+mkdir -p /srv/conversejs
+cd /srv/conversejs
+VERSION=$(curl -s https://api.github.com/repos/conversejs/converse.js/releases/latest | grep tag_name | cut -d '"' -f 4)
+wget https://github.com/conversejs/converse.js/releases/download/${VERSION}/converse.js-${VERSION:1}.tgz
+tar xzf converse.js-${VERSION:1}.tgz --strip-components=1
+rm converse.js-${VERSION:1}.tgz
+
+rm -f /etc/nginx/sites-enabled/default
 
 # install prosody modules
 if [ ! -e /srv/prosody-modules ]; then
