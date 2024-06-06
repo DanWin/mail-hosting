@@ -139,6 +139,8 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 nano /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/turnserver.conf
 ```
 
+Replace `YOUR_PASSWORD` in `/etc/postfix/sql/mysql_tls_policy_out.cf` with the one you've generated previously on the other server.
+
 Generate a wireguard keypair and add the public key generated here to the primary mail server wireguard config:
 ```
 export PRIV=$(wg genkey)
@@ -150,6 +152,12 @@ Replace `YOUR_IP` with the IP of your other server and `ens3` with your network 
 ```
 nano /etc/wireguard/wg0.conf
 systemctl enable wg-quick@wg0 && systemctl start wg-quick@wg0
+```
+
+Edit and create your admin user with the following script:
+```
+nano /var/www/mail/tools/create_admin.php
+php /var/www/mail/tools/create_admin.php
 ```
 
 Final step is to reboot the server and check that everything is working.

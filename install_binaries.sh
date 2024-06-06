@@ -52,7 +52,7 @@ chown _rspamd: /var/lib/rspamd/dkim
 if [ ! -e /var/www/html/mail ]; then
 	ln -s ../mail/www /var/www/html/mail
 fi
-cp -r composer.json cron.php setup.php www /var/www/mail/
+cp -r composer.json cron.php setup.php www tools /var/www/mail/
 cd /var/www/mail/
 composer install --no-dev
 
