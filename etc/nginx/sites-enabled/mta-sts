@@ -1,0 +1,18 @@
+server {
+    listen [::]:443 ssl http2;
+    server_name mta-sts.danwin1210.de;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+	ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+	ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+    location / {
+        return 404;
+    }
+	location = /.well-known/mta-sts.txt {
+		default_type text/plain;
+		return 200 "version: STSv1
+mode: enforce
+mx: danwin1210.de
+max_age: 86400
+";
+	}
+}
