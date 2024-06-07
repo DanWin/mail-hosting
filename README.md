@@ -212,6 +212,10 @@ Set the PTR record of your proxy servers IPs to your domain. This can usually be
 
 Consider registering your domain with [DNSWL](https://www.dnswl.org/), [SNDS](https://sendersupport.olc.protection.outlook.com/snds/), [Google Postmaster Tools](https://postmaster.google.com/) and [YahooCFL](https://senders.yahooinc.com/complaint-feedback-loop/) for valuable insights into your delivery.
 
+Consider enabling DNSSEC on your domain, when available by your Domain registrar. Some registrars may charge extra for it. Once enabled, you can also enable DANE, which increases security. Use [TLSA Record Genearator](https://ssl-tools.net/tlsa-generator) to help you create an appropriate DNS record.
+
+Consider adding your domain to [HSTS Preload List](https://hstspreload.org/) which will prevent browsers from even trying to access your domain on the insecure http:// protocol and automatically upgreade to https://
+
 ### Final configuration steps
 
 Follow [SnappyMail installation instructions](https://github.com/the-djmaze/snappymail/wiki/Installation-instructions#now-access-the-admin-page) to finish setting it up at yourdomain/mail/snappymail/?admin
