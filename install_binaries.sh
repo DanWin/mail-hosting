@@ -72,6 +72,15 @@ else
 	git pull
 fi
 
+if [ ! -e /var/www/mail/www/squirrelmail/plugins/check_quota/ ]; then
+	cd /var/www/mail/www/squirrelmail/plugins/
+	wget https://www.squirrelmail.org/plugins/check_quota-2.2-1.4.0.tar.gz
+	tar -zxf check_quota-2.2-1.4.0.tar.gz
+	rm check_quota-2.2-1.4.0.tar.gz
+	cd $workingdir
+	cp squirrelmail_plugin_hooks.php /var/www/mail/www/squirrelmail/config/plugin_hooks.php
+fi
+
 # install snappymail
 mkdir -p /var/www/mail/www/snappymail
 cd /var/www/mail/www/snappymail
