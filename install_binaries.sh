@@ -79,6 +79,7 @@ if [ ! -e /var/www/mail/www/squirrelmail/plugins/check_quota/ ]; then
 	rm check_quota-2.2-1.4.0.tar.gz
 	cd $workingdir
 	cp squirrelmail_plugin_hooks.php /var/www/mail/www/squirrelmail/config/plugin_hooks.php
+	patch -p1 -d /var/www/html/mail/squirrelmail/plugins/check_quota/ < squirrelmail_check_quota.patch
 fi
 
 # install snappymail
