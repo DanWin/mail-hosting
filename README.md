@@ -176,7 +176,7 @@ _domainkey	IN	TXT "o=-;r=postmaster@yourdomain"
 _mta-sts    IN  TXT "v=STSv1; id=2024060601"
 _smtp._tls  IN  TXT "v=TLSRPTv1; rua=mailto:postmaster@yourdomain"
 _imaps._tcp	IN	SRV	0 0 993 yourdomain.
-_submission._tcp	IN	SRV	0 0 465 yourdomain.
+_submission._tcp	IN	SRV	0 0 587 yourdomain.
 @	IN	MX	0 yourdomain.
 @	IN	A	your.ip.v4.address
 @	IN	AAAA	your:ip:v6:address
