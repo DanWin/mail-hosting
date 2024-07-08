@@ -69,8 +69,8 @@ if ( isset( $_POST[ 'user' ] ) ) {
 			$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
 			$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified) VALUES (?, ?, ?, NOW(), NOW());' );
 			$stmt->execute( [ "$user@$domain", "$user@$domain", $domain ] );
-			$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd) VALUES(?, ?, 51200000, ?, ?, NOW(), NOW(), ?, ?);' );
-			$stmt->execute( [ "$user@$domain", $hash, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ) ] );
+			$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?);' );
+			$stmt->execute( [ "$user@$domain", $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ) ] );
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
 		}
 	}

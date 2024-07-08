@@ -289,12 +289,11 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$additional = preg_split( "/[\s,]+/", $_POST[ 'alias_to' ] );
 						$alias_goto .= validate_email_list( $additional, $msg );
 					}
-					$quota = 1024 * 1024 * 1024;
 					$alias_goto = rtrim( $alias_goto, ',' );
 					$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
 					$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
 					$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, modified = NOW() WHERE username = ?;' );
-					$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $quota, $_POST[ 'user' ] ] );
+					$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $_POST[ 'user' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_mailbox' && ! empty( $_POST[ 'user' ] ) ) {
@@ -316,7 +315,6 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$user = $parser->getLocalPart();
 						$domain = $parser->getDomainPart();
 						$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
-						$quota = 50 * 1024 * 1024;
 						$alias_goto = '';
 						if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
 							$alias_goto .= $email . ',';
@@ -329,7 +327,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, enforce_tls_in, active) VALUES (?, ?, ?, NOW(), NOW(), ?, ?);' );
 						$stmt->execute( [ $email, $alias_goto, $domain, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
 						$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, enforce_tls_in, enforce_tls_out, active) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?);' );
-						$stmt->execute( [ $email, $hash, $quota, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
+						$stmt->execute( [ $email, $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
 						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
 					}
 				}

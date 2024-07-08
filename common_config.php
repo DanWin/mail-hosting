@@ -27,6 +27,7 @@ const DBUSER_PROSODY = 'prosody'; // Database user
 const DBPASS_PROSODY = 'YOUR_PASSWORD'; // Database password
 const DBNAME_PROSODY = 'prosody'; // Database
 const REGISTRATION_ENABLED = true; // Whether registration is enabled
+const DEFAULT_QUOTA = 50 * 1024 * 1024; // Default mailbox quota in bytes
 
 const LANGUAGES = [
 	'cs' => ['name' => 'čeština', 'locale' => 'cs_CZ', 'flag' => '🇨🇿', 'show_in_menu' => true, 'dir' => 'ltr'],
@@ -349,5 +350,15 @@ function alt_links(): void
 		}
 		echo '<link rel="alternate" href="?lang='.$lang.'" hreflang="'.$lang.'" />';
 		echo '<meta property="og:locale:alternate" content="'.$data['locale'].'">';
+	}
+}
+
+function bytes_to_human_readable(int $bytes) : string {
+	$suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
+	$size_class=(int) log($bytes, 1024);
+	if($size_class!==0){
+			return sprintf('%1.1f', $bytes / pow(1024, $size_class)) . $suffix[$size_class];
+	}else{
+			return $bytes . $suffix[0];
 	}
 }
