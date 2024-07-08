@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 15:41+0200\n"
+"POT-Creation-Date: 2024-07-08 15:47+0200\n"
 "PO-Revision-Date: 2023-10-14 18:51+0000\n"
 "Last-Translator: Анонім <g2014test@yandex.com>\n"
 "Language-Team: Ukrainian <https://weblate.danwin1210.de/projects/DanWin/mail-"
@@ -361,7 +361,7 @@ msgstr ""
 
 #: www/index.php:28
 #, php-format
-msgid "Your E-Mail address will be %s"
+msgid "Your E-Mail address will be user@%s"
 msgstr ""
 
 #: www/index.php:29
