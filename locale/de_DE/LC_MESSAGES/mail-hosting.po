@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 15:47+0200\n"
-"PO-Revision-Date: 2023-11-30 17:37+0000\n"
+"PO-Revision-Date: 2024-07-08 13:50+0000\n"
 "Last-Translator: Weblate Admin <daniel@danwin1210.de>\n"
-"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/mail-"
-"hosting/de/>\n"
+"Language-Team: German <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/de/>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -42,16 +42,13 @@ msgstr ""
 "löschen."
 
 #: tools/delete_leftover_files.php:33
-#, fuzzy, php-format
-#| msgid ""
-#| "%s does not seem to have any accounts, but has a directory. Consider "
-#| "deleting it."
+#, php-format
 msgid ""
 "%s does not seem to have any accounts, but has a snappymail directory. "
 "Consider deleting it."
 msgstr ""
-"%s scheint keine Konten zu haben, aber ein Verzeichnis. Denk darüber nach es "
-"zu löschen."
+"%s scheint keine Konten zu haben, aber ein snappymail Verzeichnis. Denk "
+"darüber nach es zu löschen."
 
 #: common_config.php:94 setup.php:20 setup.php:23 cron.php:11
 msgid "No Connection to MySQL database!"
@@ -105,7 +102,7 @@ msgstr "Fehler beim Erstellen der Datenbank:"
 
 #: setup.php:70
 msgid "Error adding primary domain:"
-msgstr ""
+msgstr "Fehler beim Hinzufügen der primären Domain:"
 
 #: www/terms.php:6 www/terms.php:15 www/terms.php:19
 msgid "E-Mail and XMPP - Terms of Service"
@@ -199,16 +196,13 @@ msgid "You are responsible for the security of your account and password."
 msgstr "Du bist für die Sicherheit deines Kontos und Passworts verantwortlich."
 
 #: www/terms.php:33
-#, fuzzy, php-format
-#| msgid ""
-#| "Your email account only has 50MB of disk space by default. If you need "
-#| "more, you can %s, and I will increase it for free."
+#, php-format
 msgid ""
 "Your email account has %1$s of disk space by default. If you need more, you "
 "can %2$s, and I will increase it for free."
 msgstr ""
-"Dein E-Mail-Konto hat standardmäßig nur 50MB Speicherplatz. Wenn du mehr "
-"benötigst, kannst du %s, und ich werde es kostenlos erhöhen."
+"Dein E-Mail-Konto hat standardmäßig %1$s Speicherplatz. Wenn du mehr "
+"benötigst, kannst du %$2s, und ich werde es kostenlos erhöhen."
 
 #: www/terms.php:33 www/index.php:26
 msgid "contact me"
@@ -351,21 +345,18 @@ msgstr ""
 "über Clearnet zu verbunden werden, oder über den Tor hidden service (%2$s)."
 
 #: www/index.php:26
-#, fuzzy, php-format
-#| msgid ""
-#| "You will have 50MB of disk space available for your mails. If you need "
-#| "more space, %1$s. Your E-Mail address will be %2$s"
+#, php-format
 msgid ""
 "You will have %1$s disk space available for your mails. If you need more "
 "space, %2$s."
 msgstr ""
-"Du wirst 50MB Speicherplatz für deine E-Mails haben. Wenn du mehr Speicher "
-"brauchst, %1$s einfach. Deine E-Mail Adresse wird %2$s sein"
+"Du wirst %1$s Speicherplatz für deine E-Mails haben. Wenn du mehr Speicher "
+"brauchst, %2$s einfach."
 
 #: www/index.php:28
 #, php-format
 msgid "Your E-Mail address will be user@%s"
-msgstr ""
+msgstr "Deine E-Mail Adresse wird user@%s sein"
 
 #: www/index.php:29
 #, php-format
