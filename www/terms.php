@@ -29,7 +29,9 @@ global $language, $dir, $locale;
 <li><?php echo htmlspecialchars(_('Please refrain from sending threats of violence or any harmful content. Dealing with law enforcement requests related to such incidents consumes a significant amount of time.')); ?></li>
 <li><?php echo htmlspecialchars(_('If you lose your password, I will not reset it unless you can prove ownership of the account. You could do so by signing an email with the same PGP key that you use in your account.')); ?></li>
 <li><?php echo htmlspecialchars(_('You are responsible for the security of your account and password.')); ?></li>
+<?php if(DEFAULT_QUOTA > 0) { ?>
 <li><?php printf(htmlspecialchars(_('Your email account has %1$s of disk space by default. If you need more, you can %2$s, and I will increase it for free.')), bytes_to_human_readable(DEFAULT_QUOTA), '<a href="'.CONTACT_URL.'">'.htmlspecialchars(_('contact me')).'</a>'); ?></li>
+<?php } ?>
 <li><?php echo htmlspecialchars(_('The XMPP service provides message archiving and HTTP upload, which can keep your messages and files for up to 1 week. Up to 100MB of file storage is available per user.')); ?></li>
 <li><?php echo htmlspecialchars(_('I reserve the right to block or delete your account without prior notice.')); ?></li>
 <li><?php echo htmlspecialchars(_('I reserve the right to change these terms without prior notice.')); ?></li>
