@@ -357,8 +357,8 @@ function bytes_to_human_readable(int $bytes) : string {
 	$suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
 	$size_class=(int) log($bytes, 1024);
 	if($size_class!==0){
-			return sprintf('%1.1f', $bytes / pow(1024, $size_class)) . $suffix[$size_class];
+		return sprintf('%1.1f', $bytes / pow(1024, $size_class)) . $suffix[$size_class];
 	}else{
-			return $bytes . $suffix[0];
+		return $bytes . $suffix[0];
 	}
 }
