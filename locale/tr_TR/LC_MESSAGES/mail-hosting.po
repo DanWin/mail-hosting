@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 15:47+0200\n"
-"PO-Revision-Date: 2023-05-04 00:26+0000\n"
+"PO-Revision-Date: 2024-11-11 22:48+0000\n"
 "Last-Translator: Daniel Winzen <daniel@danwin1210.de>\n"
-"Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/mail-"
-"hosting/tr/>\n"
-"Language: tr\n"
+"Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
+"mail-hosting/tr/>\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.8.3\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -186,7 +186,7 @@ msgstr ""
 
 #: www/terms.php:33 www/index.php:26
 msgid "contact me"
-msgstr ""
+msgstr "bana ulaşın"
 
 #: www/terms.php:35
 msgid ""
@@ -286,7 +286,7 @@ msgstr ""
 
 #: www/register.php:120
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Gizlilik Politikası"
 
 #: www/index.php:6 www/index.php:15 www/index.php:19
 msgid "E-Mail and XMPP"
@@ -667,7 +667,7 @@ msgstr "2FA ve uçtan uca şifreleme için PGP anahtarı ekleyin"
 
 #: www/manage_account.php:389
 msgid "PGP key"
-msgstr "PGP anahtarı"
+msgstr "Özel Anahtar"
 
 #: www/manage_account.php:394
 msgid "Update PGP key"
