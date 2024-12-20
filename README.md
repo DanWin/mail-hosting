@@ -37,12 +37,12 @@ systemctl daemon-reload && systemctl restart tor@default.service
 
 Replace the default .onion domain with your domain:
 ```
-sed -i "s/danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion/`cat /var/lib/tor/hidden_service/hostname`/g" /etc/prosody/prosody.cfg.lua /etc/nginx/sites-enabled/mail /var/www/mail/common_config.php /etc/postfix/main.cf /var/www/mail/cron.php
+sed -i "s/danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion/`cat /var/lib/tor/hidden_service/hostname`/g" /etc/prosody/prosody.cfg.lua /etc/nginx/sites-enabled/mail /var/www/mail/common_config.php /etc/postfix/main.cf
 ```
 
 Replace the default clearnet domain with your domain:
 ```
-sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/* /var/www/mail/common_config.php /var/www/mail/www/squirrelmail/config/config.php /var/www/mail/cron.php
+sed -i "s/danwin1210.de/YOUR_DOMAIN/g" /etc/prosody/prosody.cfg.lua /etc/postfix/main.cf /etc/dovecot/dovecot.conf /etc/nginx/sites-enabled/* /var/www/mail/common_config.php /var/www/mail/www/squirrelmail/config/config.php
 ```
 
 Create a mysql users and databases:
