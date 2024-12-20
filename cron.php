@@ -37,8 +37,8 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 			exec( 'rm -r ' . escapeshellarg( $snapmail_files ) );
 		}
 		$files = glob( '/var/local/squirrelmail/data/' . $local_basename . '@' . $domain_basename . '.{pref,abook,sig}', GLOB_BRACE );
-		if ( $tmp[ 'domain' ] === 'danwin1210.de' ) {
-			$files = array_merge( $files, glob( '/var/local/squirrelmail/data/' . $local_basename . '{@danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion,}.{pref,abook,sig}', GLOB_BRACE ) );
+		if ( $tmp[ 'domain' ] === CLEARNET_SERVER ) {
+			$files = array_merge( $files, glob( '/var/local/squirrelmail/data/' . $local_basename . '{@'.ONION_SERVER.',}.{pref,abook,sig}', GLOB_BRACE ) );
 			$delete_prosody->execute( [ $tmp[ 'local_part' ], $tmp[ 'domain' ] ] );
 			$delete_prosody_archive->execute( [ $tmp[ 'local_part' ], $tmp[ 'domain' ] ] );
 		}
