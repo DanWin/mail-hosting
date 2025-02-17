@@ -238,7 +238,7 @@ aliases = {
 	["danielas3rtn54uwmofdo3x2bsdifr47huasnmbgqzfrec5ubupvtpid.onion"] = "danwin1210.de";
 }
 alias_response = "User $alias can be contacted at $target";
-defautl_storage = "sql"
+default_storage = "sql"
 interfaces = { "0.0.0.0", "::" } -- Listen address
 contact_info = {
   abuse = { "https://danwin1210.de/contact.php", "mailto:daniel@danwin1210.de" };
