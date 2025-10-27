@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 15:47+0200\n"
-"PO-Revision-Date: 2024-11-11 22:48+0000\n"
-"Last-Translator: Daniel Winzen <daniel@danwin1210.de>\n"
+"PO-Revision-Date: 2025-10-27 22:01+0000\n"
+"Last-Translator: Turkish Mark <turkishmark@yandex.com>\n"
 "Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/tr/>\n"
 "Language: tr_TR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.3\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: tools/delete_leftover_files.php:14
 #, php-format
@@ -25,12 +25,14 @@ msgid ""
 "%s does not seem to have any accounts, but has a directory. Consider "
 "deleting it."
 msgstr ""
+"%s'nin herhangi bir hesabı yok gibi görünüyor, ancak bir dizini var. Silmeyi "
+"düşünün."
 
 #: tools/delete_leftover_files.php:20 tools/delete_leftover_files.php:39
 #: tools/delete_leftover_files.php:57
 #, php-format
 msgid "Deleted: %s"
-msgstr ""
+msgstr "Silindi: %s"
 
 #: tools/delete_leftover_files.php:22 tools/delete_leftover_files.php:41
 #, php-format
@@ -46,7 +48,7 @@ msgstr ""
 
 #: common_config.php:94 setup.php:20 setup.php:23 cron.php:11
 msgid "No Connection to MySQL database!"
-msgstr ""
+msgstr "MySQL veritabanına Bağlantı Yok!"
 
 #: common_config.php:143
 msgid "Copy:"
@@ -97,10 +99,8 @@ msgid "Error adding primary domain:"
 msgstr ""
 
 #: www/terms.php:6 www/terms.php:15 www/terms.php:19
-#, fuzzy
-#| msgid "E-Mail and XMPP - Manage account"
 msgid "E-Mail and XMPP - Terms of Service"
-msgstr "E-Posta ve XMPP - Hesabı yönet"
+msgstr "E-Posta ve XMPP - Hizmet Şartları"
 
 #: www/terms.php:10 www/terms.php:16 www/terms.php:19
 msgid "Terms of Service for E-Mail and XMPP accounts"
@@ -114,7 +114,7 @@ msgstr "Bilgi"
 #: www/terms.php:22 www/register.php:99 www/register.php:130 www/index.php:22
 #: www/manage_account.php:241
 msgid "Register"
-msgstr "Kayıt ol"
+msgstr "Kayıt olmak"
 
 #: www/terms.php:22 www/register.php:99 www/index.php:22
 #: www/manage_account.php:247
@@ -280,9 +280,9 @@ msgid "Password again"
 msgstr "Şifre Tekrar"
 
 #: www/register.php:120 www/register.php:124
-#, php-format
+#, fuzzy, php-format
 msgid "I have read and agreed to the %s"
-msgstr ""
+msgstr "%s'nı okudum ve kabul ettim"
 
 #: www/register.php:120
 msgid "Privacy Policy"
@@ -312,18 +312,13 @@ msgstr ""
 "clearnet'ten veya Tor gizli hizmeti (%2$s) üzerinden bağlanabilir."
 
 #: www/index.php:26
-#, fuzzy, php-format
-#| msgid ""
-#| "You will have 50MB of disk space available for your mails. If you need "
-#| "more space, just <a href=\"%1$s\">contact me</a>. Your E-Mail address "
-#| "will be %2$s"
+#, php-format
 msgid ""
 "You will have %1$s disk space available for your mails. If you need more "
 "space, %2$s."
 msgstr ""
-"Postalarınız için 50 MB boş disk alanınız olacak. Daha fazla alana "
-"ihtiyacınız varsa <a href=\"%1$s\">benimle iletişime geçin</a>. E-Mail "
-"adresiniz %2$s olacak"
+"Mailleriniz için %1$s disk alanı kullanılabilir. Daha fazla alana "
+"ihtiyacınız varsa, %2$s."
 
 #: www/index.php:28
 #, php-format
@@ -509,7 +504,7 @@ msgstr ""
 
 #: www/manage_account.php:168
 msgid "Sorry, the code was incorrect"
-msgstr "Üzgünüz, kod yanlıştı"
+msgstr "Üzgünüz, kod hatalıydı"
 
 #: www/manage_account.php:172
 msgid "Successfully enabled 2FA"
@@ -535,7 +530,7 @@ msgstr ""
 msgid ""
 "To login, please enter the following code to confirm ownership of your key:"
 msgstr ""
-"Oturum açmak için, anahtarınızın sahipliğini onaylamak üzere lütfen "
+"Giriş yapmak için lütfen anahtarınızın size ait olduğunu onaylamak üzere "
 "aşağıdaki kodu girin:"
 
 #: www/manage_account.php:216
@@ -552,20 +547,20 @@ msgstr "2FA kodu"
 
 #: www/manage_account.php:224 www/manage_account.php:373
 msgid "Confirm"
-msgstr "Onayla"
+msgstr "Onaylamak"
 
 #: www/manage_account.php:239 www/admin.php:387
 #, php-format
 msgid "Logged in as %s"
-msgstr "%s olarak giriş yaptı"
+msgstr "%s olarak giriş yapıldı"
 
 #: www/manage_account.php:245 www/admin.php:388
 msgid "Logout"
-msgstr "Çıkış Yap"
+msgstr "Oturumu kapat"
 
 #: www/manage_account.php:266 www/admin.php:414
 msgid "Login"
-msgstr "Giriş"
+msgstr "Giriş yapmak"
 
 #: www/manage_account.php:283
 msgid "Settings"
@@ -631,23 +626,23 @@ msgstr "Şifre değiştir"
 
 #: www/manage_account.php:345
 msgid "Yay, PGP based 2FA is enabled!"
-msgstr "Yay, PGP tabanlı 2FA etkinleştirildi!"
+msgstr "Yaşasın, PGP tabanlı 2FA etkinleştirildi!"
 
 #: www/manage_account.php:355
 msgid ""
 "Sorry, this key can't be used to encrypt a message to you. Your key may have "
 "expired or has been revoked."
 msgstr ""
-"Üzgünüz, bu anahtar size gönderilen bir mesajı şifrelemek için kullanılamaz. "
-"Anahtarınızın süresi dolmuş veya iptal edilmiş olabilir."
+"Üzgünüz, bu anahtar size gönderilecek bir mesajı şifrelemek için "
+"kullanılamaz. Anahtarınızın süresi dolmuş veya iptal edilmiş olabilir."
 
 #: www/manage_account.php:363
 msgid ""
 "To enable 2FA, please enter the following code to confirm ownership of your "
 "key:"
 msgstr ""
-"2FA'yı etkinleştirmek için lütfen anahtarınızın sahipliğini onaylamak üzere "
-"aşağıdaki kodu girin:"
+"2FA'yı etkinleştirmek için lütfen anahtarınızın size ait olduğunu onaylamak "
+"üzere aşağıdaki kodu girin:"
 
 #: www/manage_account.php:364
 msgid "Enable 2FA"
@@ -659,7 +654,7 @@ msgid ""
 "message and confirm the code:"
 msgstr ""
 "PGP anahtarınızı kullanarak 2FA'yı etkinleştirmek için lütfen aşağıdaki PGP "
-"şifreli mesajın şifresini çözün ve kodu onaylayın:"
+"şifreli mesajın şifresini çözün ve kodu doğrulayın:"
 
 #: www/manage_account.php:384
 msgid "Add PGP key for 2FA and end-to-end encryption"
@@ -942,15 +937,13 @@ msgid "Edit account"
 msgstr ""
 
 #: www/admin.php:477 www/admin.php:626 www/admin.php:716 www/admin.php:810
-#, fuzzy
-#| msgid "Disable account"
 msgid "Disabled"
-msgstr "Hesabı devre dışı bırak"
+msgstr "Devredışı"
 
 #: www/admin.php:478 www/admin.php:632 www/admin.php:717 www/admin.php:814
 #: www/admin.php:920
 msgid "Edit"
-msgstr "Düzenle"
+msgstr "Düzenlemek"
 
 #: www/admin.php:493
 #, php-format
@@ -995,21 +988,19 @@ msgstr ""
 
 #: www/admin.php:619 www/admin.php:648
 msgid "Domain"
-msgstr ""
+msgstr "İhtisas"
 
 #: www/admin.php:622
 msgid "Edit domain"
 msgstr ""
 
 #: www/admin.php:630 www/admin.php:918
-#, fuzzy
-#| msgid "Settings"
 msgid "Deleting"
-msgstr "Ayarlar"
+msgstr "Siliniyor"
 
 #: www/admin.php:656
 msgid "Add domain"
-msgstr ""
+msgstr "Alan ekle"
 
 #: www/admin.php:670
 #, php-format
@@ -1018,7 +1009,7 @@ msgstr ""
 
 #: www/admin.php:686
 msgid "Delete domain"
-msgstr ""
+msgstr "Alanı sil"
 
 #: www/admin.php:702 www/admin.php:721 www/admin.php:729
 msgid "Create new alias domain"
