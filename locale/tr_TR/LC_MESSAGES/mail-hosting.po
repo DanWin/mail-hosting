@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 15:47+0200\n"
-"PO-Revision-Date: 2025-10-27 22:20+0000\n"
-"Last-Translator: Turkish Mark <turkishmark@yandex.com>\n"
+"PO-Revision-Date: 2025-10-28 23:01+0000\n"
+"Last-Translator: Turkish Language Team <turkishmark@yandex.com>\n"
 "Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
 "mail-hosting/tr/>\n"
 "Language: tr_TR\n"
@@ -286,8 +286,7 @@ msgstr "E-Posta ve XMPP - Kayıt Ol"
 #: www/register.php:86 www/register.php:92 www/register.php:95
 msgid ""
 "Register for a free and anonymous E-Mail address and an XMPP/Jabber account"
-msgstr ""
-"Ücretsiz ve anonim bir E-Posta adresi ve XMPP/Jabber hesabı için kaydolun"
+msgstr "Ücretsiz anonim bir E-Posta adresi ve XMPP/Jabber hesabı için kaydolun"
 
 #: www/register.php:108 www/manage_account.php:255 www/admin.php:405
 #: www/admin.php:578 www/admin.php:905 www/admin.php:934
@@ -349,7 +348,7 @@ msgstr ""
 #: www/index.php:28
 #, php-format
 msgid "Your E-Mail address will be user@%s"
-msgstr "E-Posta adresiniz user@%s olacaktır."
+msgstr "E-Posta adresiniz user@%s olacaktır"
 
 #: www/index.php:29
 #, php-format
@@ -705,7 +704,7 @@ msgstr "2FA ve uçtan uca şifreleme için PGP anahtarı ekleyin"
 
 #: www/manage_account.php:389
 msgid "PGP key"
-msgstr "Özel Anahtar"
+msgstr "PGP anahtarı"
 
 #: www/manage_account.php:394
 msgid "Update PGP key"
@@ -992,7 +991,7 @@ msgstr "Devredışı"
 #: www/admin.php:478 www/admin.php:632 www/admin.php:717 www/admin.php:814
 #: www/admin.php:920
 msgid "Edit"
-msgstr "Düzenlemek"
+msgstr "Düzenle"
 
 #: www/admin.php:493
 #, php-format
@@ -1099,7 +1098,7 @@ msgstr "Yeni takma ad oluştur"
 
 #: www/admin.php:802 www/admin.php:828
 msgid "Alias"
-msgstr "Takma ad"
+msgstr "Diğer ad"
 
 #: www/admin.php:803 www/admin.php:832 www/admin.php:863
 msgid "Target"
