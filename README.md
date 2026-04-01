@@ -80,6 +80,7 @@ Create a password used for your TURN server and replace all `YOUR_SECRET` in `/e
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:
 ```
 nano /etc/prosody/prosody.cfg.lua /etc/dovecot/dovecot.conf /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/nginx/sites-enabled/mail /etc/nginx/sites-enabled/openpgpkey
+/etc/nginx/sites-enabled/mta-sts
 ```
 
 Add your other servers IP under `unrestricted access to these IPs` in `/etc/rc.local`
@@ -138,6 +139,13 @@ Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https
 ```
 nano /etc/postfix/main.cf /etc/nginx/nginx.conf /etc/turnserver.conf
 ```
+
+Replace your domain name in:
+
+```
+nano /etc/nginx/sites-enabled/clearnet
+```
+
 
 Replace `YOUR_PASSWORD` in `/etc/postfix/sql/mysql_tls_policy_out.cf` with the one you've generated previously on the other server.
 
