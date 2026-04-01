@@ -304,33 +304,39 @@ function validate_email_list( array $targets, string &$msg = '' ): string
 	return ltrim( $alias_goto, ',' );
 }
 
-function check_domain_access( string &$email, string &$msg = '' ): bool
+function check_domain_access(string &$email, string &$msg = ''): bool
 {
-	if ( ! $_SESSION[ 'email_admin_superadmin' ] ) {
+	if (empty($_SESSION['email_admin_superadmin'])) {
 		$db = get_db_instance();
-		$parser = new EmailParser( new EmailLexer() );
-		$parser->parse( $email );
+		$parser = new EmailParser(new EmailLexer());
+		$parser->parse($email);
+
 		$domain = $parser->getDomainPart();
-		$stmt = $db->prepare( 'SELECT target_domain FROM alias_domain WHERE alias_domain = ? AND active=1;' );
-		$stmt->execute( [ $domain ] );
-		if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-			$domain = $tmp[ 'target_domain' ];
-			$email = preg_replace( '~@[^@+]$~iu', "@$domain", $email );
+
+		$stmt = $db->prepare('SELECT target_domain FROM alias_domain WHERE alias_domain = ? AND active = 1;');
+		$stmt->execute([$domain]);
+
+		if ($tmp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$domain = $tmp['target_domain'];
+			$email = $parser->getLocalPart() . '@' . $domain;
 		}
+
 		$managed_domains = [];
-		$stmt = $db->prepare( 'SELECT domain FROM domain_admins WHERE username = ?;' );
-		$stmt->execute( [ $_SESSION[ 'email_admin_user' ] ] );
-		while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-			$managed_domains [] = $tmp[ 'domain' ];
+		$stmt = $db->prepare('SELECT domain FROM domain_admins WHERE username = ?;');
+		$stmt->execute([$_SESSION['email_admin_user']]);
+
+		while ($tmp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$managed_domains[] = $tmp['domain'];
 		}
-		if ( ! in_array( $domain, $managed_domains, true ) ) {
-			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('You are not allowed to manage this domain.')).'</div>';
+
+		if (!in_array($domain, $managed_domains, true)) {
+			$msg .= '<div class="red" role="alert">' . htmlspecialchars(_('You are not allowed to manage this domain.')) . '</div>';
 			return false;
 		}
 	}
+
 	return true;
 }
-
 function check_email_valid( string $email, string &$msg = '' ): bool
 {
 	$validator = new EmailValidator();
