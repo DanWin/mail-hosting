@@ -73,6 +73,7 @@ Generate DKIM signing keys and add them to /etc/rspamd/local.d/arc.conf /etc/rsp
 ```
 rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-rsa -b 4096 -t rsa -k /var/lib/rspamd/dkim/YOUR_DOMAIN-rsa
 rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-ed25519 -t ed25519 -k /var/lib/rspamd/dkim/YOUR_DOMAIN-ed25519
+chown -R _rspamd:_rspamd /var/lib/rspamd/dkim
 ```
 
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
