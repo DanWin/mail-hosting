@@ -3,7 +3,7 @@ require_once( '../common_config.php' );
 global $language, $dir, $locale;
 session_start();
 if ( empty( $_SESSION[ 'csrf_token' ] ) ) {
-	$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+	$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 }
 $msg = '';
 if ( ! empty( $_SESSION[ 'email_user' ] ) ) {
@@ -13,7 +13,7 @@ if ( ! empty( $_SESSION[ 'email_user' ] ) ) {
 	if ( ! $user = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$_SESSION = [];
 		session_regenerate_id( true );
-		$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+		$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('It looks like your user no longer exists!')).'</div>';
 	}
 }
@@ -34,7 +34,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 		if ( $_POST[ 'action' ] === 'logout' ) {
 			$_SESSION = [];
 			session_regenerate_id( true );
-			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+			$$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully logged out')).'</div>';
 		} elseif ( $_POST[ 'action' ] === 'login' ) {
 			$ok = true;
@@ -119,7 +119,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 			$_SESSION = [];
 			session_regenerate_id( true );
-			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+			$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully deleted account')).'</div>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'disable_account2' ) {
 			$stmt = $db->prepare( 'UPDATE alias SET active = 0 WHERE address = ?;' );
@@ -128,7 +128,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 			$_SESSION = [];
 			session_regenerate_id( true );
-			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+			$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully disabled account')).'</div>';
 		} elseif ( isset( $_POST[ 'pgp_key' ] ) && ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_pgp_key' ) {
 			$pgp_key = trim( $_POST[ 'pgp_key' ] );
