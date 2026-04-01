@@ -1,6 +1,6 @@
 {
 	"require": {
-		"egulias/email-validator": "^3.2",
+		"egulias/email-validator": "^4.0.4",
 		"ext-mbstring": "*",
 		"ext-pdo": "*",
 		"ext-gnupg": "*",
