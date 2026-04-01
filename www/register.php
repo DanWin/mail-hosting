@@ -7,7 +7,7 @@ require_once( '../common_config.php' );
 global $language, $dir, $locale;
 session_start();
 if ( empty( $_SESSION[ 'csrf_token' ] ) || $_SESSION[ 'UA' ] !== $_SERVER[ 'HTTP_USER_AGENT' ] ) {
-	$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+	$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 	$_SESSION[ 'UA' ] = $_SERVER[ 'HTTP_USER_AGENT' ];
 }
 $msg = '';
