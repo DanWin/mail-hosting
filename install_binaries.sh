@@ -8,7 +8,7 @@ workingdir=$(pwd)
 
 # install all required packages
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-managesieved dovecot-mysql dovecot-pop3d dovecot-sieve git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event lua-unbound mariadb-server mercurial nano nginx openssl patch php8.2-cli php8.2-curl php8.2-fpm php8.2-gd php8.2-gmp php8.2-gnupg php8.2-imap php8.2-intl php8.2-mbstring php8.2-mysql php8.2-pspell php8.2-readline php8.2-tidy php8.2-uuid php8.2-xml php8.2-zip postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
+DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-managesieved dovecot-mysql dovecot-pop3d dovecot-sieve git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event lua-unbound mariadb-server mercurial nano nginx openssl patch php8.3-cli php8.3-curl php8.3-fpm php8.3-gd php8.3-gmp php8.3-gnupg php8.3-imap php8.3-intl php8.3-mbstring php8.3-mysql php8.3-pspell php8.3-readline php8.3-tidy php8.3-uuid php8.3-xml php8.3-zip postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
 
 # install composer
 curl -sSL https://github.com/composer/composer/releases/download/2.8.3/composer.phar > /usr/bin/composer
