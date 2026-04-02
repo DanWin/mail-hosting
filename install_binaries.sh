@@ -5,8 +5,13 @@ export LANG=C.UTF-8
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 cd $(dirname "${BASH_SOURCE[0]}")
 workingdir=$(pwd)
+CODENAME=$(lsb_release -c -s)
 
 # install all required packages
+mkdir -p /etc/apt/keyrings
+wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/rspamd.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main" | sudo tee /etc/apt/sources.list.d/rspamd.list
+echo "deb-src [signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main" | sudo tee -a /etc/apt/sources.list.d/rspamd.list
 DEBIAN_FRONTEND=noninteractive apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -y apt-transport-tor bash-completion bind9 ca-certificates clamav-daemon clamav-freshclam curl dovecot-imapd dovecot-lmtpd dovecot-managesieved dovecot-mysql dovecot-pop3d dovecot-sieve git gnupg haveged iptables libnginx-mod-http-brotli-filter libsasl2-modules locales locales-all logrotate lsb-release lua-dbi-mysql lua-event lua-unbound mariadb-server mercurial nano nginx openssl patch php8.3-cli php8.3-curl php8.3-fpm php8.3-gd php8.3-gmp php8.3-gnupg php8.3-imap php8.3-intl php8.3-mbstring php8.3-mysql php8.3-pspell php8.3-readline php8.3-tidy php8.3-uuid php8.3-xml php8.3-zip postfix postfix-mysql prosody redis rng-tools5 rspamd tor vim wget unzip wireguard wireguard-tools
 
