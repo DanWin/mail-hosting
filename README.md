@@ -30,6 +30,11 @@ Install files and programs
 ./install_binaries.sh
 ```
 
+Create Gnupg folder:
+```
+mkdir /var/www/.gnupg && chown www-data:www-data /var/www/.gnupg
+```
+
 Copy (and modify according to your needs) the site files in `etc` to `/etc` after installation has finished. Then restart some services:
 ```
 systemctl daemon-reload && systemctl restart tor@default.service
