@@ -34,7 +34,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 		if ( $_POST[ 'action' ] === 'logout' ) {
 			$_SESSION = [];
 			session_regenerate_id( true );
-			$$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
+			$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully logged out')).'</div>';
 		} elseif ( $_POST[ 'action' ] === 'login' ) {
 			$ok = true;
