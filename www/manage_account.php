@@ -19,7 +19,7 @@ if ( ! empty( $_SESSION[ 'email_user' ] ) ) {
 }
 
 if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
-	if ( $_SESSION[ 'csrf_token' ] !== $_POST[ 'csrf_token' ] ?? '' ) {
+	if ( $_SESSION[ 'csrf_token' ] !== ($_POST[ 'csrf_token' ] ?? '' )) {
 		die( 'Invalid CSRF token' );
 	}
 	if ( isset( $_SESSION[ '2fa_code' ] ) ) {
