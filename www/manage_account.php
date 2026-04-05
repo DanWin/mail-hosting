@@ -32,6 +32,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 	}
 	if ( ! isset( $_SESSION[ '2fa_code' ] ) && isset( $_POST[ 'action' ] ) ) {
 		if ( $_POST[ 'action' ] === 'logout' ) {
+			session_destroy();
 			$_SESSION = [];
 			session_regenerate_id( true );
 			$_SESSION[ 'csrf_token' ] = bin2hex(random_bytes(32));
