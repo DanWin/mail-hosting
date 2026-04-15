@@ -4,7 +4,7 @@ keypair {
     type = "kex";
     algorithm = "curve25519";
     id = "YOUR_ID";
-    pubkey = "YPUR_PUBLIC_KEY";
+    pubkey = "YOUR_PUBLIC_KEY";
     encoding = "base32";
 }
 encrypted_only = true;
