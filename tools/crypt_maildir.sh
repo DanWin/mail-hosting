@@ -41,14 +41,14 @@ esac
 
 _encrypt(){
   touch -r "$mailmessage" $tempfile
-  doveadm fs put compress gz:9:crypt:private_key_path=$private_key_path:public_key_path=$public_key_path:posix:prefix=$maildir_path/$userdir/ "$mailmessage" "$mailmessage"
+  doveadm -o fs=compress,crypt,posix -o fs_compress_write_method=gz -o fs/compress/fs_driver=compress -o fs/crypt/fs_driver=crypt -o fs/posix/fs_driver=posix -o crypt_private_key_file=$private_key_path -o crypt_global_private_key=main -o crypt_global_private_key/main/crypt_private_key_file=$private_key_path fs put '' "$mailmessage" "$mailmessage"
   touch -r $tempfile "$mailmessage"
   chown $uid:$gid "$mailmessage"
 }
 
 _decrypt(){
   touch -r "$mailmessage" $tempfile
-  doveadm fs get compress maybe-gz:9:crypt:private_key_path=$private_key_path:public_key_path=$public_key_path:posix:prefix=$maildir_path/$userdir/ "$mailmessage" > .tempdecrypted
+  doveadm -o fs=compress,crypt,posix -o fs/compress/fs_driver=compress -o fs/crypt/fs_driver=crypt -o fs/posix/fs_driver=posix -o crypt_private_key_file=$private_key_path -o crypt_global_private_key=main -o crypt_global_private_key/main/crypt_private_key_file=$private_key_path fs get '' "$mailmessage" > .tempdecrypted
   mv .tempdecrypted "$mailmessage"
   touch -r $tempfile "$mailmessage"
   chmod 0600 "$mailmessage"

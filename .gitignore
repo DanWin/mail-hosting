@@ -1,3 +1,6 @@
 composer.lock
 vendor/
 *~
+www/snappymail/
+www/squirrelmail/
+.vscode/
