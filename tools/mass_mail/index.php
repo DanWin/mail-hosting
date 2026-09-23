@@ -1,7 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix_readonly'; // Database user
