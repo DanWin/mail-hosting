@@ -470,8 +470,7 @@ function render_admin_pagination( string $action, int $page, int $totalPages ): 
 		return;
 	}
 	$base = '?action=' . rawurlencode( $action );
-	echo '<div class="row" style="margin-top: 1rem;">';
-	echo '<div class="col" style="text-align: center;">';
+	echo '<div class="row">';
 	if ( $page > 1 ) {
 		echo '<a href="' . $base . '&page=' . ( $page - 1 ) . '">' . htmlspecialchars( _('Previous') ) . '</a> ';
 	}
@@ -485,7 +484,6 @@ function render_admin_pagination( string $action, int $page, int $totalPages ): 
 	if ( $page < $totalPages ) {
 		echo ' <a href="' . $base . '&page=' . ( $page + 1 ) . '">' . htmlspecialchars( _('Next') ) . '</a>';
 	}
-	echo '</div>';
 	echo '</div>';
 }
 
