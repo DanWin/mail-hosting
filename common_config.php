@@ -30,6 +30,7 @@ const REGISTRATION_ENABLED = true; // Whether registration is enabled
 const DEFAULT_QUOTA = 50 * 1024 * 1024; // Default mailbox quota in bytes
 const POSTMASTER_EMAIL = 'postmaster@danwin1210.de'; // Email address of the postmaster account receiving TLS and DMARC reports
 const POSTMASTER_PASSWORD = 'YOUR_PASSWORD'; // Password of the postmaster account receiving TLS and DMARC reports
+const ADMIN_LIST_PAGE_SIZE = 50; // Number of entries per page in the admin list
 
 const LANGUAGES = [
 	'cs' => ['name' => 'čeština', 'locale' => 'cs_CZ', 'flag' => '🇨🇿', 'show_in_menu' => true, 'dir' => 'ltr'],

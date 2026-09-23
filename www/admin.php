@@ -457,10 +457,49 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 </html>
 
 <?php
+
+function get_admin_list_page(): int
+{
+	$page = isset( $_GET[ 'page' ] ) ? (int) $_GET[ 'page' ] : 1;
+	return max( 1, $page );
+}
+
+function render_admin_pagination( string $action, int $page, int $totalPages ): void
+{
+	if ( $totalPages <= 1 ) {
+		return;
+	}
+	$base = '?action=' . rawurlencode( $action );
+	echo '<div class="row" style="margin-top: 1rem;">';
+	echo '<div class="col" style="text-align: center;">';
+	if ( $page > 1 ) {
+		echo '<a href="' . $base . '&page=' . ( $page - 1 ) . '">' . htmlspecialchars( _('Previous') ) . '</a> ';
+	}
+	for ( $i = 1; $i <= $totalPages; ++$i ) {
+		if ( $i === $page ) {
+			echo '<strong> ' . $i . ' </strong>';
+		} else {
+			echo '<a href="' . $base . '&page=' . $i . '"> ' . $i . ' </a>';
+		}
+	}
+	if ( $page < $totalPages ) {
+		echo ' <a href="' . $base . '&page=' . ( $page + 1 ) . '">' . htmlspecialchars( _('Next') ) . '</a>';
+	}
+	echo '</div>';
+	echo '</div>';
+}
+
 function send_manage_admins(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->query( 'SELECT username, modified, active FROM admin;' );
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$total = (int) $db->query( 'SELECT COUNT(*) FROM admin;' )->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT username, modified, active FROM admin ORDER BY username LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->execute();
 	?>
     <p><a href="?action=new_admin"><?php echo htmlspecialchars(_('Create new admin')); ?></a></p>
     <form class="form_limit" action="admin.php" method="post">
@@ -480,6 +519,7 @@ function send_manage_admins(): void
 		?></form>
     <p><a href="?action=new_admin"><?php echo htmlspecialchars(_('Create new admin')); ?></a></p>
 	<?php
+	render_admin_pagination( 'admins', $page, $totalPages );
 }
 
 function send_edit_admin(): void
@@ -607,7 +647,14 @@ function send_new_admin(): void
 function send_manage_domains(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->query( 'SELECT domain, modified, active FROM domain;' );
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$total = (int) $db->query( 'SELECT COUNT(*) FROM domain;' )->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT domain, modified, active FROM domain ORDER BY domain LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->execute();
 	if ( $_SESSION[ 'email_admin_superadmin' ] ) {
 		?>
         <p><a href="?action=new_domain"><?php echo htmlspecialchars(_('Create new domain')); ?></a></p>
@@ -636,6 +683,7 @@ function send_manage_domains(): void
     <p><a href="?action=new_domain"><?php echo htmlspecialchars(_('Create new domain')); ?></a></p>
 	<?php
 }
+	render_admin_pagination( 'domains', $page, $totalPages );
 }
 
 function send_new_domain(): void
@@ -696,7 +744,14 @@ function send_edit_domain(): void
 function send_manage_alias_domains(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->query( 'SELECT alias_domain, target_domain, modified, active FROM alias_domain;' );
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$total = (int) $db->query( 'SELECT COUNT(*) FROM alias_domain;' )->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT alias_domain, target_domain, modified, active FROM alias_domain ORDER BY alias_domain LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->execute();
 	if ( $_SESSION[ 'email_admin_superadmin' ] ) {
 		?>
         <p><a href="?action=new_alias_domain"><?php echo htmlspecialchars(_('Create new alias domain')); ?></a></p>
@@ -721,6 +776,7 @@ function send_manage_alias_domains(): void
     <p><a href="?action=new_alias_domain"><?php echo htmlspecialchars(_('Create new alias domain')); ?></a></p>
 	<?php
 }
+	render_admin_pagination( 'alias_domains', $page, $totalPages );
 }
 
 function send_new_alias_domain(): void
@@ -752,8 +808,9 @@ function send_new_alias_domain(): void
 function send_edit_alias_domain(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT alias_domain, target_domain, active FROM alias_domain WHERE alias_domain = ?;' );
-	$stmt->execute( [ $_POST[ 'alias_domain' ] ] );
+	$stmt = $db->prepare( 'SELECT alias_domain, target_domain, active FROM alias_domain WHERE alias_domain = :alias_domain;' );
+	$stmt->bindValue( ':alias_domain', $_POST[ 'alias_domain' ], PDO::PARAM_STR );
+	$stmt->execute();
 	if ( $alias = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		?>
         <h2><?php printf(htmlspecialchars(_('Edit alias domain %s')), htmlspecialchars( $_POST[ 'alias_domain' ] ) ); ?></h2>
@@ -791,8 +848,18 @@ function send_edit_alias_domain(): void
 function send_manage_aliases(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = ?) AND isnull(m.username) limit 200;' );
-	$stmt->execute( [ $_SESSION[ 'email_admin_user' ] ] );
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username);' );
+	$countStmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	$countStmt->execute();
+	$total = (int) $countStmt->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) ORDER BY a.address LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->execute();
 	?>
     <p><a href="?action=new_alias"><?php echo htmlspecialchars(_('Create new alias')); ?></a></p>
     <form class="form_limit" action="admin.php" method="post">
@@ -816,6 +883,7 @@ function send_manage_aliases(): void
 		?></form>
     <p><a href="?action=new_alias"><?php echo htmlspecialchars(_('Create new alias')); ?></a></p>
 	<?php
+	render_admin_pagination( 'alias', $page, $totalPages );
 }
 
 function send_new_alias(): void
@@ -851,8 +919,9 @@ function send_new_alias(): void
 function send_edit_alias(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.active, a.enforce_tls_in FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.address = ? AND isnull(m.username);' );
-	$stmt->execute( [ $_POST[ 'alias' ] ] );
+	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.active, a.enforce_tls_in FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.address = :alias AND isnull(m.username);' );
+	$stmt->bindValue( ':alias', $_POST[ 'alias' ], PDO::PARAM_STR );
+	$stmt->execute();
 	if ( $alias = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		?>
         <h2><?php printf(htmlspecialchars(_('Edit alias %s')), htmlspecialchars( $_POST[ 'alias' ] ) ); ?></h2>
@@ -894,8 +963,18 @@ function send_edit_alias(): void
 function send_manage_mailboxes(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT username, modified, active FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = ?) limit 200;' );
-	$stmt->execute( [ $_SESSION[ 'email_admin_user' ] ] );
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username);' );
+	$countStmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	$countStmt->execute();
+	$total = (int) $countStmt->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT username, modified, active FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username) ORDER BY username LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	$stmt->execute();
 	?>
     <p><a href="?action=new_mailbox"><?php echo htmlspecialchars(_('Create new mailbox')); ?></a></p>
     <form class="form_limit" action="admin.php" method="post">
@@ -922,6 +1001,7 @@ function send_manage_mailboxes(): void
 		?></form>
     <p><a href="?action=new_mailbox"><?php echo htmlspecialchars(_('Create new mailbox')); ?></a></p>
 	<?php
+	render_admin_pagination( 'mailbox', $page, $totalPages );
 }
 
 function send_new_mailbox(): void
