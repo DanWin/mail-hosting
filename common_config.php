@@ -82,7 +82,7 @@ bindtextdomain('mail-hosting', __DIR__.'/locale');
 bind_textdomain_codeset('mail-hosting', 'UTF-8');
 textdomain('mail-hosting');
 
-require_once( 'vendor/autoload.php' );
+require_once( __DIR__ . '/vendor/autoload.php' );
 
 function get_db_instance(): PDO
 {
