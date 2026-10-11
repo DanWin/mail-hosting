@@ -266,38 +266,51 @@ if ( isset( $_SESSION[ 'user_totp_pending' ] ) ) {
 	<?php
 	exit;
 } elseif ( isset( $_SESSION[ '2fa_code' ] ) ){
-$gpg = gnupg_init();
-gnupg_seterrormode( $gpg, GNUPG_ERROR_WARNING );
-gnupg_setarmor( $gpg, 1 );
-$imported_key = gnupg_import( $gpg, $_SESSION[ 'pgp_key' ] );
-if ( $imported_key ){
-$key_info = gnupg_keyinfo( $gpg, $imported_key[ 'fingerprint' ] );
-foreach ( $key_info as $key ) {
-	if ( $key[ 'can_encrypt' ] ) {
-		foreach ( $key[ 'subkeys' ] as $subkey ) {
-			gnupg_addencryptkey( $gpg, $subkey[ 'fingerprint' ] );
+	$gpg = gnupg_init();
+	gnupg_seterrormode( $gpg, GNUPG_ERROR_WARNING );
+	gnupg_setarmor( $gpg, 1 );
+	$imported_key = gnupg_import( $gpg, $_SESSION[ 'pgp_key' ] );
+	$key_valid = false;
+	if ( $imported_key ){
+		$key_info = gnupg_keyinfo( $gpg, $imported_key[ 'fingerprint' ] );
+		foreach ( is_array( $key_info ) ? $key_info : [] as $key ) {
+			if ( $key[ 'can_encrypt' ] && ! $key['expired'] && ! $key['revoked'] ) {
+				foreach ( $key[ 'subkeys' ] as $subkey ) {
+					if( $subkey[ 'can_encrypt' ] && ! $subkey['expired'] && ! $subkey['revoked'] ) {
+						if(gnupg_addencryptkey( $gpg, $subkey[ 'fingerprint' ] )){
+							$key_valid = true;
+						}
+					}
+				}
+			}
 		}
+		$encrypted = gnupg_encrypt( $gpg, _('To login, please enter the following code to confirm ownership of your key:')."\n\n" . $_SESSION[ '2fa_code' ] . "\n" );
 	}
-}
-$encrypted = gnupg_encrypt( $gpg, _('To login, please enter the following code to confirm ownership of your key:')."\n\n" . $_SESSION[ '2fa_code' ] . "\n" );
-echo $msg;
-echo '<p>'.htmlspecialchars(_('To login, please decrypt the following PGP encrypted message and confirm the code:')).'</p>';
-echo "<pre>$encrypted</pre>";
-?>
-<form class="form_limit" action="manage_account.php" method="post">
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
-    <div class="row">
-        <div class="col"><input type="text" name="2fa_code" aria-label="<?php echo htmlspecialchars(_('2FA code')); ?>"></div>
-        <div class="col">
-            <button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
-        </div>
-    </div>
-</form>
-</main></body>
-</html>
-<?php
-exit;
-}
+	if ( ! $key_valid || ! $encrypted ) {
+		unset( $_SESSION[ '2fa_code' ] );
+		unset( $_SESSION[ 'pgp_key' ] );
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Your PGP key has expired, so PGP two-factor authentication was skipped for this login. Update your PGP key to restore PGP two-factor authentication.')).'</div>';
+	} else {
+		echo $msg;
+		echo '<p>'.htmlspecialchars(_('To login, please decrypt the following PGP encrypted message and confirm the code:')).'</p>';
+		echo '<pre>'.htmlspecialchars( $encrypted ).'</pre>';
+		?>
+		<?php if ( $encrypted ) { ?>
+			<form class="form_limit" action="manage_account.php" method="post">
+				<input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+				<div class="row">
+					<div class="col"><input type="text" name="2fa_code" aria-label="<?php echo htmlspecialchars(_('2FA code')); ?>"></div>
+					<div class="col">
+						<button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
+					</div>
+				</div>
+			</form>
+		<?php } ?>
+		</main></body>
+		</html>
+		<?php
+		exit;
+	}
 }
 if ( ! empty( $_SESSION[ 'email_user' ] ) ){ ?>
 <form method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
