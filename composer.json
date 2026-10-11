@@ -1,12 +1,12 @@
 {
 	"require": {
-		"egulias/email-validator": "^3.2",
+		"egulias/email-validator": "^4.0",
 		"ext-mbstring": "*",
 		"ext-pdo": "*",
 		"ext-gnupg": "*",
 		"ext-gettext": "*",
 		"ext-intl": "*",
-		"endroid/qr-code": "^5.0",
+		"endroid/qr-code": "^6.1",
 		"ext-gd": "*"
 	}
 }
