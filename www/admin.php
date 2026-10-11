@@ -684,7 +684,6 @@ function send_edit_admin(): void
                 <p><?php echo htmlspecialchars(_('Add this secret to your authenticator app, then enter the generated code to enable TOTP.')); ?></p>
                 <p><img src="<?php echo htmlspecialchars( $totp_qr ); ?>" alt="<?php echo htmlspecialchars(_('TOTP setup QR code')); ?>" width="220" height="220"></p>
                 <p><strong><?php echo htmlspecialchars($_SESSION[ 'admin_totp_setup' ]); ?></strong></p>
-                <p><a href="<?php echo htmlspecialchars( $totp_uri ); ?>"><?php echo htmlspecialchars(_('Open authenticator setup link')); ?></a></p>
                 <form class="form_limit" action="admin.php" method="post">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
                     <input type="hidden" name="action" value="enable_admin_totp">

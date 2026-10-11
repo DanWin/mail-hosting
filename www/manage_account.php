@@ -196,6 +196,10 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 				$msg .= '<p class="green">'.htmlspecialchars(_('Successfully enabled 2FA')).'</p>';
 			}
+		} elseif ( $_POST[ 'action' ] === 'disable_pgp_2fa' && ! empty( $_SESSION[ 'email_user' ] ) ) {
+			$stmt = $db->prepare( 'UPDATE mailbox SET tfa = 0 WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+			$msg .= '<p class="green">'.htmlspecialchars(_('Successfully disabled two-factor authentication')).'</p>';
 		} elseif ( $_POST[ 'action' ] === 'start_totp_setup' && ! empty( $_SESSION[ 'email_user' ] ) ) {
 			$_SESSION[ 'user_totp_setup' ] = generate_totp_secret();
 		} elseif ( $_POST[ 'action' ] === 'enable_totp' && ! empty( $_SESSION[ 'email_user' ] ) && ! empty( $_SESSION[ 'user_totp_setup' ] ) ) {
@@ -423,7 +427,6 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
         <p><?php echo htmlspecialchars(_('Add this secret to your authenticator app, then enter the generated code to enable TOTP.')); ?></p>
         <p><img src="<?php echo htmlspecialchars( $totp_qr ); ?>" alt="<?php echo htmlspecialchars(_('TOTP setup QR code')); ?>" width="220" height="220"></p>
         <p><strong><?php echo htmlspecialchars($_SESSION[ 'user_totp_setup' ]); ?></strong></p>
-        <p><a href="<?php echo htmlspecialchars( $totp_uri ); ?>"><?php echo htmlspecialchars(_('Open authenticator setup link')); ?></a></p>
         <form class="form_limit" action="manage_account.php" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
             <div class="row">
@@ -439,8 +442,13 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
         </form>
 	<?php }
 	if ( ! empty( $pgp_status[ 'pgp_key' ] ) ) {
-		if ( $pgp_status[ 'tfa' ] === 1 ) {
-			echo '<p class="green">'.htmlspecialchars(_('Yay, PGP based 2FA is enabled!')).'</p>';
+		if ( (int) $pgp_status[ 'tfa' ] === 1 ) {
+			?>
+            <form class="form_limit" action="manage_account.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+                <button type="submit" name="action" value="disable_pgp_2fa"><?php echo htmlspecialchars(_('Disable two-factor authentication')); ?></button>
+            </form>
+			<?php
 		} else {
 			$gpg = gnupg_init();
 			gnupg_seterrormode( $gpg, GNUPG_ERROR_WARNING );
