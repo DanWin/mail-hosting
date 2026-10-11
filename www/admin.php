@@ -32,27 +32,34 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully logged out')).'</div>';
 		} elseif ( $_POST[ 'action' ] === 'login' ) {
+			$ok = true;
+			if ( ! check_captcha( $_POST[ 'challenge' ] ?? '', $_POST[ 'captcha' ] ?? '' ) ) {
+				$ok = false;
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid captcha')).'</div>';
+			}
 			if ( empty( $_POST[ 'user' ] ) ) {
 				$ok = false;
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid username')).'</div>';
 			}
-			$stmt = $db->prepare( 'SELECT username, password, password_hash_type, superadmin FROM admin WHERE username = ? AND active = 1;' );
-			$stmt->execute( [ $_POST[ 'user' ] ] );
-			if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-				if ( empty( $_POST[ 'pwd' ] ) || ! password_verify( $_POST[ 'pwd' ], $tmp[ 'password' ] ) ) {
-					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
-				} else {
-					$_SESSION[ 'email_admin_user' ] = $tmp[ 'username' ];
-					$_SESSION[ 'email_admin_superadmin' ] = (bool) $tmp[ 'superadmin' ];
-					// update password hash if it's using an old hashing algorithm
-					if ( $tmp[ 'password_hash_type' ] !== '{ARGON2ID}' ) {
-						$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
-						$stmt = $db->prepare( 'UPDATE admin SET password_hash_type = "{ARGON2ID}", password = ? WHERE username = ? AND active = 1;' );
-						$stmt->execute( [ $hash, $_SESSION[ 'email_admin_user' ] ] );
+			if ( $ok ) {
+				$stmt = $db->prepare( 'SELECT username, password, password_hash_type, superadmin FROM admin WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $_POST[ 'user' ] ] );
+				if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
+					if ( empty( $_POST[ 'pwd' ] ) || ! password_verify( $_POST[ 'pwd' ], $tmp[ 'password' ] ) ) {
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
+					} else {
+						$_SESSION[ 'email_admin_user' ] = $tmp[ 'username' ];
+						$_SESSION[ 'email_admin_superadmin' ] = (bool) $tmp[ 'superadmin' ];
+						// update password hash if it's using an old hashing algorithm
+						if ( $tmp[ 'password_hash_type' ] !== '{ARGON2ID}' ) {
+							$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
+							$stmt = $db->prepare( 'UPDATE admin SET password_hash_type = "{ARGON2ID}", password = ? WHERE username = ? AND active = 1;' );
+							$stmt->execute( [ $hash, $_SESSION[ 'email_admin_user' ] ] );
+						}
 					}
+				} else {
+					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 				}
-			} else {
-				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 			}
 		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) ) {
 			if ( $_POST[ 'action' ] === 'update_alias' ) {
@@ -409,6 +416,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
                 <div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
                 <div class="col"><input type="password" name="pwd" id="pwd" autocomplete="new-password" required></div>
             </div>
+			<?php send_captcha(); ?>
             <div class="row">
                 <div class="col">
                     <button name="action" value="login" type="submit"><?php echo htmlspecialchars(_('Login')); ?></button>
