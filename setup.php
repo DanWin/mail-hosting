@@ -36,7 +36,7 @@ $createTableStatements = [
 	'dmarc_report_record_reason' => "CREATE TABLE IF NOT EXISTS `dmarc_report_record_reason` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `record_id` bigint(20) unsigned NOT NULL, `type` varchar(255) NOT NULL, `comment` varchar(255) NOT NULL, PRIMARY KEY (`id`), KEY `record_id` (`record_id`), CONSTRAINT `dmarc_report_record_reason_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `dmarc_report_records` (`id`) ON DELETE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'dmarc_report_record_spf_result' => "CREATE TABLE IF NOT EXISTS `dmarc_report_record_spf_result` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `record_id` bigint(20) unsigned NOT NULL, `domain` varchar(255) NOT NULL, `result` varchar(255) NOT NULL, `scope` varchar(255) NOT NULL, PRIMARY KEY (`id`), KEY `record_id` (`record_id`), CONSTRAINT `dmarc_report_record_spf_result_ibfk_2` FOREIGN KEY (`record_id`) REFERENCES `dmarc_report_records` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;",
 	'domain_admins' => "CREATE TABLE IF NOT EXISTS `domain_admins` (`username` varchar(255) NOT NULL, `domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `id` bigint(20) NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`), KEY `username` (`username`), KEY `active` (`active`), KEY `domain` (`domain`), CONSTRAINT `domain_admins_ibfk_1` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT `domain_admins_ibfk_2` FOREIGN KEY (`username`) REFERENCES `admin` (`username`) ON DELETE CASCADE ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
-	'mailbox' => "CREATE TABLE IF NOT EXISTS `mailbox` (`username` varchar(255) NOT NULL, `password` varchar(255) NOT NULL DEFAULT '', `quota` bigint(20) NOT NULL DEFAULT 0, `local_part` varchar(255) NOT NULL DEFAULT '', `domain` varchar(255) NOT NULL DEFAULT '', `created` datetime NOT NULL DEFAULT current_timestamp(), `modified` datetime NOT NULL DEFAULT current_timestamp(), `active` tinyint(1) NOT NULL DEFAULT 1, `password_hash_type` varchar(20) NOT NULL DEFAULT '', `openpgpkey_wkd` char(32) NOT NULL DEFAULT '', `pgp_key` text DEFAULT NULL, `pgp_verified` tinyint(1) NOT NULL DEFAULT 0, `tfa` tinyint(1) NOT NULL DEFAULT 0, `totp_secret` varchar(64) DEFAULT NULL, `last_login` bigint(20) unsigned DEFAULT NULL, `enforce_tls_in` tinyint(1) NOT NULL DEFAULT 1, `enforce_tls_out` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`username`), KEY `domain` (`domain`), KEY `active` (`active`), KEY `openpgpkey_wkd` (`openpgpkey_wkd`), CONSTRAINT `mailbox_ibfk_2` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+	'mailbox' => "CREATE TABLE IF NOT EXISTS `mailbox` (`username` varchar(255) NOT NULL, `password` varchar(255) NOT NULL DEFAULT '', `quota` bigint(20) NOT NULL DEFAULT 0, `local_part` varchar(255) NOT NULL DEFAULT '', `domain` varchar(255) NOT NULL DEFAULT '', `created` datetime NOT NULL DEFAULT current_timestamp(), `modified` datetime NOT NULL DEFAULT current_timestamp(), `active` tinyint(1) NOT NULL DEFAULT 1, `password_hash_type` varchar(20) NOT NULL DEFAULT '', `openpgpkey_wkd` char(32) NOT NULL DEFAULT '', `pgp_key` text DEFAULT NULL, `pgp_verified` tinyint(1) NOT NULL DEFAULT 0, `tfa` tinyint(1) NOT NULL DEFAULT 0, `totp_secret` varchar(64) DEFAULT NULL, `last_login` bigint(20) unsigned DEFAULT NULL, `inactivity_period` tinyint unsigned NOT NULL DEFAULT 12, `enforce_tls_in` tinyint(1) NOT NULL DEFAULT 1, `enforce_tls_out` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`username`), KEY `domain` (`domain`), KEY `active` (`active`), KEY `openpgpkey_wkd` (`openpgpkey_wkd`), CONSTRAINT `mailbox_ibfk_2` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'monitored_mailboxes' => "CREATE TABLE IF NOT EXISTS `monitored_mailboxes` (`username` varchar(255) NOT NULL, `last_login` int(11) NOT NULL, PRIMARY KEY (`username`), KEY `lastlogin` (`last_login`), CONSTRAINT `monitored_mailboxes_ibfk_1` FOREIGN KEY (`username`) REFERENCES `mailbox` (`username`) ON DELETE CASCADE ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'tls_report' => "CREATE TABLE IF NOT EXISTS `tls_report` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `report_id` varchar(255) NOT NULL, `organization` varchar(255) NOT NULL, `contact` varchar(255) NOT NULL, `start` datetime NOT NULL, `end` datetime NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `report_id_organization` (`report_id`,`organization`), KEY `start_end` (`start`,`end`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'tls_report_policy' => "CREATE TABLE IF NOT EXISTS `tls_report_policy` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `report_id` bigint(20) unsigned NOT NULL, `policy_type` varchar(255) NOT NULL, `policy_string` text NOT NULL, `policy_domain` varchar(255) NOT NULL, `mx_host` text NOT NULL, `success` int(11) NOT NULL, `failure` int(11) NOT NULL, PRIMARY KEY (`id`), KEY `report_id` (`report_id`), KEY `policy_domain` (`policy_domain`), CONSTRAINT `tls_report_policy_ibfk_1` FOREIGN KEY (`report_id`) REFERENCES `tls_report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT `tls_report_policy_ibfk_3` FOREIGN KEY (`policy_domain`) REFERENCES `domain` (`domain`) ON DELETE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
@@ -46,17 +46,23 @@ $createTableStatements = [
 
 try{
 	$stmt=$db->query("SELECT value FROM settings WHERE setting='version';");
-	$version=$stmt->fetch(PDO::FETCH_NUM)[0];
+	$version=(int) $stmt->fetch(PDO::FETCH_NUM)[0];
 	try {
 		foreach($createTableStatements as $tableName => $statement){
 			$db->exec($statement);
 		}
-		if ( (int) $version < 3 ) {
+		if ( $version < 3 ) {
 			foreach ( [ 'admin', 'mailbox' ] as $tableName ) {
 				$stmt = $db->query( "SHOW COLUMNS FROM `$tableName` LIKE 'totp_secret';" );
 				if ( ! $stmt->fetch() ) {
 					$db->exec( "ALTER TABLE `$tableName` ADD COLUMN `totp_secret` varchar(64) DEFAULT NULL;" );
 				}
+			}
+		}
+		if ( $version < 4 ) {
+			$stmt = $db->query( "SHOW COLUMNS FROM `mailbox` LIKE 'inactivity_period';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( 'ALTER TABLE `mailbox` ADD COLUMN `inactivity_period` tinyint unsigned NOT NULL DEFAULT 12 AFTER `last_login`;' );
 			}
 		}
 		$db->beginTransaction();

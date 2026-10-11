@@ -22,7 +22,7 @@ global $language, $dir, $locale;
 <p><a href="<?php echo ROOT_URL; ?>"><?php echo htmlspecialchars(_('Info')); ?></a> | <a href="<?php echo ROOT_URL; ?>register.php"><?php echo htmlspecialchars(_('Register')); ?></a> | <a href="<?php echo ROOT_URL; ?>manage_account.php"><?php echo htmlspecialchars(_('Manage account')); ?></a> | <a href="<?php echo ROOT_URL; ?>squirrelmail/src/login.php" target="_blank"><?php echo htmlspecialchars(_('SquirrelMail')); ?></a> | <a href="<?php echo ROOT_URL; ?>snappymail/" target="_blank"><?php echo htmlspecialchars(_('SnappyMail')); ?></a> | <a href="<?php echo WEB_XMPP_URL; ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars(_('Web-XMPP')); ?></a></p>
 <ol>
 <li><?php echo htmlspecialchars(_('I provide this service as is. I do not offer any uptime guarantee.')); ?></li>
-<li><?php echo htmlspecialchars(_('Inactive accounts get automatically deleted after one year of inactivity.')); ?></li>
+<li><?php echo htmlspecialchars(_('Inactive accounts are automatically deleted after the inactivity period selected in account settings. By default, this period is %d months.'), DEFAULT_INACTIVITY_PERIOD); ?></li>
 <li><?php echo htmlspecialchars(_('Spamming is not allowed, and you will be blocked if you do.')); ?></li>
 <li><?php echo htmlspecialchars(_('Using your account for illegal purposes is not allowed, and you will be blocked if you do.')); ?></li>
 <li><?php echo htmlspecialchars(_('Mass mailing is not allowed, and you will be blocked if you do.')); ?></li>

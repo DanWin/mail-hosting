@@ -9,10 +9,13 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 3; // Database schema version
+const DBVERSION = 4; // Database schema version
+const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
+const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
+const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 4
-const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsbubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can mot be used on public registration
+const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can not be used on public registration
 const CANONICAL_URL = 'https://mail.danwin1210.de/'; // our preferred URL prefix for search engines
 const PRIVACY_POLICY_URL = '/privacy.php'; // URL to privacy policy
 const WEB_XMPP_URL = 'https://danwin1210.de:5281/conversejs'; // URL to Web-XMPP
@@ -83,6 +86,16 @@ bind_textdomain_codeset('mail-hosting', 'UTF-8');
 textdomain('mail-hosting');
 
 require_once( __DIR__ . '/vendor/autoload.php' );
+
+function get_inactivity_period_options(): array
+{
+	return [
+		1 => _('1 month'),
+		6 => _('6 months'),
+		12 => _('1 year'),
+		24 => _('2 years'),
+	];
+}
 
 function get_db_instance(): PDO
 {

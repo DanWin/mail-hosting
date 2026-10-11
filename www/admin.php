@@ -334,20 +334,29 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$ok = check_domain_access( $_POST[ 'user' ], $msg );
 				}
 				if ( $ok ) {
-					$alias_goto = '';
-					if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
-						$alias_goto .= $_POST[ 'user' ] . ',';
+					$inactivity_period = filter_var( $_POST[ 'inactivity_period' ] ?? null, FILTER_VALIDATE_INT );
+					$valid_inactivity_period = $inactivity_period !== false && (
+						in_array( $inactivity_period, INACTIVITY_PERIOD_MONTHS, true )
+						|| ( ALLOW_ACCOUNT_NEVER_DELETE && $inactivity_period === 0 )
+					);
+					if ( ! $valid_inactivity_period ) {
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select a valid inactivity period.')).'</div>';
+					} else {
+						$alias_goto = '';
+						if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
+							$alias_goto .= $_POST[ 'user' ] . ',';
+						}
+						if ( ! empty( $_POST[ 'alias_to' ] ) ) {
+							$additional = preg_split( "/[\s,]+/", $_POST[ 'alias_to' ] );
+							$alias_goto .= validate_email_list( $additional, $msg );
+						}
+						$alias_goto = rtrim( $alias_goto, ',' );
+						$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
+						$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
+						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, modified = NOW() WHERE username = ?;' );
+						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $_POST[ 'user' ] ] );
+						$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 					}
-					if ( ! empty( $_POST[ 'alias_to' ] ) ) {
-						$additional = preg_split( "/[\s,]+/", $_POST[ 'alias_to' ] );
-						$alias_goto .= validate_email_list( $additional, $msg );
-					}
-					$alias_goto = rtrim( $alias_goto, ',' );
-					$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
-					$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
-					$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, modified = NOW() WHERE username = ?;' );
-					$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $_POST[ 'user' ] ] );
-					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_mailbox' && ! empty( $_POST[ 'user' ] ) ) {
 				$email = mb_strtolower( $_POST[ 'user' ] );
@@ -1152,7 +1161,7 @@ function send_new_mailbox(): void
 function send_edit_mailbox(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
+	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
@@ -1186,6 +1195,19 @@ function send_edit_mailbox(): void
             <div class="row">
                 <div class="col"><label><input type="checkbox" name="enforce_tls_out"
                                                value="1"<?php echo $email[ 'enforce_tls_out' ] === 1 ? ' checked' : ''; ?>><?php echo htmlspecialchars(_('Enforce encryption for outgoing mail')); ?></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><label for="inactivity_period"><?php echo htmlspecialchars(_('Delete after inactivity')); ?></label></div>
+                <div class="col">
+                    <select name="inactivity_period" id="inactivity_period">
+						<?php if ( ALLOW_ACCOUNT_NEVER_DELETE ) { ?>
+                            <option value="0"<?php echo (int) $email[ 'inactivity_period' ] === 0 ? ' selected' : ''; ?>><?php echo htmlspecialchars(_('Never')); ?></option>
+						<?php } ?>
+						<?php foreach ( get_inactivity_period_options() as $months => $label ) { ?>
+                            <option value="<?php echo $months; ?>"<?php echo (int) $email[ 'inactivity_period' ] === $months ? ' selected' : ''; ?>><?php echo htmlspecialchars($label); ?></option>
+						<?php } ?>
+                    </select>
                 </div>
             </div>
             <div class="row">

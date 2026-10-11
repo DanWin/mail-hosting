@@ -120,6 +120,19 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), $_SESSION[ 'email_user' ] ] );
 			$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ? WHERE username = ? AND active = 1;' );
 			$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), $_SESSION[ 'email_user' ] ] );
+		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_inactivity_period' ) {
+			$inactivity_period = filter_var( $_POST[ 'inactivity_period' ] ?? null, FILTER_VALIDATE_INT );
+			$valid_inactivity_period = $inactivity_period !== false && (
+				in_array( $inactivity_period, INACTIVITY_PERIOD_MONTHS, true )
+				|| ( ALLOW_ACCOUNT_NEVER_DELETE && $inactivity_period === 0 )
+			);
+			if ( ! $valid_inactivity_period ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select a valid inactivity period.')).'</div>';
+			} else {
+				$stmt = $db->prepare( 'UPDATE mailbox SET inactivity_period = ? WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $inactivity_period, $_SESSION[ 'email_user' ] ] );
+				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated the inactivity period.')).'</div>';
+			}
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_password' ) {
 			if ( empty( $_POST[ 'pass_update' ] ) || empty( $_POST[ 'pass_update2' ] ) || $_POST[ 'pass_update' ] !== $_POST[ 'pass_update2' ] ) {
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Passwords empty or don\'t match')).'</div>';
@@ -134,7 +147,13 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$msg .= '<form method="post"><input type="hidden" name="csrf_token" value="' . $_SESSION[ 'csrf_token' ] . '">';
 			$msg .= '<button type="submit" name="action" value="delete_account2">'.htmlspecialchars(_('Yes, I want to permanently delete my account')).'</button></form>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'disable_account' ) {
-			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Warning: This will disable your account for a year and delete all your data. After a year it is available for registrations again. It cannot be reversed. Are you absolutely sure?')).'</div>';
+			$stmt = $db->prepare( 'SELECT inactivity_period FROM mailbox WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+			$inactivity_period = (int) $stmt->fetchColumn();
+			$disable_warning = ALLOW_ACCOUNT_NEVER_DELETE && $inactivity_period === 0
+				? _('Warning: This will disable your account and delete all your data. The address will not become available for registration again. It cannot be reversed. Are you absolutely sure?')
+				: _('Warning: This will disable your account and delete all your data. It will be available for registrations again after the selected inactivity period without a login. It cannot be reversed. Are you absolutely sure?');
+			$msg .= '<div class="red" role="alert">'.htmlspecialchars($disable_warning).'</div>';
 			$msg .= '<form method="post"><input type="hidden" name="csrf_token" value="' . $_SESSION[ 'csrf_token' ] . '">';
 			$msg .= '<button type="submit" name="action" value="disable_account2">'.htmlspecialchars(_('Yes, I want to disable my account')).'</button></form>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'delete_account2' ) {
@@ -356,7 +375,7 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
 		$aliases = explode( ',', $tmp[ 'goto' ] );
 	}
 	$aliases_to = implode( "\n", array_diff( $aliases, [ $_SESSION[ 'email_user' ] ] ) );
-	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out FROM mailbox WHERE username = ?;' );
+	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out, inactivity_period FROM mailbox WHERE username = ?;' );
 	$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 	$tls_status = $stmt->fetch( PDO::FETCH_ASSOC );
 	?>
@@ -395,6 +414,26 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
                 <button name="action" value="update_settings" type="submit"><?php echo htmlspecialchars(_('Update settings')); ?></button>
             </div>
         </div>
+    </form>
+
+    <form class="form_limit" action="manage_account.php" method="post">
+        <h3><?php echo htmlspecialchars(_('Account inactivity')); ?></h3>
+        <p><?php echo htmlspecialchars(_('Choose how long your account can remain inactive before it and its data are automatically deleted. The period is measured from your last login, or from account creation if you have never logged in.')); ?></p>
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <div class="row">
+            <div class="col"><label for="inactivity_period"><?php echo htmlspecialchars(_('Delete after inactivity')); ?></label></div>
+            <div class="col">
+                <select name="inactivity_period" id="inactivity_period">
+					<?php if ( ALLOW_ACCOUNT_NEVER_DELETE ) { ?>
+                        <option value="0"<?php echo (int) $tls_status[ 'inactivity_period' ] === 0 ? ' selected' : ''; ?>><?php echo htmlspecialchars(_('Never')); ?></option>
+					<?php } ?>
+					<?php foreach ( get_inactivity_period_options() as $months => $label ) { ?>
+                        <option value="<?php echo $months; ?>"<?php echo (int) $tls_status[ 'inactivity_period' ] === $months ? ' selected' : ''; ?>><?php echo htmlspecialchars($label); ?></option>
+					<?php } ?>
+                </select>
+            </div>
+        </div>
+        <button name="action" value="update_inactivity_period" type="submit"><?php echo htmlspecialchars(_('Update inactivity period')); ?></button>
     </form>
 
     <h2><?php echo htmlspecialchars(_('Change password')); ?></h2>

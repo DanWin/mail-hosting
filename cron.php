@@ -12,10 +12,12 @@ try {
 }
 setlocale( LC_CTYPE, 'C.UTF-8' ); // make sure to use UTF-8 locale. Non UTF-8 locales can cause serious issues when handling UTF-8 file names
 
-// mark accounts deletable that haven't been used in an entire year
-$expire_time = strtotime( '-1 year' );
-$stmt = $db->prepare( 'UPDATE mailbox SET active = -2 WHERE active IN (0, 1) AND modified < ? AND (last_login < ? OR last_login IS NULL);' );
-$stmt->execute( [ date( 'Y-m-d H:i:s', $expire_time ), $expire_time ] );
+// mark accounts deletable after their selected period of inactivity
+foreach ( INACTIVITY_PERIOD_MONTHS as $months ) {
+	$expire_time = strtotime( "-$months months" );
+	$stmt = $db->prepare( 'UPDATE mailbox SET active = -2 WHERE active IN (0, 1) AND inactivity_period = ? AND inactivity_period > 0 AND modified < ? AND (last_login < ? OR last_login IS NULL);' );
+	$stmt->execute( [ $months, date( 'Y-m-d H:i:s', $expire_time ), $expire_time ] );
+}
 
 // delete all associated data when deleting/disabling accounts
 $stmt = $db->query( 'SELECT username, local_part, domain, active FROM mailbox WHERE active IN (-1, -2);' );
