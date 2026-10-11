@@ -184,9 +184,13 @@ function get_totp_provisioning_uri( string $account, string $secret ): string
 
 function get_totp_qr_data_uri( string $totp_uri ): string
 {
-	$qrCode = \Endroid\QrCode\QrCode::create( $totp_uri )
-		->setSize( 220 )
-		->setMargin( 8 );
+	$qrCode = new \Endroid\QrCode\QrCode(
+		$totp_uri,
+		new \Endroid\QrCode\Encoding\Encoding( 'UTF-8' ),
+		\Endroid\QrCode\ErrorCorrectionLevel::Low,
+		220,
+		8
+	);
 	return ( new \Endroid\QrCode\Writer\PngWriter() )->write( $qrCode )->getDataUri();
 }
 

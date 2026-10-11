@@ -30,6 +30,11 @@ Install files and programs
 ./install_binaries.sh
 ```
 
+When updating the application, copy the updated `composer.json` to `/var/www/mail/` and refresh the installed dependencies and autoloader:
+```
+cd /var/www/mail && composer install --no-dev --no-interaction
+```
+
 Copy (and modify according to your needs) the site files in `etc` to `/etc` after installation has finished. Then restart some services:
 ```
 systemctl daemon-reload && systemctl restart tor@default.service
