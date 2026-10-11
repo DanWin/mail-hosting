@@ -441,7 +441,7 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
             <button type="submit" name="action" value="start_totp_setup"><?php echo htmlspecialchars(_('Set up TOTP')); ?></button>
         </form>
 	<?php }
-	if ( ! empty( $pgp_status[ 'pgp_key' ] ) ) {
+	if ( empty( $pgp_status[ 'totp_secret' ] ) && ! empty( $pgp_status[ 'pgp_key' ] ) ) {
 		if ( (int) $pgp_status[ 'tfa' ] === 1 ) {
 			?>
             <form class="form_limit" action="manage_account.php" method="post">
