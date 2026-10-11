@@ -22,7 +22,25 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 	if ( $_SESSION[ 'csrf_token' ] !== $_POST[ 'csrf_token' ] ?? '' ) {
 		die( 'Invalid CSRF token' );
 	}
-	if ( isset( $_SESSION[ '2fa_code' ] ) ) {
+	if ( isset( $_SESSION[ 'user_totp_pending' ] ) ) {
+		$db = get_db_instance();
+		$stmt = $db->prepare( 'SELECT totp_secret FROM mailbox WHERE username = ? AND active = 1;' );
+		$stmt->execute( [ $_SESSION[ 'user_totp_pending' ] ] );
+		$pending = $stmt->fetch( PDO::FETCH_ASSOC );
+		if ( ! $pending || empty( $pending[ 'totp_secret' ] ) ) {
+			unset( $_SESSION[ 'user_totp_pending' ] );
+			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
+		} elseif ( verify_totp_code( $pending[ 'totp_secret' ], $_POST[ 'totp_code' ] ?? '' ) ) {
+			$_SESSION[ 'email_user' ] = $_SESSION[ 'user_totp_pending' ];
+			unset( $_SESSION[ 'user_totp_pending' ] );
+			session_regenerate_id( true );
+			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+			$stmt = $db->prepare( 'UPDATE mailbox SET last_login = ? WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ time(), $_SESSION[ 'email_user' ] ] );
+		} else {
+			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Wrong 2FA code')).'</div>';
+		}
+	} elseif ( isset( $_SESSION[ '2fa_code' ] ) ) {
 		if ( ! empty( $_POST[ '2fa_code' ] ) && $_POST[ '2fa_code' ] === $_SESSION[ '2fa_code' ] ) {
 			unset( $_SESSION[ '2fa_code' ] );
 			unset( $_SESSION[ 'pgp_key' ] );
@@ -30,7 +48,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$msg .= '<p style="color:red">'.htmlspecialchars(_('Wrong 2FA code')).'</p>';
 		}
 	}
-	if ( ! isset( $_SESSION[ '2fa_code' ] ) && isset( $_POST[ 'action' ] ) ) {
+	if ( ! isset( $_SESSION[ '2fa_code' ] ) && ! isset( $_SESSION[ 'user_totp_pending' ] ) && isset( $_POST[ 'action' ] ) ) {
 		if ( $_POST[ 'action' ] === 'logout' ) {
 			$_SESSION = [];
 			session_regenerate_id( true );
@@ -55,26 +73,33 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 					$domain = $tmp[ 'target_domain' ];
 				}
-				$stmt = $db->prepare( 'SELECT username, password, password_hash_type, tfa, pgp_key FROM mailbox WHERE username = ? AND active = 1;' );
+				$stmt = $db->prepare( 'SELECT username, password, password_hash_type, tfa, pgp_key, totp_secret FROM mailbox WHERE username = ? AND active = 1;' );
 				$stmt->execute( [ "$user@$domain" ] );
 				if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 					if ( empty( $_POST[ 'pwd' ] ) || ! password_verify( $_POST[ 'pwd' ], $tmp[ 'password' ] ) ) {
 						$ok = false;
 						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 					} else {
-						$_SESSION[ 'email_user' ] = $tmp[ 'username' ];
-						$stmt = $db->prepare( 'UPDATE mailbox SET last_login = ? WHERE username = ? AND active = 1;' );
-						$stmt->execute( [ time(), $_SESSION[ 'email_user' ] ] );
 						// update password hash if it's using an old hashing algorithm
 						if ( $tmp[ 'password_hash_type' ] !== '{ARGON2ID}' ) {
 							$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
 							$stmt = $db->prepare( 'UPDATE mailbox SET password_hash_type = "{ARGON2ID}", password = ? WHERE username = ? AND active = 1;' );
-							$stmt->execute( [ $hash, $_SESSION[ 'email_user' ] ] );
+							$stmt->execute( [ $hash, $tmp[ 'username' ] ] );
 						}
-						if ( $tmp[ 'tfa' ] ) {
-							$code = bin2hex( random_bytes( 3 ) );
-							$_SESSION[ '2fa_code' ] = $code;
-							$_SESSION[ 'pgp_key' ] = $tmp[ 'pgp_key' ];
+						if ( ! empty( $tmp[ 'totp_secret' ] ) ) {
+							unset( $_SESSION[ 'email_user' ] );
+							session_regenerate_id( true );
+							$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+							$_SESSION[ 'user_totp_pending' ] = $tmp[ 'username' ];
+						} else {
+							$_SESSION[ 'email_user' ] = $tmp[ 'username' ];
+							$stmt = $db->prepare( 'UPDATE mailbox SET last_login = ? WHERE username = ? AND active = 1;' );
+							$stmt->execute( [ time(), $_SESSION[ 'email_user' ] ] );
+							if ( $tmp[ 'tfa' ] ) {
+								$code = bin2hex( random_bytes( 3 ) );
+								$_SESSION[ '2fa_code' ] = $code;
+								$_SESSION[ 'pgp_key' ] = $tmp[ 'pgp_key' ];
+							}
 						}
 					}
 				} else {
@@ -171,6 +196,29 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 				$msg .= '<p class="green">'.htmlspecialchars(_('Successfully enabled 2FA')).'</p>';
 			}
+		} elseif ( $_POST[ 'action' ] === 'start_totp_setup' && ! empty( $_SESSION[ 'email_user' ] ) ) {
+			$_SESSION[ 'user_totp_setup' ] = generate_totp_secret();
+		} elseif ( $_POST[ 'action' ] === 'enable_totp' && ! empty( $_SESSION[ 'email_user' ] ) && ! empty( $_SESSION[ 'user_totp_setup' ] ) ) {
+			if ( verify_totp_code( $_SESSION[ 'user_totp_setup' ], $_POST[ 'totp_code' ] ?? '' ) ) {
+				$stmt = $db->prepare( 'UPDATE mailbox SET totp_secret = ? WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $_SESSION[ 'user_totp_setup' ], $_SESSION[ 'email_user' ] ] );
+				unset( $_SESSION[ 'user_totp_setup' ] );
+				$msg .= '<p class="green">'.htmlspecialchars(_('Successfully enabled TOTP two-factor authentication')).'</p>';
+			} else {
+				$msg .= '<p class="red">'.htmlspecialchars(_('Invalid TOTP code')).'</p>';
+			}
+		} elseif ( $_POST[ 'action' ] === 'disable_totp' && ! empty( $_SESSION[ 'email_user' ] ) ) {
+			$stmt = $db->prepare( 'SELECT totp_secret FROM mailbox WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+			$totp_secret = $stmt->fetchColumn();
+			if ( is_string( $totp_secret ) && verify_totp_code( $totp_secret, $_POST[ 'totp_code' ] ?? '' ) ) {
+				$stmt = $db->prepare( 'UPDATE mailbox SET totp_secret = NULL WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+				unset( $_SESSION[ 'user_totp_setup' ] );
+				$msg .= '<p class="green">'.htmlspecialchars(_('Successfully disabled TOTP two-factor authentication')).'</p>';
+			} else {
+				$msg .= '<p class="red">'.htmlspecialchars(_('Invalid TOTP code')).'</p>';
+			}
 		}
 	}
 }
@@ -197,7 +245,23 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 <body>
 <main>
 <?php
-if ( isset( $_SESSION[ '2fa_code' ] ) ){
+if ( isset( $_SESSION[ 'user_totp_pending' ] ) ) {
+	echo $msg;
+	?>
+    <p><?php echo htmlspecialchars(_('Enter the current code from your authenticator app to finish logging in.')); ?></p>
+    <form class="form_limit" action="manage_account.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <div class="row">
+            <div class="col"><label for="totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
+            <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+        </div>
+        <button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
+    </form>
+</main></body>
+</html>
+	<?php
+	exit;
+} elseif ( isset( $_SESSION[ '2fa_code' ] ) ){
 $gpg = gnupg_init();
 gnupg_seterrormode( $gpg, GNUPG_ERROR_WARNING );
 gnupg_setarmor( $gpg, 1 );
@@ -337,9 +401,43 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
     </form>
 
 	<?php
-	$stmt = $db->prepare( 'SELECT pgp_key, tfa FROM mailbox WHERE username = ?;' );
+	$stmt = $db->prepare( 'SELECT pgp_key, tfa, totp_secret FROM mailbox WHERE username = ?;' );
 	$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 	$pgp_status = $stmt->fetch( PDO::FETCH_ASSOC );
+	?>
+    <h2><?php echo htmlspecialchars(_('Authenticator app (TOTP) two-factor authentication')); ?></h2>
+	<?php if ( ! empty( $pgp_status[ 'totp_secret' ] ) ) { ?>
+        <p class="green"><?php echo htmlspecialchars(_('TOTP two-factor authentication is enabled. It is used instead of PGP for login while enabled.')); ?></p>
+        <form class="form_limit" action="manage_account.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <div class="row">
+                <div class="col"><label for="disable_totp_code"><?php echo htmlspecialchars(_('Current authentication code')); ?></label></div>
+                <div class="col"><input type="text" name="totp_code" id="disable_totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+            </div>
+            <button type="submit" name="action" value="disable_totp"><?php echo htmlspecialchars(_('Disable TOTP')); ?></button>
+        </form>
+	<?php } elseif ( ! empty( $_SESSION[ 'user_totp_setup' ] ) ) {
+		$totp_uri = get_totp_provisioning_uri( $_SESSION[ 'email_user' ], $_SESSION[ 'user_totp_setup' ] );
+		$totp_qr = get_totp_qr_data_uri( $totp_uri );
+		?>
+        <p><?php echo htmlspecialchars(_('Add this secret to your authenticator app, then enter the generated code to enable TOTP.')); ?></p>
+        <p><img src="<?php echo htmlspecialchars( $totp_qr ); ?>" alt="<?php echo htmlspecialchars(_('TOTP setup QR code')); ?>" width="220" height="220"></p>
+        <p><strong><?php echo htmlspecialchars($_SESSION[ 'user_totp_setup' ]); ?></strong></p>
+        <p><a href="<?php echo htmlspecialchars( $totp_uri ); ?>"><?php echo htmlspecialchars(_('Open authenticator setup link')); ?></a></p>
+        <form class="form_limit" action="manage_account.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <div class="row">
+                <div class="col"><label for="enable_totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
+                <div class="col"><input type="text" name="totp_code" id="enable_totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+            </div>
+            <button type="submit" name="action" value="enable_totp"><?php echo htmlspecialchars(_('Enable TOTP')); ?></button>
+        </form>
+	<?php } else { ?>
+        <form class="form_limit" action="manage_account.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <button type="submit" name="action" value="start_totp_setup"><?php echo htmlspecialchars(_('Set up TOTP')); ?></button>
+        </form>
+	<?php }
 	if ( ! empty( $pgp_status[ 'pgp_key' ] ) ) {
 		if ( $pgp_status[ 'tfa' ] === 1 ) {
 			echo '<p class="green">'.htmlspecialchars(_('Yay, PGP based 2FA is enabled!')).'</p>';

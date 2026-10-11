@@ -5,6 +5,8 @@
 		"ext-pdo": "*",
 		"ext-gnupg": "*",
 		"ext-gettext": "*",
-		"ext-intl": "*"
+		"ext-intl": "*",
+		"endroid/qr-code": "^5.0",
+		"ext-gd": "*"
 	}
 }

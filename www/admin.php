@@ -26,7 +26,23 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 		if ( $_SESSION[ 'csrf_token' ] !== $_POST[ 'csrf_token' ] ?? '' ) {
 			die( 'Invalid CSRF token' );
 		}
-		if ( $_POST[ 'action' ] === 'logout' ) {
+		if ( ! empty( $_SESSION[ 'admin_totp_pending' ] ) ) {
+			$stmt = $db->prepare( 'SELECT username, superadmin, totp_secret FROM admin WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ $_SESSION[ 'admin_totp_pending' ] ] );
+			$pending = $stmt->fetch( PDO::FETCH_ASSOC );
+			if ( $pending && ! empty( $pending[ 'totp_secret' ] ) && verify_totp_code( $pending[ 'totp_secret' ], $_POST[ 'totp_code' ] ?? '' ) ) {
+				unset( $_SESSION[ 'admin_totp_pending' ] );
+				session_regenerate_id( true );
+				$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+				$_SESSION[ 'email_admin_user' ] = $pending[ 'username' ];
+				$_SESSION[ 'email_admin_superadmin' ] = (bool) $pending[ 'superadmin' ];
+			} elseif ( ! $pending || empty( $pending[ 'totp_secret' ] ) ) {
+				unset( $_SESSION[ 'admin_totp_pending' ] );
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
+			} else {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Wrong 2FA code')).'</div>';
+			}
+		} elseif ( $_POST[ 'action' ] === 'logout' ) {
 			$_SESSION = [];
 			session_regenerate_id( true );
 			$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
@@ -42,24 +58,54 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid username')).'</div>';
 			}
 			if ( $ok ) {
-				$stmt = $db->prepare( 'SELECT username, password, password_hash_type, superadmin FROM admin WHERE username = ? AND active = 1;' );
+				$stmt = $db->prepare( 'SELECT username, password, password_hash_type, superadmin, totp_secret FROM admin WHERE username = ? AND active = 1;' );
 				$stmt->execute( [ $_POST[ 'user' ] ] );
 				if ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 					if ( empty( $_POST[ 'pwd' ] ) || ! password_verify( $_POST[ 'pwd' ], $tmp[ 'password' ] ) ) {
 						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 					} else {
-						$_SESSION[ 'email_admin_user' ] = $tmp[ 'username' ];
-						$_SESSION[ 'email_admin_superadmin' ] = (bool) $tmp[ 'superadmin' ];
 						// update password hash if it's using an old hashing algorithm
 						if ( $tmp[ 'password_hash_type' ] !== '{ARGON2ID}' ) {
 							$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
 							$stmt = $db->prepare( 'UPDATE admin SET password_hash_type = "{ARGON2ID}", password = ? WHERE username = ? AND active = 1;' );
-							$stmt->execute( [ $hash, $_SESSION[ 'email_admin_user' ] ] );
+							$stmt->execute( [ $hash, $tmp[ 'username' ] ] );
+						}
+						if ( ! empty( $tmp[ 'totp_secret' ] ) ) {
+							unset( $_SESSION[ 'email_admin_user' ], $_SESSION[ 'email_admin_superadmin' ] );
+							session_regenerate_id( true );
+							$_SESSION[ 'csrf_token' ] = sha1( uniqid() );
+							$_SESSION[ 'admin_totp_pending' ] = $tmp[ 'username' ];
+						} else {
+							$_SESSION[ 'email_admin_user' ] = $tmp[ 'username' ];
+							$_SESSION[ 'email_admin_superadmin' ] = (bool) $tmp[ 'superadmin' ];
 						}
 					}
 				} else {
 					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 				}
+			}
+		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) && $_POST[ 'action' ] === 'start_admin_totp_setup' ) {
+			$_SESSION[ 'admin_totp_setup' ] = generate_totp_secret();
+		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) && $_POST[ 'action' ] === 'enable_admin_totp' && ! empty( $_SESSION[ 'admin_totp_setup' ] ) ) {
+			if ( verify_totp_code( $_SESSION[ 'admin_totp_setup' ], $_POST[ 'totp_code' ] ?? '' ) ) {
+				$stmt = $db->prepare( 'UPDATE admin SET totp_secret = ? WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $_SESSION[ 'admin_totp_setup' ], $_SESSION[ 'email_admin_user' ] ] );
+				unset( $_SESSION[ 'admin_totp_setup' ] );
+				$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully enabled TOTP two-factor authentication')).'</div>';
+			} else {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid TOTP code')).'</div>';
+			}
+		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) && $_POST[ 'action' ] === 'disable_admin_totp' ) {
+			$stmt = $db->prepare( 'SELECT totp_secret FROM admin WHERE username = ? AND active = 1;' );
+			$stmt->execute( [ $_SESSION[ 'email_admin_user' ] ] );
+			$totp_secret = $stmt->fetchColumn();
+			if ( is_string( $totp_secret ) && verify_totp_code( $totp_secret, $_POST[ 'totp_code' ] ?? '' ) ) {
+				$stmt = $db->prepare( 'UPDATE admin SET totp_secret = NULL WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $_SESSION[ 'email_admin_user' ] ] );
+				unset( $_SESSION[ 'admin_totp_setup' ] );
+				$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully disabled TOTP two-factor authentication')).'</div>';
+			} else {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid TOTP code')).'</div>';
 			}
 		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) ) {
 			if ( $_POST[ 'action' ] === 'update_alias' ) {
@@ -359,7 +405,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$ok = check_domain_access( $_POST[ 'user' ], $msg );
 				}
 				if ( $ok ) {
-					$stmt = $db->prepare( 'UPDATE mailbox SET tfa = 0 WHERE username = ?;' );
+					$stmt = $db->prepare( 'UPDATE mailbox SET tfa = 0, totp_secret = NULL WHERE username = ?;' );
 					$stmt->execute( [ $_POST[ 'user' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully disabled two-factor authentication')).'</div>';
 				}
@@ -396,16 +442,26 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			if ( $_SESSION[ 'email_admin_superadmin' ] ) {
 				?> | <a href="?action=admins"><?php echo htmlspecialchars(_('Manage admins')); ?></a><?php
 				?> | <a href="?action=alias_domains"><?php echo htmlspecialchars(_('Manage alias domains')); ?></a><?php
-			} else {
-				?> | <a href="?action=edit_admin"><?php echo htmlspecialchars(_('Manage your admin account')); ?></a><?php
 			}
+			?> | <a href="?action=edit_admin"><?php echo htmlspecialchars(_('Manage your admin account')); ?></a><?php
 			?> | <a href="?action=domains"><?php echo htmlspecialchars(_('Manage domains')); ?></a><?php
 			?> | <a href="?action=alias"><?php echo htmlspecialchars(_('Manage aliases')); ?></a><?php
 			?> | <a href="?action=mailbox"><?php echo htmlspecialchars(_('Manage mailboxes')); ?></a><?php
 			?></p></form><?php
 	}
 	echo "<p>$msg</p>";
-	if ( empty( $_SESSION[ 'email_admin_user' ] ) ) { ?>
+	if ( ! empty( $_SESSION[ 'admin_totp_pending' ] ) ) { ?>
+        <p><?php echo htmlspecialchars(_('Enter the current code from your authenticator app to finish logging in.')); ?></p>
+        <form class="form_limit" action="admin.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <input type="hidden" name="action" value="verify_admin_totp">
+            <div class="row">
+                <div class="col"><label for="totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
+                <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+            </div>
+            <button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
+        </form>
+	<?php } elseif ( empty( $_SESSION[ 'email_admin_user' ] ) ) { ?>
         <form class="form_limit" action="admin.php" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
             <div class="row">
@@ -424,7 +480,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
             </div>
         </form>
 	<?php } else {
-		if ( empty( $_REQUEST[ 'action' ] ) || $_REQUEST[ 'action' ] === 'login' ) {
+		if ( empty( $_REQUEST[ 'action' ] ) || in_array( $_REQUEST[ 'action' ], [ 'login', 'verify_admin_totp' ], true ) ) {
 			?><p><?php echo htmlspecialchars(_('Welcome to the admin management interface. You can configure your domain(s) and accounts here. Please select an option from the menu.')); ?></p><?php
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'admins', 'delete_admin2' ], true ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 			send_manage_admins();
@@ -446,7 +502,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			send_new_alias();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'new_mailbox', 'save_new_mailbox' ], true ) ) {
 			send_new_mailbox();
-		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_admin', 'save_edit_admin' ], true ) ) {
+		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_admin', 'save_edit_admin', 'start_admin_totp_setup', 'enable_admin_totp', 'disable_admin_totp' ], true ) ) {
 			send_edit_admin();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_domain', 'save_edit_domain' ], true ) ) {
 			send_edit_domain();
@@ -532,7 +588,7 @@ function send_edit_admin(): void
 {
 	$db = get_db_instance();
 	$admin = $_POST[ 'admin' ] ?? $_SESSION[ 'email_admin_user' ];
-	$stmt = $db->prepare( 'SELECT username, superadmin, active FROM admin WHERE username = ?;' );
+	$stmt = $db->prepare( 'SELECT username, superadmin, active, totp_secret FROM admin WHERE username = ?;' );
 	$stmt->execute( [ $admin ] );
 	if ( $admin = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		?>
@@ -608,6 +664,44 @@ function send_edit_admin(): void
                 </div>
 			<?php } ?>
         </form>
+		<?php if ( $admin[ 'username' ] === $_SESSION[ 'email_admin_user' ] ) { ?>
+            <h2><?php echo htmlspecialchars(_('Authenticator app (TOTP) two-factor authentication')); ?></h2>
+			<?php if ( ! empty( $admin[ 'totp_secret' ] ) ) { ?>
+                <p class="green"><?php echo htmlspecialchars(_('TOTP two-factor authentication is enabled.')); ?></p>
+                <form class="form_limit" action="admin.php" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+                    <input type="hidden" name="action" value="disable_admin_totp">
+                    <div class="row">
+                        <div class="col"><label for="disable_admin_totp_code"><?php echo htmlspecialchars(_('Current authentication code')); ?></label></div>
+                        <div class="col"><input type="text" name="totp_code" id="disable_admin_totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+                    </div>
+                    <button type="submit"><?php echo htmlspecialchars(_('Disable TOTP')); ?></button>
+                </form>
+			<?php } elseif ( ! empty( $_SESSION[ 'admin_totp_setup' ] ) ) {
+				$totp_uri = get_totp_provisioning_uri( $admin[ 'username' ], $_SESSION[ 'admin_totp_setup' ] );
+				$totp_qr = get_totp_qr_data_uri( $totp_uri );
+				?>
+                <p><?php echo htmlspecialchars(_('Add this secret to your authenticator app, then enter the generated code to enable TOTP.')); ?></p>
+                <p><img src="<?php echo htmlspecialchars( $totp_qr ); ?>" alt="<?php echo htmlspecialchars(_('TOTP setup QR code')); ?>" width="220" height="220"></p>
+                <p><strong><?php echo htmlspecialchars($_SESSION[ 'admin_totp_setup' ]); ?></strong></p>
+                <p><a href="<?php echo htmlspecialchars( $totp_uri ); ?>"><?php echo htmlspecialchars(_('Open authenticator setup link')); ?></a></p>
+                <form class="form_limit" action="admin.php" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+                    <input type="hidden" name="action" value="enable_admin_totp">
+                    <div class="row">
+                        <div class="col"><label for="enable_admin_totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
+                        <div class="col"><input type="text" name="totp_code" id="enable_admin_totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+                    </div>
+                    <button type="submit"><?php echo htmlspecialchars(_('Enable TOTP')); ?></button>
+                </form>
+			<?php } else { ?>
+                <form class="form_limit" action="admin.php" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+                    <input type="hidden" name="action" value="start_admin_totp_setup">
+                    <button type="submit"><?php echo htmlspecialchars(_('Set up TOTP')); ?></button>
+                </form>
+			<?php } ?>
+		<?php } ?>
 		<?php
 	} else {
 		echo '<p>'.htmlspecialchars(_('Oops, this admin doesn\'t seem to exist.')) . '</p>';

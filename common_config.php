@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 2; // Database schema version
+const DBVERSION = 3; // Database schema version
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 4
 const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsbubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can mot be used on public registration
@@ -127,6 +127,97 @@ function z_base32_encode( string $input ): string
 	return $base32;
 }
 
+function totp_base32_encode( string $input ): string
+{
+	$alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+	$encoded = '';
+	$buffer = 0;
+	$bits = 0;
+	for ( $i = 0, $length = strlen( $input ); $i < $length; ++$i ) {
+		$buffer = ( $buffer << 8 ) | ord( $input[ $i ] );
+		$bits += 8;
+		while ( $bits >= 5 ) {
+			$bits -= 5;
+			$encoded .= $alphabet[ ( $buffer >> $bits ) & 31 ];
+		}
+		$buffer &= ( 1 << $bits ) - 1;
+	}
+	if ( $bits > 0 ) {
+		$encoded .= $alphabet[ ( $buffer << ( 5 - $bits ) ) & 31 ];
+	}
+	return $encoded;
+}
+
+function totp_base32_decode( string $input ): string|false
+{
+	$input = strtoupper( rtrim( $input, '=' ) );
+	if ( $input === '' || ! preg_match( '/^[A-Z2-7]+$/', $input ) ) {
+		return false;
+	}
+	$alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+	$decoded = '';
+	$buffer = 0;
+	$bits = 0;
+	for ( $i = 0, $length = strlen( $input ); $i < $length; ++$i ) {
+		$buffer = ( $buffer << 5 ) | strpos( $alphabet, $input[ $i ] );
+		$bits += 5;
+		if ( $bits >= 8 ) {
+			$bits -= 8;
+			$decoded .= chr( ( $buffer >> $bits ) & 255 );
+		}
+		$buffer &= ( 1 << $bits ) - 1;
+	}
+	return $decoded === '' ? false : $decoded;
+}
+
+function generate_totp_secret(): string
+{
+	return totp_base32_encode( random_bytes( 20 ) );
+}
+
+function get_totp_provisioning_uri( string $account, string $secret ): string
+{
+	$issuer = 'Mail Hosting';
+	$label = rawurlencode( "$issuer:$account" );
+	return "otpauth://totp/$label?secret=" . rawurlencode( $secret ) . '&issuer=' . rawurlencode( $issuer ) . '&algorithm=SHA1&digits=6&period=30';
+}
+
+function get_totp_qr_data_uri( string $totp_uri ): string
+{
+	$qrCode = \Endroid\QrCode\QrCode::create( $totp_uri )
+		->setSize( 220 )
+		->setMargin( 8 );
+	return ( new \Endroid\QrCode\Writer\PngWriter() )->write( $qrCode )->getDataUri();
+}
+
+function verify_totp_code( string $secret, mixed $code, ?int $time = null ): bool
+{
+	if ( ! is_string( $code ) || ! preg_match( '/^[0-9]{6}$/', $code ) ) {
+		return false;
+	}
+	$key = totp_base32_decode( $secret );
+	if ( $key === false ) {
+		return false;
+	}
+	$time ??= time();
+	$counter = intdiv( $time, 30 );
+	for ( $offset = -1; $offset <= 1; ++$offset ) {
+		$step = $counter + $offset;
+		$counter_bytes = pack( 'N2', ( $step >> 32 ) & 0xffffffff, $step & 0xffffffff );
+		$hash = hash_hmac( 'sha1', $counter_bytes, $key, true );
+		$offset_byte = ord( $hash[ 19 ] ) & 0x0f;
+		$binary = ( ( ord( $hash[ $offset_byte ] ) & 0x7f ) << 24 )
+			| ( ( ord( $hash[ $offset_byte + 1 ] ) & 0xff ) << 16 )
+			| ( ( ord( $hash[ $offset_byte + 2 ] ) & 0xff ) << 8 )
+			| ( ord( $hash[ $offset_byte + 3 ] ) & 0xff );
+		$expected = str_pad( (string) ( $binary % 1000000 ), 6, '0', STR_PAD_LEFT );
+		if ( hash_equals( $expected, $code ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function send_captcha(): void
 {
 	if ( CAPTCHA_DIFFICULTY === 0 || ! extension_loaded( 'gd' ) ) {
@@ -195,7 +286,6 @@ function send_captcha(): void
 		$im = imagerotate($im, $deg, $bg);
 		$im = imagecrop($im, array('x'=>0, 'y'=>0, 'width'=>120, 'height'=>80));
 		imagecopy($background, $im, 0, 0, 0, 0, 110, 80);
-		imagedestroy($im);
 		$im = $background;
 
 		for($i=0; $i<1000; ++$i){
@@ -203,7 +293,6 @@ function send_captcha(): void
 			$dots = imagecolorallocate($im, $c, $c, $c);
 			imagesetpixel($im, mt_rand(0, 120), mt_rand(0, 80), $dots);
 		}
-		imagedestroy($char);
 		echo '<img width="120" height="80" src="data:image/png;base64,';
 	} else {
 		$im = imagecreatetruecolor( 150, 200 );
@@ -261,7 +350,6 @@ function send_captcha(): void
 	}
 	ob_start();
 	imagegif( $im );
-	imagedestroy( $im );
 	echo base64_encode( ob_get_clean() ) . '">';
 	echo '</div><div class="col"><input type="hidden" name="challenge" value="' . $randid . '"><input type="text" name="captcha" size="15" autocomplete="off" required></div></div>';
 }
