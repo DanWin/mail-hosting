@@ -27,7 +27,6 @@ while ( $mailbox = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 $settings = [];
 foreach ( $recipients_by_policy as $policy => $recipients ) {
 	$setting = [
-		'id' => 'mailbox_' . $policy,
 		'priority' => 'low',
 		'rcpt' => $recipients,
 	];
@@ -46,7 +45,6 @@ foreach ( $recipients_by_policy as $policy => $recipients ) {
 $output = [ 'settings {' ];
 foreach ( $settings as $name => $setting ) {
 	$output[] = "\t" . $name . ' {';
-	$output[] = "\t\tid = " . json_encode( $setting[ 'id' ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES ) . ';';
 	$output[] = "\t\tpriority = " . $setting[ 'priority' ] . ';';
 	$recipients = array_map(
 		static fn( string $recipient ): string => json_encode( $recipient, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES ),
