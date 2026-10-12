@@ -6,7 +6,7 @@ header( 'Cache-Control: no-store' );
 header( 'Expires: 600' ); 
 
 $token = $_GET[ 'token' ] ?? '';
-if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' || ! hash_equals( RSPAMD_SETTINGS_MAP_TOKEN, $token ) ) {
+if ( !in_array( $_SERVER[ 'REQUEST_METHOD' ], [ 'GET', 'HEAD' ], true ) || ! hash_equals( RSPAMD_SETTINGS_MAP_TOKEN, $token ) ) {
 	http_response_code( 403 );
 	exit;
 }
