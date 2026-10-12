@@ -64,6 +64,7 @@ foreach ( $settings as $name => $setting ) {
 	}
 	$output[] = "\t}";
 }
+$output[] = CUSTOM_RSPAMD_SETTINGS;
 $output[] = '}';
 
-echo implode( "\n", $output ) . "\n" . CUSTOM_RSPAMD_SETTINGS . "\n";
+echo implode( "\n", $output ) . "\n";
