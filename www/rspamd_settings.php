@@ -12,7 +12,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' || ! hash_equals( RSPAMD_SETTINGS_MA
 }
 
 $db = get_db_instance();
-$stmt = $db->query( 'SELECT username, spam_reject_score FROM mailbox WHERE active = 1 AND spam_reject_score != ?;' );
+$stmt = $db->prepare( 'SELECT username, spam_reject_score FROM mailbox WHERE active = 1 AND spam_reject_score != ?;' );
 $stmt->execute( [ DEFAULT_SPAM_REJECT_SCORE ] );
 $recipients_by_policy = [];
 while ( $mailbox = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
