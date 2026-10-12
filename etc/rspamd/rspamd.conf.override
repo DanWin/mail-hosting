@@ -1,0 +1,2 @@
+# Replace this token with the same random secret configured in common_config.php.
+settings = "https://mail.danwin1210.de/rspamd_settings.php?token=CHANGE_ME_TO_A_LONG_RANDOM_SECRET";

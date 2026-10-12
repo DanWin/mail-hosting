@@ -9,10 +9,20 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 4; // Database schema version
+const DBVERSION = 5; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
+const RSPAMD_SETTINGS_MAP_TOKEN = 'CHANGE_ME_TO_A_LONG_RANDOM_SECRET'; // Token used to authenticate requests to the Rspamd settings map endpoint
+const SPAM_REJECT_SCORE_OPTIONS = [0, 5, 8, 10, 12, 15, 20, 25, 30]; // Allowed spam reject scores
+const DEFAULT_SPAM_REJECT_SCORE = 15; // Default spam reject score
+const CUSTOM_RSPAMD_SETTINGS = 'whitelist_contact_form {
+  priority = low;
+  rcpt = "daniel@danwin1210.de";
+  want_spam = yes;
+  from = "www-data@danwin1210.de";
+}
+'; // Custom Rspamd settings to be added to the Rspamd settings map
 const PERSISTENT = true; // persistent database connection
 const CAPTCHA_DIFFICULTY = 1; // captcha difficulty from 0 to 4
 const RESERVED_USERNAMES = ['about', 'abuse', 'admin', 'administrator', 'billing', 'contact', 'daemon', 'ftp', 'help', 'hostmaster', 'info', 'legal', 'list', 'list-request', 'lists', 'maildaemon', 'mailerdaemon', 'mailer-daemon', 'marketing', 'media', 'news', 'newsletter', 'nobody', 'noc', 'noreply', 'no-reply', 'notification', 'notifications', 'notify', 'offer', 'offers', 'office', 'official', 'order', 'orders', 'phish', 'phishing', 'postmaster', 'root', 'sale', 'sales', 'security', 'service', 'services', 'shop', 'shopping', 'spam', 'staff', 'support', 'survey', 'system', 'team', 'teams', 'unsubscribe', 'uucp', 'usenet', 'user', 'username', 'users', 'web', 'webmail', 'webmaster', 'webmasters', 'welcome', 'www']; // list of reserved usernames that can not be used on public registration

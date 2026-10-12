@@ -339,8 +339,10 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						in_array( $inactivity_period, INACTIVITY_PERIOD_MONTHS, true )
 						|| ( ALLOW_ACCOUNT_NEVER_DELETE && $inactivity_period === 0 )
 					);
-					if ( ! $valid_inactivity_period ) {
-						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select a valid inactivity period.')).'</div>';
+					$spam_reject_score = filter_var( $_POST[ 'spam_reject_score' ] ?? null, FILTER_VALIDATE_INT );
+					$valid_spam_settings = in_array( $spam_reject_score, SPAM_REJECT_SCORE_OPTIONS, true );
+					if ( ! $valid_inactivity_period || ! $valid_spam_settings ) {
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select valid mailbox settings.')).'</div>';
 					} else {
 						$alias_goto = '';
 						if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
@@ -353,8 +355,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$alias_goto = rtrim( $alias_goto, ',' );
 						$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
 						$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
-						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, modified = NOW() WHERE username = ?;' );
-						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $_POST[ 'user' ] ] );
+						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, modified = NOW() WHERE username = ?;' );
+						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, $_POST[ 'user' ] ] );
 						$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 					}
 				}
@@ -1161,7 +1163,7 @@ function send_new_mailbox(): void
 function send_edit_mailbox(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
+	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
@@ -1210,6 +1212,17 @@ function send_edit_mailbox(): void
                     </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="col"><label for="spam_reject_score"><?php echo htmlspecialchars(_('Spam reject score for incoming mail')); ?></label></div>
+                <div class="col">
+                    <select name="spam_reject_score" id="spam_reject_score">
+						<?php foreach ( SPAM_REJECT_SCORE_OPTIONS as $score ) { ?>
+                            <option value="<?php echo $score; ?>"<?php echo (int) $email[ 'spam_reject_score' ] === $score ? ' selected' : ''; ?>><?php echo $score === 0 ? htmlspecialchars(_('Disabled')) : sprintf(htmlspecialchars(_('%d points')), $score); ?></option>
+						<?php } ?>
+                    </select>
+                </div>
+            </div>
+            <p><?php echo htmlspecialchars(_('Disabling spam filtering by setting the score to 0 bypasses all spam checks for incoming mail. The higher the score, the more spam you may receive.')); ?></p>
             <div class="row">
                 <div class="col">
                     <button name="action" value="save_edit_mailbox" type="submit"><?php echo htmlspecialchars(_('Save mailbox')); ?></button>

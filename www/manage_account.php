@@ -133,6 +133,15 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$stmt->execute( [ $inactivity_period, $_SESSION[ 'email_user' ] ] );
 				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated the inactivity period.')).'</div>';
 			}
+		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_spam_settings' ) {
+			$spam_reject_score = filter_var( $_POST[ 'spam_reject_score' ] ?? null, FILTER_VALIDATE_INT );
+			if ( ! in_array( $spam_reject_score, SPAM_REJECT_SCORE_OPTIONS, true ) ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select a valid spam reject score.')).'</div>';
+			} else {
+				$stmt = $db->prepare( 'UPDATE mailbox SET spam_reject_score = ? WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ $spam_reject_score, $_SESSION[ 'email_user' ] ] );
+				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated spam filter settings, changes can take up to 10 minutes to take effect.')).'</div>';
+			}
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_password' ) {
 			if ( empty( $_POST[ 'pass_update' ] ) || empty( $_POST[ 'pass_update2' ] ) || $_POST[ 'pass_update' ] !== $_POST[ 'pass_update2' ] ) {
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Passwords empty or don\'t match')).'</div>';
@@ -375,9 +384,9 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
 		$aliases = explode( ',', $tmp[ 'goto' ] );
 	}
 	$aliases_to = implode( "\n", array_diff( $aliases, [ $_SESSION[ 'email_user' ] ] ) );
-	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out, inactivity_period FROM mailbox WHERE username = ?;' );
+	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out, inactivity_period, spam_reject_score FROM mailbox WHERE username = ?;' );
 	$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
-	$tls_status = $stmt->fetch( PDO::FETCH_ASSOC );
+	$mailbox_options = $stmt->fetch( PDO::FETCH_ASSOC );
 	?>
     <form class="form_limit" action="manage_account.php" method="post">
         <h2><?php echo htmlspecialchars(_('Settings')); ?></h2>
@@ -400,13 +409,13 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
         <div class="row">
             <div class="col"><label for="enforce_tls_in"><?php echo htmlspecialchars(_('Enforce encryption for incoming mail')); ?></label></div>
             <div class="col"><input type="checkbox" name="enforce_tls_in"
-                                    id="enforce_tls_in"<?php echo ! empty( $tls_status[ 'enforce_tls_in' ] ) ? ' checked' : ''; ?>>
+                                    id="enforce_tls_in"<?php echo ! empty( $mailbox_options[ 'enforce_tls_in' ] ) ? ' checked' : ''; ?>>
             </div>
         </div>
         <div class="row">
             <div class="col"><label for="enforce_tls_out"><?php echo htmlspecialchars(_('Enforce encryption for outgoing mail')); ?></label></div>
             <div class="col"><input type="checkbox" name="enforce_tls_out"
-                                    id="enforce_tls_out"<?php echo ! empty( $tls_status[ 'enforce_tls_out' ] ) ? ' checked' : ''; ?>>
+                                    id="enforce_tls_out"<?php echo ! empty( $mailbox_options[ 'enforce_tls_out' ] ) ? ' checked' : ''; ?>>
             </div>
         </div>
         <div class="row">
@@ -414,6 +423,23 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
                 <button name="action" value="update_settings" type="submit"><?php echo htmlspecialchars(_('Update settings')); ?></button>
             </div>
         </div>
+    </form>
+
+    <form class="form_limit" action="manage_account.php" method="post">
+        <h3><?php echo htmlspecialchars(_('Spam filtering')); ?></h3>
+        <p><?php echo htmlspecialchars(_('Disabling spam filtering by setting the score to 0 bypasses all spam checks for incoming mail. The higher the score, the more spam you may receive.')); ?></p>
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <div class="row">
+            <div class="col"><label for="spam_reject_score"><?php echo htmlspecialchars(_('Spam reject score for incoming mail')); ?></label></div>
+            <div class="col">
+                <select name="spam_reject_score" id="spam_reject_score">
+					<?php foreach ( SPAM_REJECT_SCORE_OPTIONS as $score ) { ?>
+                        <option value="<?php echo $score; ?>"<?php echo (int) $mailbox_options[ 'spam_reject_score' ] === $score ? ' selected' : ''; ?>><?php echo $score === 0 ? htmlspecialchars(_('Disabled')) : sprintf(htmlspecialchars(_('%d points')), $score); ?></option>
+					<?php } ?>
+                </select>
+            </div>
+        </div>
+        <button name="action" value="update_spam_settings" type="submit"><?php echo htmlspecialchars(_('Update spam filter settings')); ?></button>
     </form>
 
     <form class="form_limit" action="manage_account.php" method="post">
@@ -425,10 +451,10 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
             <div class="col">
                 <select name="inactivity_period" id="inactivity_period">
 					<?php if ( ALLOW_ACCOUNT_NEVER_DELETE ) { ?>
-                        <option value="0"<?php echo (int) $tls_status[ 'inactivity_period' ] === 0 ? ' selected' : ''; ?>><?php echo htmlspecialchars(_('Never')); ?></option>
+                        <option value="0"<?php echo (int) $mailbox_options[ 'inactivity_period' ] === 0 ? ' selected' : ''; ?>><?php echo htmlspecialchars(_('Never')); ?></option>
 					<?php } ?>
 					<?php foreach ( get_inactivity_period_options() as $months => $label ) { ?>
-                        <option value="<?php echo $months; ?>"<?php echo (int) $tls_status[ 'inactivity_period' ] === $months ? ' selected' : ''; ?>><?php echo htmlspecialchars($label); ?></option>
+                        <option value="<?php echo $months; ?>"<?php echo (int) $mailbox_options[ 'inactivity_period' ] === $months ? ' selected' : ''; ?>><?php echo htmlspecialchars($label); ?></option>
 					<?php } ?>
                 </select>
             </div>
