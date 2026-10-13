@@ -36,7 +36,7 @@ rspamd_config:register_symbol{
 			rspamd_logger.errx(task, 'no Google Feedback Loop ID found for authenticated user %s', user)
 			return
 		end
-		if #feedback_id < 5 or #feedback_id > 15 or not feedback_id:match('^[a-f0-9]$') then
+		if #feedback_id < 5 or #feedback_id > 15 or not feedback_id:match('^[a-f0-9]+$') then
 			rspamd_logger.errx(task, 'invalid Google Feedback Loop ID for authenticated user %s', user)
 			return
 		end
