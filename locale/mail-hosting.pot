@@ -1098,3 +1098,7 @@ msgstr ""
 #: www/manage_account.php:492
 msgid "Update sender rules"
 msgstr ""
+
+#: www/manage_account.php www/admin.php
+msgid "Google Feedback Loop ID"
+msgstr ""

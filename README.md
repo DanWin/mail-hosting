@@ -74,7 +74,11 @@ Generate a keypair for rspamd with `rspamadm keypair gen` and add it to /etc/rsp
 
 Set a password for the web interface with `rspamadm pw` and add the hash for it to /etc/rspamd/override.d/worker-controller.inc
 
-Configure the Rspamd dynamic settings map by replacing `CHANGE_ME_TO_A_LONG_RANDOM_SECRET` with the same value in `/var/www/mail/common_config.php` and `/etc/rspamd/rspamd.conf.override`. Generate a secret with `openssl rand -hex 32`. Also replace the example hostname in the Rspamd override URL with your mail server's public hostname. The endpoint returns the settings map in Rspamd's UCL format and is authenticated because the map contains mailbox addresses and filtering preferences. Users can configure exact sender addresses to block or whitelist in their account settings; whitelisting uses Rspamd's `want_spam` option and bypasses all Rspamd checks, including virus scanning.
+Configure the Rspamd dynamic maps by replacing `CHANGE_ME_TO_A_LONG_RANDOM_SECRET` with the same value in `/var/www/mail/common_config.php`, `/etc/rspamd/rspamd.conf.override`, and `/etc/rspamd/lua/rspamd.local.lua`. Generate a secret with `openssl rand -hex 32`. Also replace the example hostname in both Rspamd URLs with your mail server's public hostname. The authenticated settings endpoint returns Rspamd's UCL settings map; the feedback ID endpoint returns the active mailbox-to-ID map. Users can configure exact sender addresses to block or whitelist in their account settings; whitelisting uses Rspamd's `want_spam` option and bypasses all Rspamd checks, including virus scanning.
+
+Each mailbox receives a unique 15-character Feedback Loop sender ID. Rspamd adds it to authenticated outgoing messages as `Feedback-ID: :::<id>` before DKIM signing, replacing any existing `Feedback-ID` header so the resulting message contains only one. The account settings and admin mailbox editor display the ID.
+
+Google FBL reporting requires mail to be DKIM-signed by a domain verified in Google Postmaster Tools. Publish the sending IPs in SPF and ensure the IPs have valid PTR records; FBL reports apply only to Gmail recipients.
 
 Generate DKIM signing keys and add them to /etc/rspamd/local.d/arc.conf /etc/rspamd/local.d/dkim_signing.conf, then add the printed DNS records to your domain:
 ```

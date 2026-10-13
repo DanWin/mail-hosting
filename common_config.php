@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 7; // Database schema version
+const DBVERSION = 8; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -99,6 +99,16 @@ function get_inactivity_period_options(): array
 		12 => _('1 year'),
 		24 => _('2 years'),
 	];
+}
+
+function generate_feedback_id( PDO $db ): string
+{
+	$stmt = $db->prepare( 'SELECT 1 FROM mailbox WHERE feedback_id = ? LIMIT 1;' );
+	do {
+		$feedback_id = substr( bin2hex( random_bytes( 8 ) ), 0, 15 );
+		$stmt->execute( [ $feedback_id ] );
+	} while ( $stmt->fetchColumn() );
+	return $feedback_id;
 }
 
 function get_db_instance(): PDO

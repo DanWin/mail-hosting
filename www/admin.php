@@ -398,8 +398,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$alias_goto = rtrim( $alias_goto, ',' );
 						$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, enforce_tls_in, active) VALUES (?, ?, ?, NOW(), NOW(), ?, ?);' );
 						$stmt->execute( [ $email, $alias_goto, $domain, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
-						$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, enforce_tls_in, enforce_tls_out, active) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?);' );
-						$stmt->execute( [ $email, $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
+						$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, feedback_id, enforce_tls_in, enforce_tls_out, active) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?);' );
+						$stmt->execute( [ $email, $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), generate_feedback_id( $db ), ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
 						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
 					}
 				}
@@ -1171,13 +1171,14 @@ function send_new_mailbox(): void
 function send_edit_mailbox(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score, m.blocked_senders, m.whitelisted_senders FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
+	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score, m.blocked_senders, m.whitelisted_senders, m.feedback_id FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
 		$aliases_to = implode( "\n", array_diff( $aliases, [ $_REQUEST[ 'user' ] ] ) );
 		?>
         <h2><?php printf(htmlspecialchars(_('Edit mailbox %s')), htmlspecialchars( $_REQUEST[ 'user' ] ) ); ?></h2>
+        <p><?php echo htmlspecialchars(_('Google Feedback Loop ID')); ?>: <code>:::<?php echo htmlspecialchars( $email[ 'feedback_id' ] ); ?></code></p>
         <form class="form_limit" action="admin.php" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
             <input type="hidden" name="user" value="<?php echo htmlspecialchars( $_REQUEST[ 'user' ] ); ?>">
