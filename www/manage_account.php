@@ -142,6 +142,18 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$stmt->execute( [ $spam_reject_score, $_SESSION[ 'email_user' ] ] );
 				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated spam filter settings, changes can take up to 10 minutes to take effect.')).'</div>';
 			}
+		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_sender_rules' ) {
+			$blocked_senders = is_string( $_POST[ 'blocked_senders' ] ?? null ) ? parse_sender_address_list( $_POST[ 'blocked_senders' ] ) : null;
+			$whitelisted_senders = is_string( $_POST[ 'whitelisted_senders' ] ?? null ) ? parse_sender_address_list( $_POST[ 'whitelisted_senders' ] ) : null;
+			if ( $blocked_senders === null || $whitelisted_senders === null ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please enter a valid email address on each line.')).'</div>';
+			} elseif ( array_intersect( $blocked_senders, $whitelisted_senders ) ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('An email address cannot be both blocked and whitelisted.')).'</div>';
+			} else {
+				$stmt = $db->prepare( 'UPDATE mailbox SET blocked_senders = ?, whitelisted_senders = ? WHERE username = ? AND active = 1;' );
+				$stmt->execute( [ implode( "\n", $blocked_senders ), implode( "\n", $whitelisted_senders ), $_SESSION[ 'email_user' ] ] );
+				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated sender rules. Changes can take up to 10 minutes to take effect.')).'</div>';
+			}
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_password' ) {
 			if ( empty( $_POST[ 'pass_update' ] ) || empty( $_POST[ 'pass_update2' ] ) || $_POST[ 'pass_update' ] !== $_POST[ 'pass_update2' ] ) {
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Passwords empty or don\'t match')).'</div>';
@@ -384,7 +396,7 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
 		$aliases = explode( ',', $tmp[ 'goto' ] );
 	}
 	$aliases_to = implode( "\n", array_diff( $aliases, [ $_SESSION[ 'email_user' ] ] ) );
-	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out, inactivity_period, spam_reject_score FROM mailbox WHERE username = ?;' );
+	$stmt = $db->prepare( 'SELECT enforce_tls_in, enforce_tls_out, inactivity_period, spam_reject_score, blocked_senders, whitelisted_senders FROM mailbox WHERE username = ?;' );
 	$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 	$mailbox_options = $stmt->fetch( PDO::FETCH_ASSOC );
 	?>
@@ -460,6 +472,21 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
             </div>
         </div>
         <button name="action" value="update_inactivity_period" type="submit"><?php echo htmlspecialchars(_('Update inactivity period')); ?></button>
+    </form>
+
+    <form class="form_limit" action="manage_account.php" method="post">
+        <h3><?php echo htmlspecialchars(_('Sender rules')); ?></h3>
+        <p><?php echo htmlspecialchars(_('Enter one exact sender email address per line. Blocking a sender rejects matching incoming mail. Whitelisting a sender bypasses all spam checks, for matching mail.')); ?></p>
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <div class="row">
+            <div class="col"><label for="blocked_senders"><?php echo htmlspecialchars(_('Blocked senders')); ?></label></div>
+            <div class="col"><textarea name="blocked_senders" id="blocked_senders"><?php echo htmlspecialchars( $mailbox_options[ 'blocked_senders' ] ); ?></textarea></div>
+        </div>
+        <div class="row">
+            <div class="col"><label for="whitelisted_senders"><?php echo htmlspecialchars(_('Whitelisted senders')); ?></label></div>
+            <div class="col"><textarea name="whitelisted_senders" id="whitelisted_senders"><?php echo htmlspecialchars( $mailbox_options[ 'whitelisted_senders' ] ); ?></textarea></div>
+        </div>
+        <button name="action" value="update_sender_rules" type="submit"><?php echo htmlspecialchars(_('Update sender rules')); ?></button>
     </form>
 
     <h2><?php echo htmlspecialchars(_('Change password')); ?></h2>

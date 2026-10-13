@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 6; // Database schema version
+const DBVERSION = 7; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -456,6 +456,23 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 		return false;
 	}
 	return true;
+}
+
+function parse_sender_address_list( string $value ): ?array
+{
+	$validator = new EmailValidator();
+	$addresses = [];
+	foreach ( preg_split( '/\R/', $value ) as $address ) {
+		$address = trim( $address );
+		if ( $address === '' ) {
+			continue;
+		}
+		if ( ! $validator->isValid( $address, new NoRFCWarningsValidation() ) ) {
+			return null;
+		}
+		$addresses[] = mb_strtolower( $address );
+	}
+	return array_values( array_unique( $addresses ) );
 }
 
 function alt_links(): void

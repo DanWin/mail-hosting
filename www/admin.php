@@ -341,8 +341,16 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					);
 					$spam_reject_score = filter_var( $_POST[ 'spam_reject_score' ] ?? null, FILTER_VALIDATE_INT );
 					$valid_spam_settings = in_array( $spam_reject_score, SPAM_REJECT_SCORE_OPTIONS, true );
+					$blocked_senders = is_string( $_POST[ 'blocked_senders' ] ?? null ) ? parse_sender_address_list( $_POST[ 'blocked_senders' ] ) : null;
+					$whitelisted_senders = is_string( $_POST[ 'whitelisted_senders' ] ?? null ) ? parse_sender_address_list( $_POST[ 'whitelisted_senders' ] ) : null;
+					$valid_sender_addresses = $blocked_senders !== null && $whitelisted_senders !== null;
+					$sender_lists_overlap = $valid_sender_addresses && (bool) array_intersect( $blocked_senders, $whitelisted_senders );
 					if ( ! $valid_inactivity_period || ! $valid_spam_settings ) {
 						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please select valid mailbox settings.')).'</div>';
+					} elseif ( ! $valid_sender_addresses ) {
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Please enter a valid email address on each line.')).'</div>';
+					} elseif ( $sender_lists_overlap ) {
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('An email address cannot be both blocked and whitelisted.')).'</div>';
 					} else {
 						$alias_goto = '';
 						if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
@@ -355,8 +363,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$alias_goto = rtrim( $alias_goto, ',' );
 						$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
 						$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
-						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, modified = NOW() WHERE username = ?;' );
-						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, $_POST[ 'user' ] ] );
+						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, blocked_senders = ?, whitelisted_senders = ?, modified = NOW() WHERE username = ?;' );
+						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, implode( "\n", $blocked_senders ), implode( "\n", $whitelisted_senders ), $_POST[ 'user' ] ] );
 						$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 					}
 				}
@@ -1163,7 +1171,7 @@ function send_new_mailbox(): void
 function send_edit_mailbox(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
+	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score, m.blocked_senders, m.whitelisted_senders FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
@@ -1223,6 +1231,16 @@ function send_edit_mailbox(): void
                 </div>
             </div>
             <p><?php echo htmlspecialchars(_('Disabling spam filtering by setting the score to 0 bypasses all spam checks for incoming mail. The higher the score, the more spam you may receive.')); ?></p>
+            <h3><?php echo htmlspecialchars(_('Sender rules')); ?></h3>
+            <p><?php echo htmlspecialchars(_('Enter one exact sender email address per line. Blocking a sender rejects matching incoming mail. Whitelisting a sender bypasses all spam checks, for matching mail.')); ?></p>
+            <div class="row">
+                <div class="col"><label for="blocked_senders"><?php echo htmlspecialchars(_('Blocked senders')); ?></label></div>
+                <div class="col"><textarea name="blocked_senders" id="blocked_senders"><?php echo htmlspecialchars( $email[ 'blocked_senders' ] ?? '' ); ?></textarea></div>
+            </div>
+            <div class="row">
+                <div class="col"><label for="whitelisted_senders"><?php echo htmlspecialchars(_('Whitelisted senders')); ?></label></div>
+                <div class="col"><textarea name="whitelisted_senders" id="whitelisted_senders"><?php echo htmlspecialchars( $email[ 'whitelisted_senders' ] ?? '' ); ?></textarea></div>
+            </div>
             <div class="row">
                 <div class="col">
                     <button name="action" value="save_edit_mailbox" type="submit"><?php echo htmlspecialchars(_('Save mailbox')); ?></button>
