@@ -25,6 +25,7 @@ rspamd_config:register_symbol{
 	type = 'prefilter',
 	priority = lua_util.symbols_priorities.top,
 	flags = 'empty,nostat',
+	score = 0.0,
 	callback = function(task)
 		local user = task:get_user()
 		if not user then
@@ -53,3 +54,5 @@ rspamd_config:register_symbol{
 		})
 	end,
 }
+
+rspamd_config:register_dependency('DKIM_SIGNED', 'GOOGLE_FEEDBACK_ID')
