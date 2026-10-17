@@ -82,6 +82,8 @@ Google FBL reporting requires mail to be DKIM-signed by a domain verified in Goo
 
 Configure DKIM signing maps by replacing the example hostname and token in `/etc/rspamd/local.d/arc.conf` and `/etc/rspamd/local.d/dkim_signing.conf` with the same hostname and token used for the other Rspamd maps. An RSA DKIM key is generated automatically when a domain is added. The domain editor shows the selector and public DNS TXT record to publish; regenerating the key changes the selector and requires updating that record. Private keys are stored in the database and should be protected accordingly.
 
+The authenticated-user ratelimit map is configured in `/etc/rspamd/custom_ratelimit.lua`; replace its example hostname and token with your map endpoint settings. Accounts registered within the last 14 days receive lower sending limits. A mailbox marked as trusted in the admin editor receives higher limits; other authenticated mailboxes receive the default limits.
+
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:

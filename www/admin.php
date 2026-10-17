@@ -393,8 +393,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$alias_goto = rtrim( $alias_goto, ',' );
 						$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
 						$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
-						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, blocked_senders = ?, whitelisted_senders = ?, modified = NOW() WHERE username = ?;' );
-						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, implode( "\n", $blocked_senders ), implode( "\n", $whitelisted_senders ), $_POST[ 'user' ] ] );
+						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, trusted = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, blocked_senders = ?, whitelisted_senders = ?, modified = NOW() WHERE username = ?;' );
+						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), ( isset( $_POST[ 'trusted' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, implode( "\n", $blocked_senders ), implode( "\n", $whitelisted_senders ), $_POST[ 'user' ] ] );
 						$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
 					}
 				}
@@ -1229,7 +1229,7 @@ function send_new_mailbox(): void
 function send_edit_mailbox(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score, m.blocked_senders, m.whitelisted_senders, m.feedback_id FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
+	$stmt = $db->prepare( 'SELECT a.goto, m.active, m.trusted, m.enforce_tls_in, m.enforce_tls_out, m.inactivity_period, m.spam_reject_score, m.blocked_senders, m.whitelisted_senders, m.feedback_id FROM alias AS a INNER JOIN mailbox AS m ON (m.username=a.address) WHERE m.username = ?;' );
 	$stmt->execute( [ $_REQUEST[ 'user' ] ] );
 	if ( $email = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$aliases = explode( ',', $email[ 'goto' ] );
@@ -1254,6 +1254,11 @@ function send_edit_mailbox(): void
             <div class="row">
                 <div class="col"><label><input type="checkbox" name="active"
                                                value="1"<?php echo $email[ 'active' ] === 1 ? ' checked' : ''; ?>><?php echo htmlspecialchars(_('Active')); ?></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><label><input type="checkbox" name="trusted"
+                                               value="1"<?php echo (int) $email[ 'trusted' ] === 1 ? ' checked' : ''; ?>><?php echo htmlspecialchars(_('Trusted sender (higher sending limits)')); ?></label>
                 </div>
             </div>
             <div class="row">
