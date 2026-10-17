@@ -23,7 +23,6 @@ function handle_postfix_policy_request(): bool
 
 	if (
 		( $attributes[ 'request' ] ?? '' ) === 'smtpd_access_policy'
-		&& ( $attributes[ 'protocol_state' ] ?? '' ) === 'MAIL'
 		&& is_string( $attributes[ 'sasl_username' ] ?? null )
 		&& preg_match( '/^[^@\s]+@[^@\s]+$/D', $attributes[ 'sasl_username' ] )
 	) {
