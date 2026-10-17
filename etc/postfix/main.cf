@@ -65,7 +65,7 @@ smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 smtpd_client_restrictions = reject_unauth_pipelining
 smtpd_recipient_restrictions = check_policy_service inet:127.0.0.1:12340, permit_sasl_authenticated, check_recipient_access proxy:mysql:/etc/postfix/sql/mysql_tls_policy_in.cf
-smtpd_sender_restrictions = reject_sender_login_mismatch, check_sender_access inline:{{<> = REJECT}}, permit_sasl_authenticated
+smtpd_sender_restrictions = reject_sender_login_mismatch, check_sender_access inline:{{<> = REJECT}}, check_policy_service { unix:private/last-login, timeout=5s, default_action=DUNNO }, permit_sasl_authenticated
 smtpd_relay_restrictions = permit_sasl_authenticated, permit_auth_destination, reject_unauth_destination
 smtpd_sender_login_maps = proxy:mysql:/etc/postfix/sql/mysql_virtual_auth_maps.cf
 

@@ -84,6 +84,8 @@ Configure DKIM signing maps by replacing the example hostname and token in `/etc
 
 The authenticated-user ratelimit map is configured in `/etc/rspamd/custom_ratelimit.lua`; replace its example hostname and token with your map endpoint settings. Accounts registered within the last 14 days receive lower sending limits. A mailbox marked as trusted in the admin editor receives higher limits; other authenticated mailboxes receive the default limits.
 
+Postfix updates a mailbox's `last_login` timestamp when an authenticated SMTP session reaches the `MAIL FROM` command. Install the policy script at `/var/www/mail/tools/postfix_last_login_policy.php` and reload Postfix after updating `/etc/postfix/main.cf` and `/etc/postfix/master.cf`. An SMTP session that authenticates but disconnects before `MAIL FROM` cannot be recorded by this policy hook.
+
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:
