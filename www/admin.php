@@ -872,38 +872,40 @@ function send_edit_domain(): void
                                                value="1"<?php echo $admin[ 'active' ] ? ' checked' : ''; ?>><?php echo htmlspecialchars(_('Active')); ?></label>
                 </div>
             </div>
-			<?php if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
-            <div class="row">
-                <div class="col"><?php echo htmlspecialchars(_('DKIM selector')); ?></div>
-                <div class="col"><?php echo htmlspecialchars( $admin[ 'dkim_selector' ] ); ?></div>
-            </div>
-			<?php
-			$public_key = get_rsa_dkim_public_key_base64( $admin[ 'dkim_key' ] );
-			if ( $public_key === null ) {
-				error_log( 'Invalid RSA DKIM key configured for ' . $admin[ 'domain' ] );
-			}
-			?>
-            <div class="row">
-                <div class="col"><?php echo htmlspecialchars(_('DKIM DNS TXT record')); ?></div>
-                <div class="col">
-					<?php echo htmlspecialchars( $admin[ 'dkim_selector' ] . '._domainkey.' . $admin[ 'domain' ] ); ?>
-                    <textarea rows="4" readonly><?php echo htmlspecialchars( $public_key === null ? '' : 'v=DKIM1; k=rsa; p=' . $public_key ); ?></textarea>
-                </div>
-            </div>
-			<?php } ?>
+			<?php if(!str_ends_with( $admin[ 'domain' ], '.onion' )) { ?>
+				<?php if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
+				<div class="row">
+					<div class="col"><?php echo htmlspecialchars(_('DKIM selector')); ?></div>
+					<div class="col"><?php echo htmlspecialchars( $admin[ 'dkim_selector' ] ); ?></div>
+				</div>
+				<?php
+				$public_key = get_rsa_dkim_public_key_base64( $admin[ 'dkim_key' ] );
+				if ( $public_key === null ) {
+					error_log( 'Invalid RSA DKIM key configured for ' . $admin[ 'domain' ] );
+				}
+				?>
+				<div class="row">
+					<div class="col"><?php echo htmlspecialchars(_('DKIM DNS TXT record')); ?></div>
+					<div class="col">
+						<?php echo htmlspecialchars( $admin[ 'dkim_selector' ] . '._domainkey.' . $admin[ 'domain' ] ); ?>
+						<textarea rows="4" readonly><?php echo htmlspecialchars( $public_key === null ? '' : 'v=DKIM1; k=rsa; p=' . $public_key ); ?></textarea>
+					</div>
+				</div>
+				<?php }
+				if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
+				<div class="row">
+					<div class="col">
+						<button type="submit" name="action" value="confirm_regenerate_dkim_key"><?php echo htmlspecialchars(_('Regenerate DKIM key')); ?></button>
+					</div>
+				</div>
+				<?php }
+			} ?>
             <div class="row">
                 <div class="col">
                     <button name="action" value="save_edit_domain" type="submit"><?php echo htmlspecialchars(_('Save changes')); ?></button>
                 </div>
             </div>
-			<?php if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
-            <div class="row">
-                <div class="col">
-					<button type="submit" name="action" value="confirm_regenerate_dkim_key"><?php echo htmlspecialchars(_('Regenerate DKIM key')); ?></button>
-                </div>
-            </div>
-			<?php } ?>
-            <div class="row">
+			<div class="row">
                 <div class="col">
                     <button type="submit" name="action" value="delete_domain"><?php echo htmlspecialchars(_('Delete domain')); ?></button>
                 </div>

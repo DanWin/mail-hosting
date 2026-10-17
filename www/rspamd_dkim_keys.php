@@ -14,8 +14,8 @@ if ( ! in_array( $_SERVER[ 'REQUEST_METHOD' ], [ 'GET', 'HEAD' ], true ) || ! ha
 $stmt = get_db_instance()->query( "SELECT domain, dkim_key, dkim_selector FROM domain WHERE active = 1 ORDER BY domain;" );
 $map_entries = [];
 while ( $domain = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-	if(empty($domain['dkim_key'])) {
-		continue; // Skip domains without DKIM keys
+	if(empty($domain['dkim_key']) || str_ends_with($domain['domain'], '.onion')) {
+		continue; // Skip domains without DKIM keys or onion domains
 	}
 	$ascii_domain = idn_to_ascii( $domain[ 'domain' ], IDNA_NONTRANSITIONAL_TO_ASCII );
 	$key = get_rsa_dkim_private_key_base64_der( $domain[ 'dkim_key' ] );
