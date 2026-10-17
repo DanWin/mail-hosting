@@ -235,6 +235,27 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created admin account.')).'</div>';
 					}
 				}
+			} elseif ( $_POST[ 'action' ] === 'confirm_regenerate_dkim_key' && ! empty( $_POST[ 'domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
+				$msg .= '<div class="red" role="alert">'.sprintf(htmlspecialchars(_('Regenerating the DKIM key for "%s" requires updating your domain DNS record. Are you sure?')), htmlspecialchars( $_POST[ 'domain' ] ) ).'</div>';
+				$msg .= '<form method="post"><input type="hidden" name="csrf_token" value="' . $_SESSION[ 'csrf_token' ] . '">';
+				$msg .= '<input type="hidden" name="domain" value="' . htmlspecialchars( $_POST[ 'domain' ] ) . '">';
+				$msg .= '<button type="submit" name="action" value="regenerate_dkim_key">'.htmlspecialchars(_('Yes, regenerate the DKIM key')).'</button></form>';
+			} elseif ( $_POST[ 'action' ] === 'regenerate_dkim_key' && ! empty( $_POST[ 'domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
+				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ?;' );
+				$stmt->execute( [ $_POST[ 'domain' ] ] );
+				if ( ! $stmt->fetch() ) {
+					$msg .= '<div class="red" role="alert">'.sprintf(htmlspecialchars(_('Oops, it looks like the domain "%s" doesn\'t exists.')), htmlspecialchars( $_POST[ 'domain' ] ) ).'</div>';
+				} else {
+					try {
+						$dkim = generate_rsa_dkim_key();
+						$stmt = $db->prepare( 'UPDATE domain SET dkim_key = ?, dkim_selector = ?, modified = NOW() WHERE domain = ?;' );
+						$stmt->execute( [ $dkim[ 'key' ], $dkim[ 'selector' ], $_POST[ 'domain' ] ] );
+						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully regenerated DKIM key.')).'</div>';
+					} catch ( RuntimeException $exception ) {
+						error_log( 'Failed to regenerate DKIM key for ' . $_POST[ 'domain' ] . ': ' . $exception->getMessage() );
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Unable to generate a new DKIM key.')).'</div>';
+					}
+				}
 			} elseif ( $_POST[ 'action' ] === 'save_edit_domain' && ! empty( $_POST[ 'domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ?;' );
 				$stmt->execute( [ $_POST[ 'domain' ] ] );
@@ -242,7 +263,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$msg .= '<div class="red" role="alert">'.sprintf(htmlspecialchars(_('Oops, it looks like the domain "%s" doesn\'t exists.')), htmlspecialchars( $_POST[ 'domain' ] ) ).'</div>';
 				} else {
 					$active = isset( $_POST[ 'active' ] ) ? 1 : 0;
-					$stmt = $db->prepare( 'UPDATE domain set active = ?, modified = NOW() WHERE domain = ?;' );
+					$stmt = $db->prepare( 'UPDATE domain SET active = ?, modified = NOW() WHERE domain = ?;' );
 					$stmt->execute( [ $active, $_POST[ 'domain' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated domain.')).'</div>';
 				}
@@ -266,13 +287,22 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$ascii_domain = idn_to_ascii($_POST['domain'], IDNA_NONTRANSITIONAL_TO_ASCII);
 					$utf8_domain = idn_to_utf8($_POST['domain'], IDNA_NONTRANSITIONAL_TO_UNICODE);
 					$active = isset( $_POST[ 'active' ] ) ? 1 : 0;
-					$stmt = $db->prepare( 'INSERT INTO domain (active, domain, created, modified) VALUES (?, ?, NOW(), NOW());' );
-					$stmt->execute( [ $active, $utf8_domain ] );
-					if($ascii_domain !== $utf8_domain){
-						$stmt = $db->prepare( 'INSERT INTO alias_domain (active, alias_domain, target_domain, created, modified) VALUES (1, ?, ?, NOW(), NOW());' );
-						$stmt->execute( [ $ascii_domain, $utf8_domain ] );
+					$dkim = null;
+					try {
+						$dkim = generate_rsa_dkim_key();
+					} catch ( RuntimeException $exception ) {
+						error_log( 'Failed to generate DKIM key for new domain ' . $utf8_domain . ': ' . $exception->getMessage() );
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Unable to generate a DKIM key for the new domain.')).'</div>';
 					}
-					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created domain.')).'</div>';
+					if ( $dkim !== null ) {
+						$stmt = $db->prepare( 'INSERT INTO domain (active, domain, dkim_key, dkim_selector, created, modified) VALUES (?, ?, ?, ?, NOW(), NOW());' );
+						$stmt->execute( [ $active, $utf8_domain, $dkim[ 'key' ], $dkim[ 'selector' ] ] );
+						if($ascii_domain !== $utf8_domain){
+							$stmt = $db->prepare( 'INSERT INTO alias_domain (active, alias_domain, target_domain, created, modified) VALUES (1, ?, ?, NOW(), NOW());' );
+							$stmt->execute( [ $ascii_domain, $utf8_domain ] );
+						}
+						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created domain.')).'</div>';
+					}
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_alias_domain' && ! empty( $_POST[ 'alias_domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 				$stmt = $db->prepare( 'SELECT null FROM domain WHERE domain = ? UNION SELECT null FROM alias_domain WHERE alias_domain = ?;' );
@@ -523,7 +553,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			send_new_mailbox();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_admin', 'save_edit_admin', 'start_admin_totp_setup', 'enable_admin_totp', 'disable_admin_totp' ], true ) ) {
 			send_edit_admin();
-		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_domain', 'save_edit_domain' ], true ) ) {
+		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_domain', 'save_edit_domain', 'regenerate_dkim_key' ], true ) ) {
 			send_edit_domain();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_alias_domain', 'save_edit_alias_domain' ], true ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 			send_edit_alias_domain();
@@ -829,7 +859,7 @@ function send_new_domain(): void
 function send_edit_domain(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT domain, active FROM domain WHERE domain = ?;' );
+	$stmt = $db->prepare( 'SELECT domain, active, dkim_key, dkim_selector FROM domain WHERE domain = ?;' );
 	$stmt->execute( [ $_POST[ 'domain' ] ] );
 	if ( $admin = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		?>
@@ -842,11 +872,37 @@ function send_edit_domain(): void
                                                value="1"<?php echo $admin[ 'active' ] ? ' checked' : ''; ?>><?php echo htmlspecialchars(_('Active')); ?></label>
                 </div>
             </div>
+			<?php if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
+            <div class="row">
+                <div class="col"><?php echo htmlspecialchars(_('DKIM selector')); ?></div>
+                <div class="col"><?php echo htmlspecialchars( $admin[ 'dkim_selector' ] ); ?></div>
+            </div>
+			<?php
+			$public_key = get_rsa_dkim_public_key_base64( $admin[ 'dkim_key' ] );
+			if ( $public_key === null ) {
+				error_log( 'Invalid RSA DKIM key configured for ' . $admin[ 'domain' ] );
+			}
+			?>
+            <div class="row">
+                <div class="col"><?php echo htmlspecialchars(_('DKIM DNS TXT record')); ?></div>
+                <div class="col">
+					<?php echo htmlspecialchars( $admin[ 'dkim_selector' ] . '._domainkey.' . $admin[ 'domain' ] ); ?>
+                    <textarea rows="4" readonly><?php echo htmlspecialchars( $public_key === null ? '' : 'v=DKIM1; k=rsa; p=' . $public_key ); ?></textarea>
+                </div>
+            </div>
+			<?php } ?>
             <div class="row">
                 <div class="col">
                     <button name="action" value="save_edit_domain" type="submit"><?php echo htmlspecialchars(_('Save changes')); ?></button>
                 </div>
             </div>
+			<?php if ( $_SESSION[ 'email_admin_superadmin' ] ) { ?>
+            <div class="row">
+                <div class="col">
+					<button type="submit" name="action" value="confirm_regenerate_dkim_key"><?php echo htmlspecialchars(_('Regenerate DKIM key')); ?></button>
+                </div>
+            </div>
+			<?php } ?>
             <div class="row">
                 <div class="col">
                     <button type="submit" name="action" value="delete_domain"><?php echo htmlspecialchars(_('Delete domain')); ?></button>

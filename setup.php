@@ -3,7 +3,7 @@ if(!extension_loaded('gettext')){
 	die('The gettext extension of PHP is required. Please install it first.' . PHP_EOL);
 }
 require('common_config.php');
-foreach(['pdo_mysql', 'mbstring', 'pcre', 'gnupg', 'intl'] as $required_extension) {
+foreach(['pdo_mysql', 'mbstring', 'pcre', 'gnupg', 'intl', 'openssl'] as $required_extension) {
 	if ( ! extension_loaded( $required_extension ) ) {
 		die( sprintf( _( 'The %s extension of PHP is required. Please install it first.' ), $required_extension ) . PHP_EOL );
 	}
@@ -25,7 +25,7 @@ try{
 }
 $createTableStatements = [
 	'admin' => "CREATE TABLE IF NOT EXISTS `admin` (`username` varchar(255) NOT NULL, `password` varchar(255) NOT NULL, `superadmin` tinyint(1) NOT NULL DEFAULT 0, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `password_hash_type` varchar(20) NOT NULL DEFAULT '{MD5-CRYPT}', `totp_secret` varchar(64) DEFAULT NULL, PRIMARY KEY (`username`), KEY `active` (`active`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
-	'domain' => "CREATE TABLE IF NOT EXISTS `domain` (`domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`domain`), KEY `active` (`active`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+	'domain' => "CREATE TABLE IF NOT EXISTS `domain` (`domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `dkim_key` text NOT NULL DEFAULT '', `dkim_selector` varchar(20) NOT NULL DEFAULT '', PRIMARY KEY (`domain`), KEY `active` (`active`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'alias' => "CREATE TABLE IF NOT EXISTS `alias` (`address` varchar(255) NOT NULL, `goto` text NOT NULL, `domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `enforce_tls_in` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`address`), KEY `domain` (`domain`), KEY `active` (`active`), CONSTRAINT `alias_ibfk_1` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'alias_domain' => "CREATE TABLE IF NOT EXISTS `alias_domain` (`alias_domain` varchar(255) NOT NULL DEFAULT '', `target_domain` varchar(255) NOT NULL DEFAULT '', `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`alias_domain`), KEY `active` (`active`), KEY `target_domain` (`target_domain`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'captcha' => "CREATE TABLE IF NOT EXISTS `captcha` (`id` bigint(20) NOT NULL AUTO_INCREMENT, `time` int(11) NOT NULL, `code` char(5) NOT NULL, PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;",
@@ -110,6 +110,22 @@ try{
 		if ( $version < 9 ) {
 			$db->exec( 'ALTER TABLE `mailbox` MODIFY COLUMN `feedback_id` char(15) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL;' );
 		}
+		if ( $version < 10 ) {
+			$stmt = $db->query( "SHOW COLUMNS FROM `domain` LIKE 'dkim_key';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( "ALTER TABLE `domain` ADD COLUMN `dkim_key` text NOT NULL DEFAULT '';" );
+			}
+			$stmt = $db->query( "SHOW COLUMNS FROM `domain` LIKE 'dkim_selector';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( "ALTER TABLE `domain` ADD COLUMN `dkim_selector` varchar(20) NOT NULL DEFAULT '';" );
+			}
+			$stmt = $db->query( "SELECT `domain` FROM `domain` WHERE `dkim_key` = '' OR `dkim_selector` = '';" );
+			$update_dkim = $db->prepare( 'UPDATE `domain` SET `dkim_key` = ?, `dkim_selector` = ?, `modified` = NOW() WHERE `domain` = ?;' );
+			while ( $domain = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
+				$dkim = generate_rsa_dkim_key();
+				$update_dkim->execute( [ $dkim[ 'key' ], $dkim[ 'selector' ], $domain[ 'domain' ] ] );
+			}
+		}
 		$db->beginTransaction();
 		$stmt=$db->prepare("UPDATE `settings` SET `value`=? WHERE `setting`='version';");
 		$stmt->execute([DBVERSION]);
@@ -119,7 +135,7 @@ try{
 		} else {
 			echo _('Database is already up-to-date.') . PHP_EOL;
 		}
-	} catch(PDOException $e){
+	}catch(PDOException | RuntimeException $e){
 		echo _('Error updating database:') . PHP_EOL;
 		echo $e->getMessage() . PHP_EOL;
 		if($db->inTransaction()){
@@ -141,12 +157,19 @@ try{
 	}
 }
 try {
-	$stmt = $db->prepare( 'INSERT IGNORE INTO `domain` (`domain`, `created`, `modified`) VALUES (?, NOW(), NOW())' );
-	$stmt->execute( [ CLEARNET_SERVER ] );
-	$stmt->execute( [ ONION_SERVER ] );
+	$select_domain = $db->prepare( 'SELECT null FROM `domain` WHERE `domain` = ?;' );
+	$insert_domain = $db->prepare( 'INSERT INTO `domain` (`domain`, `dkim_key`, `dkim_selector`, `created`, `modified`) VALUES (?, ?, ?, NOW(), NOW());' );
+	foreach ( [ CLEARNET_SERVER, ONION_SERVER ] as $domain ) {
+		$select_domain->execute( [ $domain ] );
+		$existing_domain = $select_domain->fetch( PDO::FETCH_ASSOC );
+		if ( ! $existing_domain ) {
+			$dkim = generate_rsa_dkim_key();
+			$insert_domain->execute( [ $domain, $dkim[ 'key' ], $dkim[ 'selector' ] ] );
+		}
+	}
 	$stmt = $db->prepare( 'INSERT IGNORE INTO `alias_domain` (`alias_domain`, `target_domain`, `created`, `modified`) VALUES (?, ?, NOW(), NOW())' );
 	$stmt->execute( [ ONION_SERVER, CLEARNET_SERVER ] );
-} catch( PDOException $e ) {
+} catch( PDOException | RuntimeException $e ) {
 	echo _('Error adding primary domain:') . PHP_EOL;
 	echo $e->getMessage() . PHP_EOL;
 }

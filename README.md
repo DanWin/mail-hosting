@@ -80,11 +80,7 @@ Each mailbox receives a unique 15-character Feedback Loop sender ID. Rspamd adds
 
 Google FBL reporting requires mail to be DKIM-signed by a domain verified in Google Postmaster Tools. Publish the sending IPs in SPF and ensure the IPs have valid PTR records; FBL reports apply only to Gmail recipients.
 
-Generate DKIM signing keys and add them to /etc/rspamd/local.d/arc.conf /etc/rspamd/local.d/dkim_signing.conf, then add the printed DNS records to your domain:
-```
-rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-rsa -b 4096 -t rsa -k /var/lib/rspamd/dkim/YOUR_DOMAIN-rsa
-rspamadm dkim_keygen -d YOUR_DOMAIN -s $(date +"%Y%m%d")-ed25519 -t ed25519 -k /var/lib/rspamd/dkim/YOUR_DOMAIN-ed25519
-```
+Configure DKIM signing maps by replacing the example hostname and token in `/etc/rspamd/local.d/arc.conf` and `/etc/rspamd/local.d/dkim_signing.conf` with the same hostname and token used for the other Rspamd maps. An RSA DKIM key is generated automatically when a domain is added. The domain editor shows the selector and public DNS TXT record to publish; regenerating the key changes the selector and requires updating that record. Private keys are stored in the database and should be protected accordingly.
 
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 

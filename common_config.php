@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 9; // Database schema version
+const DBVERSION = 10; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -124,6 +124,58 @@ function get_db_instance(): PDO
 		die( _('No Connection to MySQL database!') );
 	}
 	return $db;
+}
+
+function get_rsa_dkim_private_key_base64_der( string $private_key ): ?string
+{
+	$key = openssl_pkey_get_private( $private_key );
+	if ( $key === false ) {
+		return null;
+	}
+	$details = openssl_pkey_get_details( $key );
+	if ( ! is_array( $details ) || $details[ 'type' ] !== OPENSSL_KEYTYPE_RSA ) {
+		return null;
+	}
+	if ( ! openssl_pkey_export( $key, $normalized_key ) ) {
+		return null;
+	}
+	$encoded_key = preg_replace( '/-----BEGIN [^-]+-----|-----END [^-]+-----|\s+/', '', $normalized_key );
+	if ( ! is_string( $encoded_key ) || $encoded_key === '' || base64_decode( $encoded_key, true ) === false ) {
+		return null;
+	}
+	return $encoded_key;
+}
+
+function get_rsa_dkim_public_key_base64( string $private_key ): ?string
+{
+	$key = openssl_pkey_get_private( $private_key );
+	if ( $key === false ) {
+		return null;
+	}
+	$details = openssl_pkey_get_details( $key );
+	if ( ! is_array( $details ) || $details[ 'type' ] !== OPENSSL_KEYTYPE_RSA ) {
+		return null;
+	}
+	$encoded_key = preg_replace( '/-----BEGIN [^-]+-----|-----END [^-]+-----|\s+/', '', $details[ 'key' ] );
+	if ( ! is_string( $encoded_key ) || $encoded_key === '' || base64_decode( $encoded_key, true ) === false ) {
+		return null;
+	}
+	return $encoded_key;
+}
+
+function generate_rsa_dkim_key(): array
+{
+	$key = openssl_pkey_new( [
+		'private_key_type' => OPENSSL_KEYTYPE_RSA,
+		'private_key_bits' => 4096,
+	] );
+	if ( $key === false || ! openssl_pkey_export( $key, $private_key ) ) {
+		throw new RuntimeException( 'Unable to generate RSA DKIM private key.' );
+	}
+	return [
+		'key' => $private_key,
+		'selector' => date( 'Ymd' ) . '-rsa',
+	];
 }
 
 function z_base32_encode( string $input ): string
