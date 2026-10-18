@@ -11,10 +11,12 @@
 # ==========================================================================
 smtp      inet  n       -       n       -       2       smtpd
  -o smtpd_sasl_auth_enable=no
+ -o smtpd_sender_restrictions=
 last-login unix  -       n       n       -       0       spawn
   user=www-data argv=/usr/bin/php /var/www/mail/tools/postfix_last_login_policy.php
 26      inet  n       -       n       -       2       smtpd
  -o smtpd_sasl_auth_enable=no
+ -o smtpd_sender_restrictions=
  -o smtpd_tls_security_level=may
 #smtp      inet  n       -       y       -       1       postscreen
 #smtpd     pass  -       -       y       -       -       smtpd
