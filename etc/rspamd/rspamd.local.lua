@@ -20,6 +20,16 @@ if not feedback_ids then
 	error('cannot load Google Feedback Loop sender ID map')
 end
 
+local local_domains = rspamd_config:add_map{
+	type = 'map',
+	url = 'https://mail.danwin1210.de/rspamd_local_domains.php?token=CHANGE_ME_TO_A_LONG_RANDOM_SECRET',
+	description = 'Hosted mail domains',
+}
+
+if not local_domains then
+	error('cannot load hosted mail domains map')
+end
+
 rspamd_config:register_symbol{
 	name = 'GOOGLE_FEEDBACK_ID',
 	type = 'prefilter',
@@ -104,6 +114,74 @@ rspamd_config:register_symbol{
 				)
 				return
 			end
+		end
+	end,
+}
+
+rspamd_config:register_symbol{
+	name = 'LOCAL_DOMAIN_AUTH_POLICY',
+	type = 'postfilter',
+	priority = lua_util.symbols_priorities.high,
+	flags = 'empty,nostat',
+	score = 0.0,
+	callback = function(task)
+		if task:get_user() then
+			return
+		end
+
+		local spf_allowed = task:get_symbol('R_SPF_ALLOW') ~= nil
+		local dmarc_allowed = task:get_symbol('DMARC_POLICY_ALLOW') ~= nil
+		local dkim_allowed = task:get_symbol('R_DKIM_ALLOW') ~= nil
+		local dkim_aligned = task:get_symbol('R_DKIM_ALIGNED') ~= nil
+		local smtp_senders = task:get_from('smtp') or {}
+		local mime_senders = task:get_from('mime') or {}
+		local local_envelope_sender = false
+		local local_header_sender = false
+		local matching_senders = false
+		for _, sender in ipairs(mime_senders) do
+			local domain = sender.domain
+			if domain then
+				domain = domain:lower():gsub('%.$', '')
+				if local_domains:get_key(domain) then
+					local_header_sender = true
+					break
+				end
+			end
+		end
+
+		for _, sender in ipairs(smtp_senders) do
+			local domain = sender.domain
+			if domain then
+				domain = domain:lower():gsub('%.$', '')
+				if local_domains:get_key(domain) then
+					local_envelope_sender = true
+					break
+				end
+			end
+		end
+
+		for _, smtp_sender in ipairs(smtp_senders) do
+			for _, mime_sender in ipairs(mime_senders) do
+				if smtp_sender.domain and mime_sender.domain
+					and smtp_sender.domain:lower():gsub('%.$', '') == mime_sender.domain:lower():gsub('%.$', '') then
+					matching_senders = true
+					break
+				end
+			end
+			if matching_senders then
+				break
+			end
+		end
+
+		local authenticated_envelope = not local_envelope_sender or spf_allowed or ( ( dmarc_allowed or ( dkim_aligned and dkim_allowed ) ) and matching_senders )
+		local authenticated_header = not local_header_sender or dmarc_allowed or ( dkim_aligned and dkim_allowed ) or ( matching_senders and spf_allowed )
+		if not authenticated_envelope or not authenticated_header then
+			task:set_pre_result(
+				'reject',
+				'Messages using hosted sender domains require SPF, DKIM, or DMARC authentication',
+				'LOCAL_DOMAIN_AUTH_POLICY'
+			)
+			return
 		end
 	end,
 }

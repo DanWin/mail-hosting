@@ -90,6 +90,8 @@ Mailbox owners can add identity addresses on their mailbox domain from account s
 
 Registering a mailbox on `CLEARNET_SERVER` automatically creates its matching `local_part@ONION_SERVER` identity. The database upgrade backfills this identity for existing clearnet mailboxes.
 
+Rspamd rejects unauthenticated inbound messages using a hosted envelope-sender domain unless SPF passes or DMARC passes for a hosted From domain. Configure the hosted-domain map URL and token in `/etc/rspamd/rspamd.local.lua` alongside the other Rspamd map settings.
+
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:

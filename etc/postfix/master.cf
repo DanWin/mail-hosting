@@ -11,12 +11,10 @@
 # ==========================================================================
 smtp      inet  n       -       n       -       2       smtpd
  -o smtpd_sasl_auth_enable=no
- -o { smtpd_sender_restrictions = check_sender_access inline:{double-bounce@mail.danwin1210.de=OK} check_sender_access mysql:/etc/postfix/sql/mysql_virtual_domain_unauth_block.cf }
 last-login unix  -       n       n       -       0       spawn
   user=www-data argv=/usr/bin/php /var/www/mail/tools/postfix_last_login_policy.php
 26      inet  n       -       n       -       2       smtpd
  -o smtpd_sasl_auth_enable=no
- -o { smtpd_sender_restrictions = check_sender_access mysql:/etc/postfix/sql/mysql_virtual_domain_unauth_block.cf }
  -o smtpd_tls_security_level=may
 #smtp      inet  n       -       y       -       1       postscreen
 #smtpd     pass  -       -       y       -       -       smtpd
