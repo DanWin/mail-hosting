@@ -26,7 +26,7 @@ try{
 $createTableStatements = [
 	'admin' => "CREATE TABLE IF NOT EXISTS `admin` (`username` varchar(255) NOT NULL, `password` varchar(255) NOT NULL, `superadmin` tinyint(1) NOT NULL DEFAULT 0, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `password_hash_type` varchar(20) NOT NULL DEFAULT '{MD5-CRYPT}', `totp_secret` varchar(64) DEFAULT NULL, PRIMARY KEY (`username`), KEY `active` (`active`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'domain' => "CREATE TABLE IF NOT EXISTS `domain` (`domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `dkim_key` text NOT NULL DEFAULT '', `dkim_selector` varchar(20) NOT NULL DEFAULT '', PRIMARY KEY (`domain`), KEY `active` (`active`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
-	'alias' => "CREATE TABLE IF NOT EXISTS `alias` (`address` varchar(255) NOT NULL, `goto` text NOT NULL, `domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `enforce_tls_in` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`address`), KEY `domain` (`domain`), KEY `active` (`active`), CONSTRAINT `alias_ibfk_1` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+	'alias' => "CREATE TABLE IF NOT EXISTS `alias` (`address` varchar(255) NOT NULL, `goto` text NOT NULL, `domain` varchar(255) NOT NULL, `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, `enforce_tls_in` tinyint(1) NOT NULL DEFAULT 1, `identity` varchar(255) DEFAULT NULL, PRIMARY KEY (`address`), KEY `domain` (`domain`), KEY `active` (`active`), KEY `identity` (`identity`), CONSTRAINT `alias_ibfk_1` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON UPDATE CASCADE, CONSTRAINT `alias_identity_ibfk_1` FOREIGN KEY (`identity`) REFERENCES `mailbox` (`username`) ON DELETE CASCADE ON UPDATE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'alias_domain' => "CREATE TABLE IF NOT EXISTS `alias_domain` (`alias_domain` varchar(255) NOT NULL DEFAULT '', `target_domain` varchar(255) NOT NULL DEFAULT '', `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `modified` datetime NOT NULL DEFAULT '2000-01-01 00:00:00', `active` tinyint(1) NOT NULL DEFAULT 1, PRIMARY KEY (`alias_domain`), KEY `active` (`active`), KEY `target_domain` (`target_domain`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 	'captcha' => "CREATE TABLE IF NOT EXISTS `captcha` (`id` bigint(20) NOT NULL AUTO_INCREMENT, `time` int(11) NOT NULL, `code` char(5) NOT NULL, PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;",
 	'dmarc_report' => "CREATE TABLE IF NOT EXISTS `dmarc_report` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `report_id` varchar(255) NOT NULL, `email` varchar(255) NOT NULL, `org_name` varchar(255) NOT NULL, `begin` datetime NOT NULL, `end` datetime NOT NULL, `domain` varchar(255) NOT NULL, `adkim` char(1) NOT NULL, `aspf` char(1) NOT NULL, `policy` varchar(10) NOT NULL, `subdomain_policy` varchar(10) NOT NULL, `pct` tinyint(3) unsigned NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `report_id_org_name` (`report_id`,`org_name`), KEY `begin_end` (`begin`,`end`), KEY `domain` (`domain`), CONSTRAINT `dmarc_report_ibfk_1` FOREIGN KEY (`domain`) REFERENCES `domain` (`domain`) ON DELETE CASCADE) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
@@ -136,6 +136,20 @@ try{
 				if ( ! $stmt->fetch() ) {
 					$db->exec( "ALTER TABLE `mailbox` ADD INDEX `$indexName` (`$indexName`);" );
 				}
+			}
+		}
+		if ( $version < 12 ) {
+			$stmt = $db->query( "SHOW COLUMNS FROM `alias` LIKE 'identity';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( 'ALTER TABLE `alias` ADD COLUMN `identity` varchar(255) DEFAULT NULL;' );
+			}
+			$stmt = $db->query( "SHOW INDEX FROM `alias` WHERE `Key_name` = 'identity';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( 'ALTER TABLE `alias` ADD INDEX `identity` (`identity`);' );
+			}
+			$stmt = $db->query( "SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'alias' AND COLUMN_NAME = 'identity' AND REFERENCED_TABLE_NAME = 'mailbox';" );
+			if ( ! $stmt->fetch() ) {
+				$db->exec( 'ALTER TABLE `alias` ADD CONSTRAINT `alias_identity_ibfk_1` FOREIGN KEY (`identity`) REFERENCES `mailbox` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;' );
 			}
 		}
 		$db->beginTransaction();

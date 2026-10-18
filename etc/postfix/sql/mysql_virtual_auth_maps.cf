@@ -2,4 +2,4 @@ user = postfix_readonly
 password = YOUR_PASSWORD
 hosts = localhost
 dbname = postfix
-query = SELECT username FROM mailbox WHERE username=CONCAT('%u', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active = '1'
+query = SELECT username FROM mailbox WHERE username=CONCAT('%u', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND active = '1' UNION SELECT a.identity AS username FROM alias AS a INNER JOIN mailbox AS m ON m.username = a.identity WHERE a.address = CONCAT('%u', '@', COALESCE((SELECT target_domain FROM alias_domain WHERE alias_domain = '%d' AND active='1'), '%d')) AND a.active = '1' AND a.identity IS NOT NULL AND m.active = '1'

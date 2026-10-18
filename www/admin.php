@@ -146,6 +146,23 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$msg .= '<form method="post"><input type="hidden" name="csrf_token" value="' . $_SESSION[ 'csrf_token' ] . '">';
 				$msg .= '<input type="hidden" name="user" value="' . htmlspecialchars( $_POST[ 'user' ] ) . '">';
 				$msg .= '<button type="submit" name="action" value="delete_mailbox2">'.htmlspecialchars(_('Yes, I want to permanently delete this mailbox')).'</button></form>';
+			} elseif ( $_POST[ 'action' ] === 'add_mailbox_identity' && is_string( $_POST[ 'user' ] ?? null ) && $_POST[ 'user' ] !== '' && is_string( $_POST[ 'identity_address' ] ?? null ) && $_POST[ 'identity_address' ] !== '' ) {
+				$ok = check_domain_access( $_POST[ 'user' ], $msg );
+				if ( $ok ) {
+					$ok = check_email_valid( $_POST[ 'identity_address' ], $msg );
+				}
+				if ( $ok ) {
+					$ok = check_domain_access( $_POST[ 'identity_address' ], $msg );
+				}
+				if ( $ok && create_mailbox_identity( $db, $_POST[ 'identity_address' ], $_POST[ 'user' ], $msg, true ) ) {
+					$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully added identity address.')).'</div>';
+				}
+			} elseif ( $_POST[ 'action' ] === 'delete_mailbox_identity' && is_string( $_POST[ 'user' ] ?? null ) && $_POST[ 'user' ] !== '' && is_string( $_POST[ 'identity_address' ] ?? null ) && $_POST[ 'identity_address' ] !== '' ) {
+				if ( check_domain_access( $_POST[ 'user' ], $msg ) ) {
+					$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ? AND identity = ?;' );
+					$stmt->execute( [ $_POST[ 'identity_address' ], $_POST[ 'user' ] ] );
+					$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully removed identity address.')).'</div>';
+				}
 			} elseif ( $_POST[ 'action' ] === 'delete_admin2' && ! empty( $_POST[ 'admin' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 				if ( $_SESSION[ 'email_admin_user' ] === $_POST[ 'admin' ] ) {
 					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('You can\'t delete your own admin account!')).'</div>';
@@ -164,7 +181,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully deleted alias domain.')).'</div>';
 			} elseif ( $_POST[ 'action' ] === 'delete_alias2' && ! empty( $_POST[ 'alias' ] ) ) {
 				if ( check_domain_access( $_POST[ 'alias' ], $msg ) ) {
-					$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ?;' );
+					$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ? AND identity IS NULL;' );
 					$stmt->execute( [ $_POST[ 'alias' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully deleted alias.')).'</div>';
 				}
@@ -172,6 +189,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				if ( check_domain_access( $_POST[ 'user' ], $msg ) ) {
 					$stmt = $db->prepare( 'UPDATE mailbox SET active = -2 WHERE username = ?;' );
 					$stmt->execute( [ $_POST[ 'user' ] ] );
+					$stmt = $db->prepare( 'UPDATE alias SET active = 0 WHERE address = ? OR identity = ?;' );
+					$stmt->execute( [ $_POST[ 'user' ], $_POST[ 'user' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully deleted mailbox.')).'</div>';
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_edit_admin' && ! empty( $_POST[ 'admin' ] ) && ( $_SESSION[ 'email_admin_superadmin' ] || $_POST[ 'admin' ] === $_SESSION[ 'email_admin_user' ] ) ) {
@@ -354,7 +373,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$alias_goto = validate_email_list( $targets, $msg );
 					$active = isset( $_POST[ 'active' ] ) ? 1 : 0;
 					$enforce_tls_in = isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0;
-					$stmt = $db->prepare( 'UPDATE alias SET goto = ?, active = ?, enforce_tls_in = ?, modified = NOW() WHERE address = ?;' );
+					$stmt = $db->prepare( 'UPDATE alias SET goto = ?, active = ?, enforce_tls_in = ?, modified = NOW() WHERE address = ? AND identity IS NULL;' );
 					$stmt->execute( [ $alias_goto, $active, $enforce_tls_in, $_POST[ 'alias' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated alias.')).'</div>';
 				}
@@ -393,6 +412,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$alias_goto = rtrim( $alias_goto, ',' );
 						$stmt = $db->prepare( 'UPDATE alias SET goto = ?, enforce_tls_in = ?, active = ? WHERE address = ?;' );
 						$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
+						$stmt = $db->prepare( 'UPDATE alias SET active = ? WHERE identity = ?;' );
+						$stmt->execute( [ ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), $_POST[ 'user' ] ] );
 						$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ?, active = ?, trusted = ?, quota = ?, inactivity_period = ?, spam_reject_score = ?, blocked_senders = ?, whitelisted_senders = ?, modified = NOW() WHERE username = ?;' );
 						$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ), ( isset( $_POST[ 'trusted' ] ) ? 1 : 0 ), DEFAULT_QUOTA, $inactivity_period, $spam_reject_score, implode( "\n", $blocked_senders ), implode( "\n", $whitelisted_senders ), $_POST[ 'user' ] ] );
 						$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully updated mailbox.')).'</div>';
@@ -559,7 +580,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			send_edit_alias_domain();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_alias', 'save_edit_alias' ], true ) ) {
 			send_edit_alias();
-		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_mailbox', 'save_edit_mailbox', 'save_password_mailbox', 'disable_tfa_mailbox' ], true ) ) {
+		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'edit_mailbox', 'save_edit_mailbox', 'save_password_mailbox', 'disable_tfa_mailbox', 'add_mailbox_identity', 'delete_mailbox_identity' ], true ) ) {
 			send_edit_mailbox();
 		} elseif ( empty( $msg ) ) {
 			?><p><?php echo htmlspecialchars(_('Oops, it looks like the page you tried to access does not exist or you do not have permission to access it.')) ?></p><?php
@@ -1026,12 +1047,12 @@ function send_manage_aliases(): void
 	$db = get_db_instance();
 	$page = get_admin_list_page();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username);' );
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL;' );
 	$countStmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
 	$countStmt->execute();
 	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) ORDER BY a.address LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL ORDER BY a.address LIMIT :limit OFFSET :offset;' );
 	$stmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
@@ -1095,7 +1116,7 @@ function send_new_alias(): void
 function send_edit_alias(): void
 {
 	$db = get_db_instance();
-	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.active, a.enforce_tls_in FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.address = :alias AND isnull(m.username);' );
+	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.active, a.enforce_tls_in FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.address = :alias AND isnull(m.username) AND a.identity IS NULL;' );
 	$stmt->bindValue( ':alias', $_POST[ 'alias' ], PDO::PARAM_STR );
 	$stmt->execute();
 	if ( $alias = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
@@ -1310,6 +1331,32 @@ function send_edit_mailbox(): void
                     <button name="action" value="save_edit_mailbox" type="submit"><?php echo htmlspecialchars(_('Save mailbox')); ?></button>
                 </div>
             </div>
+        </form>
+        <h2><?php echo htmlspecialchars(_('Identity addresses')); ?></h2>
+        <p><?php echo htmlspecialchars(_('Identity addresses receive mail in this mailbox and can be used as a sender by this mailbox owner.')); ?></p>
+		<?php
+		$identityStmt = $db->prepare( 'SELECT address FROM alias WHERE identity = ? ORDER BY address;' );
+		$identityStmt->execute( [ $_REQUEST[ 'user' ] ] );
+		while ( $identity = $identityStmt->fetch( PDO::FETCH_ASSOC ) ) {
+			?>
+            <form class="form_limit" action="admin.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+                <input type="hidden" name="user" value="<?php echo htmlspecialchars( $_REQUEST[ 'user' ] ); ?>">
+                <input type="hidden" name="identity_address" value="<?php echo htmlspecialchars( $identity[ 'address' ] ); ?>">
+                <span><?php echo htmlspecialchars( $identity[ 'address' ] ); ?></span>
+                <button name="action" value="delete_mailbox_identity" type="submit"><?php echo htmlspecialchars(_('Remove identity')); ?></button>
+            </form>
+			<?php
+		}
+		?>
+        <form class="form_limit" action="admin.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <input type="hidden" name="user" value="<?php echo htmlspecialchars( $_REQUEST[ 'user' ] ); ?>">
+            <div class="row">
+                <div class="col"><label for="identity_address"><?php echo htmlspecialchars(_('New identity address')); ?></label></div>
+                <div class="col"><input type="email" name="identity_address" id="identity_address" required></div>
+            </div>
+            <button name="action" value="add_mailbox_identity" type="submit"><?php echo htmlspecialchars(_('Add identity')); ?></button>
         </form>
         <h2><?php echo htmlspecialchars(_('Change password')); ?></h2>
         <form class="form_limit" action="admin.php" method="post">

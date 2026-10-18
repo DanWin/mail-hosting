@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 11; // Database schema version
+const DBVERSION = 12; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -512,6 +512,46 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid email address.')).'</div>';
 		return false;
 	}
+	return true;
+}
+
+function create_mailbox_identity( PDO $db, string $identityAddress, string $mailboxUsername, string &$msg = '', bool $allowOtherDomains = false ): bool
+{
+	$identityAddress = mb_strtolower( trim( $identityAddress ) );
+	$stmt = $db->prepare( 'SELECT username, domain FROM mailbox WHERE username = ? AND active = 1;' );
+	$stmt->execute( [ $mailboxUsername ] );
+	$mailbox = $stmt->fetch( PDO::FETCH_ASSOC );
+	if ( ! $mailbox ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The mailbox does not exist or is not active.')).'</div>';
+		return false;
+	}
+	$mailboxUsername = $mailbox[ 'username' ];
+	$mailboxDomain = $mailbox[ 'domain' ];
+	if ( ! check_email_valid( $identityAddress, $msg ) ) {
+		return false;
+	}
+	$parser = new EmailParser( new EmailLexer() );
+	$parser->parse( $identityAddress );
+	$identityDomain = $parser->getDomainPart();
+	if ( ! $allowOtherDomains && mb_strtolower( $identityDomain ) !== mb_strtolower( $mailboxDomain ) ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('An identity address must use the mailbox domain.')).'</div>';
+		return false;
+	}
+	$stmt = $db->prepare( 'SELECT domain FROM domain WHERE domain = ? AND active = 1;' );
+	$stmt->execute( [ $identityDomain ] );
+	$identityDomain = $stmt->fetchColumn();
+	if ( ! is_string( $identityDomain ) ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The identity address must use an active mail domain.')).'</div>';
+		return false;
+	}
+	$stmt = $db->prepare( 'SELECT username FROM mailbox WHERE username = ? UNION SELECT address FROM alias WHERE address = ?;' );
+	$stmt->execute( [ $identityAddress, $identityAddress ] );
+	if ( $stmt->fetch() ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('This email address is already in use.')).'</div>';
+		return false;
+	}
+	$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, active, enforce_tls_in, identity) VALUES (?, ?, ?, NOW(), NOW(), 1, 1, ?);' );
+	$stmt->execute( [ $identityAddress, $mailboxUsername, $identityDomain, $mailboxUsername ] );
 	return true;
 }
 

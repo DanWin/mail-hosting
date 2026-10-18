@@ -120,6 +120,17 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$stmt->execute( [ $alias_goto, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), $_SESSION[ 'email_user' ] ] );
 			$stmt = $db->prepare( 'UPDATE mailbox SET enforce_tls_in = ?, enforce_tls_out = ? WHERE username = ? AND active = 1;' );
 			$stmt->execute( [ ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), $_SESSION[ 'email_user' ] ] );
+		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'add_identity' ) {
+			$identityAddress = $_POST[ 'identity_address' ] ?? '';
+			if ( ! is_string( $identityAddress ) ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid email address.')).'</div>';
+			} elseif ( create_mailbox_identity( $db, $identityAddress, $_SESSION[ 'email_user' ], $msg ) ) {
+				$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully added identity address.')).'</div>';
+			}
+		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'delete_identity' && is_string( $_POST[ 'identity_address' ] ?? null ) && $_POST[ 'identity_address' ] !== '' ) {
+			$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ? AND identity = ?;' );
+			$stmt->execute( [ $_POST[ 'identity_address' ], $_SESSION[ 'email_user' ] ] );
+			$msg .= '<div class="green" role="status">'.htmlspecialchars(_('Successfully removed identity address.')).'</div>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_inactivity_period' ) {
 			$inactivity_period = filter_var( $_POST[ 'inactivity_period' ] ?? null, FILTER_VALIDATE_INT );
 			$valid_inactivity_period = $inactivity_period !== false && (
@@ -178,8 +189,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$msg .= '<form method="post"><input type="hidden" name="csrf_token" value="' . $_SESSION[ 'csrf_token' ] . '">';
 			$msg .= '<button type="submit" name="action" value="disable_account2">'.htmlspecialchars(_('Yes, I want to disable my account')).'</button></form>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'delete_account2' ) {
-			$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ?;' );
-			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+			$stmt = $db->prepare( 'DELETE FROM alias WHERE address = ? OR identity = ?;' );
+			$stmt->execute( [ $_SESSION[ 'email_user' ], $_SESSION[ 'email_user' ] ] );
 			$stmt = $db->prepare( 'UPDATE mailbox SET active = -2 WHERE username = ? AND active = 1;' );
 			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 			$_SESSION = [];
@@ -188,6 +199,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully deleted account')).'</div>';
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'disable_account2' ) {
 			$stmt = $db->prepare( 'UPDATE alias SET active = 0 WHERE address = ?;' );
+			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
+			$stmt = $db->prepare( 'UPDATE alias SET active = 0 WHERE identity = ?;' );
 			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
 			$stmt = $db->prepare( 'UPDATE mailbox SET active = -1 WHERE username = ? AND active = 1;' );
 			$stmt->execute( [ $_SESSION[ 'email_user' ] ] );
@@ -435,6 +448,31 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
                 <button name="action" value="update_settings" type="submit"><?php echo htmlspecialchars(_('Update settings')); ?></button>
             </div>
         </div>
+    </form>
+
+    <h2><?php echo htmlspecialchars(_('Identity addresses')); ?></h2>
+    <p><?php echo htmlspecialchars(_('Identity addresses receive mail in this mailbox and can be used as a sender for this account. They must use your mailbox domain.')); ?></p>
+	<?php
+	$identityStmt = $db->prepare( 'SELECT address FROM alias WHERE identity = ? ORDER BY address;' );
+	$identityStmt->execute( [ $_SESSION[ 'email_user' ] ] );
+	while ( $identity = $identityStmt->fetch( PDO::FETCH_ASSOC ) ) {
+		?>
+        <form class="form_limit" action="manage_account.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+            <input type="hidden" name="identity_address" value="<?php echo htmlspecialchars( $identity[ 'address' ] ); ?>">
+            <span><?php echo htmlspecialchars( $identity[ 'address' ] ); ?></span>
+            <button name="action" value="delete_identity" type="submit"><?php echo htmlspecialchars(_('Remove identity')); ?></button>
+        </form>
+		<?php
+	}
+	?>
+    <form class="form_limit" action="manage_account.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <div class="row">
+            <div class="col"><label for="identity_address"><?php echo htmlspecialchars(_('New identity address')); ?></label></div>
+            <div class="col"><input type="email" name="identity_address" id="identity_address" required></div>
+        </div>
+        <button name="action" value="add_identity" type="submit"><?php echo htmlspecialchars(_('Add identity')); ?></button>
     </form>
 
     <form class="form_limit" action="manage_account.php" method="post">
