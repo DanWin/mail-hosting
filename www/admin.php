@@ -447,11 +447,17 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 							$alias_goto .= validate_email_list( $additional, $msg );
 						}
 						$alias_goto = rtrim( $alias_goto, ',' );
+						$db->beginTransaction();
 						$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, enforce_tls_in, active) VALUES (?, ?, ?, NOW(), NOW(), ?, ?);' );
 						$stmt->execute( [ $email, $alias_goto, $domain, ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
 						$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, feedback_id, enforce_tls_in, enforce_tls_out, active) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?);' );
 						$stmt->execute( [ $email, $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), generate_feedback_id( $db ), ( isset( $_POST[ 'enforce_tls_in' ] ) ? 1 : 0 ), ( isset( $_POST[ 'enforce_tls_out' ] ) ? 1 : 0 ), ( isset( $_POST[ 'active' ] ) ? 1 : 0 ) ] );
-						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+						if ( ! create_clearnet_onion_identity( $db, $email, $msg ) ) {
+							$db->rollBack();
+						} else {
+							$db->commit();
+							$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+						}
 					}
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_password_mailbox' && ! empty( $_POST[ 'user' ] ) ) {

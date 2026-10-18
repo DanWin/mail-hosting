@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 12; // Database schema version
+const DBVERSION = 13; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -518,11 +518,11 @@ function check_email_valid( string $email, string &$msg = '' ): bool
 function create_mailbox_identity( PDO $db, string $identityAddress, string $mailboxUsername, string &$msg = '', bool $allowOtherDomains = false ): bool
 {
 	$identityAddress = mb_strtolower( trim( $identityAddress ) );
-	$stmt = $db->prepare( 'SELECT username, domain FROM mailbox WHERE username = ? AND active = 1;' );
+	$stmt = $db->prepare( 'SELECT username, domain, active FROM mailbox WHERE username = ?;' );
 	$stmt->execute( [ $mailboxUsername ] );
 	$mailbox = $stmt->fetch( PDO::FETCH_ASSOC );
-	if ( ! $mailbox ) {
-		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The mailbox does not exist or is not active.')).'</div>';
+	if ( ! $mailbox || (int) $mailbox[ 'active' ] < 0 ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The mailbox does not exist or is being deleted.')).'</div>';
 		return false;
 	}
 	$mailboxUsername = $mailbox[ 'username' ];
@@ -550,9 +550,24 @@ function create_mailbox_identity( PDO $db, string $identityAddress, string $mail
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('This email address is already in use.')).'</div>';
 		return false;
 	}
-	$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, active, enforce_tls_in, identity) VALUES (?, ?, ?, NOW(), NOW(), 1, 1, ?);' );
-	$stmt->execute( [ $identityAddress, $mailboxUsername, $identityDomain, $mailboxUsername ] );
+	$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified, active, enforce_tls_in, identity) VALUES (?, ?, ?, NOW(), NOW(), ?, 1, ?);' );
+	$stmt->execute( [ $identityAddress, $mailboxUsername, $identityDomain, ( (int) $mailbox[ 'active' ] === 1 ? 1 : 0 ), $mailboxUsername ] );
 	return true;
+}
+
+function create_clearnet_onion_identity( PDO $db, string $mailboxUsername, string &$msg = '' ): bool
+{
+	$stmt = $db->prepare( 'SELECT local_part, domain FROM mailbox WHERE username = ?;' );
+	$stmt->execute( [ $mailboxUsername ] );
+	$mailbox = $stmt->fetch( PDO::FETCH_ASSOC );
+	if ( ! $mailbox ) {
+		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The mailbox does not exist.')).'</div>';
+		return false;
+	}
+	if ( $mailbox[ 'domain' ] !== CLEARNET_SERVER ) {
+		return true;
+	}
+	return create_mailbox_identity( $db, $mailbox[ 'local_part' ] . '@' . ONION_SERVER, $mailboxUsername, $msg, true );
 }
 
 function parse_sender_address_list( string $value ): ?array

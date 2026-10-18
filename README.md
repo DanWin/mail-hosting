@@ -88,6 +88,8 @@ Postfix updates a mailbox's `last_login` timestamp when an authenticated SMTP se
 
 Mailbox owners can add identity addresses on their mailbox domain from account settings; administrators can associate addresses on domains they manage from the mailbox editor. Identity addresses deliver only to their owner, are hidden from the regular alias list, and are authorized as sender addresses only for that mailbox's SMTP login.
 
+Registering a mailbox on `CLEARNET_SERVER` automatically creates its matching `local_part@ONION_SERVER` identity. The database upgrade backfills this identity for existing clearnet mailboxes.
+
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.
 
 Install [acme.sh](https://github.com/acmesh-official/acme.sh) or [certbot](https://certbot.eff.org/) to obtain a free letsencrypt SSL certificate, then update the path to this new certificate in the following files:

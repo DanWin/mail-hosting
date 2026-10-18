@@ -67,11 +67,17 @@ if ( isset( $_POST[ 'user' ] ) ) {
 		}
 		if ( $ok ) {
 			$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
+			$db->beginTransaction();
 			$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified) VALUES (?, ?, ?, NOW(), NOW());' );
 			$stmt->execute( [ "$user@$domain", "$user@$domain", $domain ] );
 			$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, feedback_id) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?);' );
 			$stmt->execute( [ "$user@$domain", $hash, DEFAULT_QUOTA, $user, $domain, '{ARGON2ID}', z_base32_encode( hash( 'sha1', mb_strtolower( $user ), true ) ), generate_feedback_id( $db ) ] );
-			$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+			if ( ! create_clearnet_onion_identity( $db, "$user@$domain", $msg ) ) {
+				$db->rollBack();
+			} else {
+				$db->commit();
+				$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+			}
 		}
 	}
 }

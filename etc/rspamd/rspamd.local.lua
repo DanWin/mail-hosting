@@ -56,3 +56,54 @@ rspamd_config:register_symbol{
 }
 
 rspamd_config:register_dependency('DKIM_SIGNED', 'GOOGLE_FEEDBACK_ID')
+
+rspamd_config:register_symbol{
+	name = 'ONION_SENDER_RECIPIENT_POLICY',
+	type = 'prefilter',
+	priority = lua_util.symbols_priorities.top,
+	flags = 'empty,nostat',
+	score = 0.0,
+	callback = function(task)
+		local function is_onion_address(address)
+			local domain = address and address.domain
+			if not domain then
+				return false
+			end
+			domain = domain:lower():gsub('%.$', '')
+			return domain:match('%.onion$') ~= nil
+		end
+
+		local onion_sender = false
+		for _, address_type in ipairs({ 'smtp', 'mime' }) do
+			local senders = task:get_from(address_type) or {}
+			for _, sender in ipairs(senders) do
+				if is_onion_address(sender) then
+					onion_sender = true
+					break
+				end
+			end
+			if onion_sender then
+				break
+			end
+		end
+
+		if not onion_sender then
+			return
+		end
+
+		local recipients = task:get_recipients('smtp') or {}
+		if #recipients == 0 then
+			return
+		end
+		for _, recipient in ipairs(recipients) do
+			if not is_onion_address(recipient) then
+				task:set_pre_result(
+					'reject',
+					'Messages from .onion senders may only be sent to .onion recipients',
+					'ONION_SENDER_RECIPIENT_POLICY'
+				)
+				return
+			end
+		end
+	end,
+}
