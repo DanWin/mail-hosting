@@ -22,9 +22,9 @@ last-login unix  -       n       n       -       0       spawn
 #smtpd     pass  -       -       y       -       -       smtpd
 #dnsblog   unix  -       -       y       -       0       dnsblog
 #tlsproxy  unix  -       -       y       -       0       tlsproxy
-#submission inet n       -       y       -       -       smtpd
+submission inet n       -       y       -       -       smtpd
 #  -o syslog_name=postfix/submission
-#  -o smtpd_tls_security_level=encrypt
+  -o smtpd_tls_security_level=encrypt
 #  -o smtpd_sasl_auth_enable=yes
 #  -o smtpd_reject_unlisted_recipient=no
 #  -o smtpd_client_restrictions=$mua_client_restrictions
@@ -45,8 +45,6 @@ smtps     inet  n       -       n       -       2       smtpd
 #  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
 #  -o milter_macro_daemon_name=ORIGINATING
 #628       inet  n       -       y       -       -       qmqpd
-587       inet  n       -       y       -       2       smtpd
- -o smtpd_tls_security_level=encrypt
 pickup    unix  n       -       y       60      1       pickup
 cleanup   unix  n       -       y       -       0       cleanup
 qmgr      unix  n       -       n       300     1       qmgr
