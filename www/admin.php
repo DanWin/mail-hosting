@@ -223,12 +223,12 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 							$managed_domains [] = $tmp[ 'domain' ];
 						}
 						foreach ( $managed_domains as $domain ) {
-							if ( ! in_array( $domain, $_POST[ 'domains' ], true ) ) {
+							if ( ! in_array( $domain, $_POST[ 'domains' ] ?? [], true ) ) {
 								$stmt = $db->prepare( 'DELETE FROM domain_admins WHERE username = ? AND domain = ?;' );
 								$stmt->execute( [ $_POST[ 'admin' ], $domain ] );
 							}
 						}
-						foreach ( $_POST[ 'domains' ] as $domain ) {
+						foreach ( $_POST[ 'domains' ] ?? [] as $domain ) {
 							if ( ! in_array( $domain, $managed_domains, true ) ) {
 								$stmt = $db->prepare( 'INSERT INTO domain_admins (username, domain) VALUES (?, ?);' );
 								$stmt->execute( [ $_POST[ 'admin' ], $domain ] );
