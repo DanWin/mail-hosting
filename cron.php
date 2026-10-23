@@ -4,6 +4,7 @@ if ( php_sapi_name() !== 'cli' ) {
 }
 
 require_once 'common_config.php';
+require_once 'tools/sync_rspamd_dkim_keys.php';
 $db = get_db_instance();
 try {
 	$db_prosody = new PDO( 'mysql:host=' . DBHOST_PROSODY . ';dbname=' . DBNAME_PROSODY, DBUSER_PROSODY, DBPASS_PROSODY, [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION ] );
@@ -86,3 +87,11 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 }
 // delete squirrelmail attachments older than an hour
 exec( 'find /var/local/squirrelmail/attach/ -type f -cmin +60 -delete' );
+try {
+	$count = sync_rspamd_dkim_keys( $db );
+	echo sprintf( "Synchronized %d DKIM signing keys to Redis.\n", $count );
+} catch ( PDOException | RuntimeException $exception ) {
+	error_log( 'Failed to synchronize DKIM signing keys: ' . $exception->getMessage() );
+	echo _('Error synchronizing DKIM signing keys:') . PHP_EOL;
+	echo $exception->getMessage() . PHP_EOL;
+}

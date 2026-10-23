@@ -4,6 +4,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailParser;
 
 require_once( '../common_config.php' );
+require_once( __DIR__ . '/../tools/sync_rspamd_dkim_keys.php' );
 global $language, $dir, $locale;
 session_start();
 if ( empty( $_SESSION[ 'csrf_token' ] ) ) {
@@ -270,6 +271,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 						$stmt = $db->prepare( 'UPDATE domain SET dkim_key = ?, dkim_selector = ?, modified = NOW() WHERE domain = ?;' );
 						$stmt->execute( [ $dkim[ 'key' ], $dkim[ 'selector' ], $_POST[ 'domain' ] ] );
 						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully regenerated DKIM key.')).'</div>';
+						$msg .= sync_admin_dkim_keys_alert();
 					} catch ( RuntimeException $exception ) {
 						error_log( 'Failed to regenerate DKIM key for ' . $_POST[ 'domain' ] . ': ' . $exception->getMessage() );
 						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Unable to generate a new DKIM key.')).'</div>';
@@ -285,8 +287,9 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$stmt = $db->prepare( 'UPDATE domain SET active = ?, modified = NOW() WHERE domain = ?;' );
 					$stmt->execute( [ $active, $_POST[ 'domain' ] ] );
 					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully updated domain.')).'</div>';
+					$msg .= sync_admin_dkim_keys_alert();
 				}
-			} elseif ( $_POST[ 'action' ] === 'save_edit_alis_domain' && ! empty( $_POST[ 'alias_domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
+			} elseif ( $_POST[ 'action' ] === 'save_edit_alias_domain' && ! empty( $_POST[ 'alias_domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 				$stmt = $db->prepare( 'SELECT null FROM alias_domain WHERE alias_domain = ?;' );
 				$stmt->execute( [ $_POST[ 'alias_domain' ] ] );
 				if ( ! $stmt->fetch() ) {
@@ -321,6 +324,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 							$stmt->execute( [ $ascii_domain, $utf8_domain ] );
 						}
 						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created domain.')).'</div>';
+						$msg .= sync_admin_dkim_keys_alert();
 					}
 				}
 			} elseif ( $_POST[ 'action' ] === 'save_new_alias_domain' && ! empty( $_POST[ 'alias_domain' ] ) && $_SESSION[ 'email_admin_superadmin' ] ) {
@@ -597,6 +601,17 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 </html>
 
 <?php
+
+function sync_admin_dkim_keys_alert(): string
+{
+	try {
+		sync_rspamd_dkim_keys( get_db_instance() );
+		return '';
+	} catch ( PDOException | RuntimeException $exception ) {
+		error_log( 'Failed to synchronize DKIM signing keys after domain update: ' . $exception->getMessage() );
+		return '<div class="red" role="alert">' . htmlspecialchars(_('The domain was saved, but DKIM keys could not be synchronized to Redis. The scheduled sync will retry.')) . '</div>';
+	}
+}
 
 function get_admin_list_page(): int
 {

@@ -3,7 +3,7 @@ if(!extension_loaded('gettext')){
 	die('The gettext extension of PHP is required. Please install it first.' . PHP_EOL);
 }
 require('common_config.php');
-foreach(['pdo_mysql', 'mbstring', 'pcre', 'gnupg', 'intl', 'openssl'] as $required_extension) {
+foreach(['pdo_mysql', 'mbstring', 'pcre', 'gnupg', 'intl', 'openssl', 'redis'] as $required_extension) {
 	if ( ! extension_loaded( $required_extension ) ) {
 		die( sprintf( _( 'The %s extension of PHP is required. Please install it first.' ), $required_extension ) . PHP_EOL );
 	}
