@@ -1146,6 +1146,51 @@ msgstr "Odstranit poštovní schránku"
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr "Jejda, zdá se, že tato poštovní schránka neexistuje."
 
+#: www/manage_account.php:149 www/admin.php:351
+#, fuzzy
+#| msgid "Invalid email address."
+msgid "Please enter a valid email address on each line."
+msgstr "Neplatná emailová adresa."
+
+#: www/manage_account.php:151 www/admin.php:353
+msgid "An email address cannot be both blocked and whitelisted."
+msgstr ""
+
+#: www/manage_account.php:155
+msgid ""
+"Successfully updated sender rules. Changes can take up to 10 minutes to take "
+"effect."
+msgstr ""
+
+#: www/manage_account.php:481 www/admin.php:1236
+msgid "Sender rules"
+msgstr ""
+
+#: www/manage_account.php:482 www/admin.php:1237
+msgid ""
+"Enter one exact sender email address per line. Blocking a sender rejects "
+"matching incoming mail. Whitelisting a sender makes Rspamd bypass all "
+"checks, including virus scanning, for matching mail."
+msgstr ""
+
+#: www/manage_account.php:485 www/admin.php:1239
+msgid "Blocked senders"
+msgstr ""
+
+#: www/manage_account.php:489 www/admin.php:1243
+msgid "Whitelisted senders"
+msgstr ""
+
+#: www/manage_account.php:492
+#, fuzzy
+#| msgid "Update settings"
+msgid "Update sender rules"
+msgstr "Aktualizovat nastavení"
+
+#: www/manage_account.php www/admin.php
+msgid "Google Feedback Loop ID"
+msgstr ""
+
 #, php-format
 #~ msgid ""
 #~ "I have read and agreed to the <a href=\"%s\" target=\"_blank\">Privacy "
@@ -1161,9 +1206,9 @@ msgstr "Jejda, zdá se, že tato poštovní schránka neexistuje."
 #~ "For privacy, please use PGP mail encryption, if you can. This prevents "
 #~ "others from reading your mails (including me and/or LEA). GnuPGs official "
 #~ "home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
-#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
-#~ "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</"
-#~ "a>"
+#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://"
+#~ "gpg4usb.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://"
+#~ "gpg4usb.org</a>"
 #~ msgstr ""
 #~ "Pokud můžeš, použij pro ochranu soukromí šifrování pošty PGP. To brání "
 #~ "ostatním ve čtení tvých e-mailů (včetně mě a/nebo LEA). Oficiální domov "

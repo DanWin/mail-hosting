@@ -1128,3 +1128,46 @@ msgstr ""
 #: www/admin.php:1055
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr ""
+
+#: www/manage_account.php:149 www/admin.php:351
+#, fuzzy
+#| msgid "Invalid email address."
+msgid "Please enter a valid email address on each line."
+msgstr "Неправильна адреса електронної пошти."
+
+#: www/manage_account.php:151 www/admin.php:353
+msgid "An email address cannot be both blocked and whitelisted."
+msgstr ""
+
+#: www/manage_account.php:155
+msgid ""
+"Successfully updated sender rules. Changes can take up to 10 minutes to take "
+"effect."
+msgstr ""
+
+#: www/manage_account.php:481 www/admin.php:1236
+msgid "Sender rules"
+msgstr ""
+
+#: www/manage_account.php:482 www/admin.php:1237
+msgid ""
+"Enter one exact sender email address per line. Blocking a sender rejects "
+"matching incoming mail. Whitelisting a sender makes Rspamd bypass all "
+"checks, including virus scanning, for matching mail."
+msgstr ""
+
+#: www/manage_account.php:485 www/admin.php:1239
+msgid "Blocked senders"
+msgstr ""
+
+#: www/manage_account.php:489 www/admin.php:1243
+msgid "Whitelisted senders"
+msgstr ""
+
+#: www/manage_account.php:492
+msgid "Update sender rules"
+msgstr ""
+
+#: www/manage_account.php www/admin.php
+msgid "Google Feedback Loop ID"
+msgstr ""

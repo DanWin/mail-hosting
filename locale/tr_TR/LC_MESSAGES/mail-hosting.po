@@ -10,8 +10,8 @@ msgstr ""
 "POT-Creation-Date: 2024-07-08 15:47+0200\n"
 "PO-Revision-Date: 2025-10-28 23:01+0000\n"
 "Last-Translator: Turkish Language Team <turkishmark@yandex.com>\n"
-"Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/"
-"mail-hosting/tr/>\n"
+"Language-Team: Turkish <https://weblate.danwin1210.de/projects/DanWin/mail-"
+"hosting/tr/>\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1170,6 +1170,51 @@ msgstr "Posta kutusunu sil"
 msgid "Oops, this mailbox doesn't seem to exist."
 msgstr "Hata! Bu posta kutusu mevcut değil gibi görünüyor."
 
+#: www/manage_account.php:149 www/admin.php:351
+#, fuzzy
+#| msgid "Invalid email address."
+msgid "Please enter a valid email address on each line."
+msgstr "Geçersiz e-posta adresi."
+
+#: www/manage_account.php:151 www/admin.php:353
+msgid "An email address cannot be both blocked and whitelisted."
+msgstr ""
+
+#: www/manage_account.php:155
+msgid ""
+"Successfully updated sender rules. Changes can take up to 10 minutes to take "
+"effect."
+msgstr ""
+
+#: www/manage_account.php:481 www/admin.php:1236
+msgid "Sender rules"
+msgstr ""
+
+#: www/manage_account.php:482 www/admin.php:1237
+msgid ""
+"Enter one exact sender email address per line. Blocking a sender rejects "
+"matching incoming mail. Whitelisting a sender makes Rspamd bypass all "
+"checks, including virus scanning, for matching mail."
+msgstr ""
+
+#: www/manage_account.php:485 www/admin.php:1239
+msgid "Blocked senders"
+msgstr ""
+
+#: www/manage_account.php:489 www/admin.php:1243
+msgid "Whitelisted senders"
+msgstr ""
+
+#: www/manage_account.php:492
+#, fuzzy
+#| msgid "Update settings"
+msgid "Update sender rules"
+msgstr "Ayarları güncelle"
+
+#: www/manage_account.php www/admin.php
+msgid "Google Feedback Loop ID"
+msgstr ""
+
 #~ msgid "Webmail-Login"
 #~ msgstr "Webmail-Giriş"
 
@@ -1177,9 +1222,9 @@ msgstr "Hata! Bu posta kutusu mevcut değil gibi görünüyor."
 #~ "For privacy, please use PGP mail encryption, if you can. This prevents "
 #~ "others from reading your mails (including me and/or LEA). GnuPGs official "
 #~ "home: <a href=\"https://gnupg.org\" target=\"_blank\" rel=\"noopener "
-#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://gpg4usb."
-#~ "org\" target=\"_blank\" rel=\"noopener noreferrer\">https://gpg4usb.org</"
-#~ "a>"
+#~ "noreferrer\">https://gnupg.org</a> Windows GUI: <a href=\"https://"
+#~ "gpg4usb.org\" target=\"_blank\" rel=\"noopener noreferrer\">https://"
+#~ "gpg4usb.org</a>"
 #~ msgstr ""
 #~ "Gizlilik için, yapabiliyorsanız lütfen PGP posta şifreleme kullanın. Bu, "
 #~ "başkalarının (ben ve/veya LEA dahil) postalarınızı okumasını engeller. "
