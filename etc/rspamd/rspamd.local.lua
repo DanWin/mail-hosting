@@ -65,8 +65,6 @@ rspamd_config:register_symbol{
 	end,
 }
 
-rspamd_config:register_dependency('DKIM_SIGNED', 'GOOGLE_FEEDBACK_ID')
-
 rspamd_config:register_symbol{
 	name = 'ONION_SENDER_RECIPIENT_POLICY',
 	type = 'prefilter',
@@ -126,6 +124,11 @@ rspamd_config:register_symbol{
 	score = 0.0,
 	callback = function(task)
 		if task:get_user() then
+			return
+		end
+
+		local ip = task:get_ip()
+		if ip and ip:is_local() then
 			return
 		end
 
