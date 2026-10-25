@@ -90,6 +90,8 @@ Mailbox owners can add identity addresses on their mailbox domain from account s
 
 Registering a mailbox on `CLEARNET_SERVER` automatically creates its matching `local_part@ONION_SERVER` identity. The database upgrade backfills this identity for existing clearnet mailboxes.
 
+When `INVITE_CODES_ENABLED` is true, public mailbox registration requires an unused invite code and admins can generate unlimited codes from the admin interface. User accounts can generate up to `INVITE_CODE_LIMIT` codes after `INVITE_WAIT_PERIOD_MONTHS` months; each redeemed user-generated code makes one replacement available after the same wait from its redemption date. Set `INVITE_CODE_LIMIT` to 0 to hide user invite management while retaining admin-generated codes and invite-required registration. Set `INVITE_CODES_ENABLED` to false to hide invite management and allow registration without an invite. These settings are in `common_config.php`. Running `php setup.php` creates the invite-code table on existing installations.
+
 Rspamd rejects unauthenticated inbound messages using a hosted envelope-sender domain unless SPF passes or DMARC passes for a hosted From domain. Configure the hosted-domain map URL and token in `/etc/rspamd/rspamd.local.lua` alongside the other Rspamd map settings.
 
 Create a password used for your TURN server and replace all `YOUR_SECRET` in `/etc/prosody/prosody.cfg.lua` with it.

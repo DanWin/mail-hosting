@@ -26,6 +26,20 @@ if ( isset( $_POST[ 'user' ] ) ) {
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid captcha')).'</div>';
 	}
 	$db = get_db_instance();
+	$invite_code = is_string( $_POST[ 'invite_code' ] ?? null ) ? strtolower( trim( $_POST[ 'invite_code' ] ) ) : '';
+	if ( INVITE_CODES_ENABLED ) {
+		if ( $invite_code === '' ) {
+			$ok = false;
+			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('A valid invite code is required.')).'</div>';
+		} else {
+			$stmt = $db->prepare( 'SELECT null FROM invite_codes WHERE code = ? AND redeemed_by IS NULL;' );
+			$stmt->execute( [ $invite_code ] );
+			if ( ! $stmt->fetchColumn() ) {
+				$ok = false;
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The invite code is invalid or has already been used.')).'</div>';
+			}
+		}
+	}
 	if ( ! preg_match( '/^([^+\/\'"]+?)(@([^@]+))?$/iu', $_POST[ 'user' ], $match ) ) {
 		$ok = false;
 		$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid username. It may not contain a +, \', " or /.')).'</div>';
@@ -67,7 +81,21 @@ if ( isset( $_POST[ 'user' ] ) ) {
 		}
 		if ( $ok ) {
 			$hash = password_hash( $_POST[ 'pwd' ], PASSWORD_ARGON2ID );
-			$db->beginTransaction();
+			if ( INVITE_CODES_ENABLED ) {
+				$db->beginTransaction();
+				$stmt = $db->prepare( 'SELECT id FROM invite_codes WHERE code = ? AND redeemed_by IS NULL FOR UPDATE;' );
+				$stmt->execute( [ $invite_code ] );
+				$invite_id = $stmt->fetchColumn();
+				if ( ! $invite_id ) {
+					$db->rollBack();
+					$ok = false;
+					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The invite code is invalid or has already been used.')).'</div>';
+				}
+			} else {
+				$db->beginTransaction();
+			}
+		}
+		if ( $ok ) {
 			$stmt = $db->prepare( 'INSERT INTO alias (address, goto, domain, created, modified) VALUES (?, ?, ?, NOW(), NOW());' );
 			$stmt->execute( [ "$user@$domain", "$user@$domain", $domain ] );
 			$stmt = $db->prepare( 'INSERT INTO mailbox (username, password, quota, local_part, domain, created, modified, password_hash_type, openpgpkey_wkd, feedback_id) VALUES(?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?);' );
@@ -75,8 +103,20 @@ if ( isset( $_POST[ 'user' ] ) ) {
 			if ( ! create_clearnet_onion_identity( $db, "$user@$domain", $msg ) ) {
 				$db->rollBack();
 			} else {
-				$db->commit();
-				$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+				if ( INVITE_CODES_ENABLED ) {
+					$stmt = $db->prepare( 'UPDATE invite_codes SET redeemed_by = ?, redeemed_at = NOW() WHERE id = ? AND redeemed_by IS NULL;' );
+					$stmt->execute( [ "$user@$domain", $invite_id ] );
+					if ( $stmt->rowCount() !== 1 ) {
+						$db->rollBack();
+						$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('The invite code is invalid or has already been used.')).'</div>';
+					} else {
+						$db->commit();
+						$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+					}
+				} else {
+					$db->commit();
+					$msg .= '<div class="green" role="alert">'.htmlspecialchars(_('Successfully created new mailbox!')).'</div>';
+				}
 			}
 		}
 	}
@@ -112,8 +152,14 @@ if( ! REGISTRATION_ENABLED ) {
 	<form class="form_limit" action="register.php" method="post"><input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ] ?>">
 		<div class="row">
 			<div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
-			<div class="col"><input type="text" name="user" id="user" autocomplete="username" required value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
+			<div class="col"><input type="text" name="user" id="user" autocomplete="username" required value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>" autofocus></div>
 		</div>
+		<?php if ( INVITE_CODES_ENABLED ) { ?>
+		<div class="row">
+			<div class="col"><label for="invite_code"><?php echo htmlspecialchars(_('Invite code')); ?></label></div>
+			<div class="col"><input type="text" name="invite_code" id="invite_code" autocomplete="off" required value="<?php echo htmlspecialchars( $_POST[ 'invite_code' ] ?? '' ); ?>"></div>
+		</div>
+		<?php } ?>
 		<div class="row">
 			<div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
 			<div class="col"><input type="password" name="pwd" id="pwd" autocomplete="new-password" required></div>

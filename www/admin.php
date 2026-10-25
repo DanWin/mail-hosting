@@ -109,7 +109,14 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Invalid TOTP code')).'</div>';
 			}
 		} elseif ( ! empty( $_SESSION[ 'email_admin_user' ] ) ) {
-			if ( $_POST[ 'action' ] === 'update_alias' ) {
+			if ( INVITE_CODES_ENABLED && $_POST[ 'action' ] === 'create_admin_invite_code' ) {
+				$invite_code = create_admin_invite_code( $db, $_SESSION[ 'email_admin_user' ] );
+				if( $invite_code === null ) {
+					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Unable to create invite code.')).'</div>';
+				} else {
+					$msg .= '<div class="green" role="status">'.sprintf(htmlspecialchars(_('Invite code created: %s')), '<code>'.htmlspecialchars( $invite_code ).'</code>').'</div>';
+				}
+			} elseif ( $_POST[ 'action' ] === 'update_alias' ) {
 				$alias_goto = '';
 				if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
 					$alias_goto .= $_SESSION[ 'email_admin_user' ] . ',';
@@ -523,6 +530,9 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 				?> | <a href="?action=admins"><?php echo htmlspecialchars(_('Manage admins')); ?></a><?php
 				?> | <a href="?action=alias_domains"><?php echo htmlspecialchars(_('Manage alias domains')); ?></a><?php
 			}
+			if ( INVITE_CODES_ENABLED ) {
+				?> | <a href="?action=invite_codes"><?php echo htmlspecialchars(_('Manage invite codes')); ?></a><?php
+			}
 			?> | <a href="?action=edit_admin"><?php echo htmlspecialchars(_('Manage your admin account')); ?></a><?php
 			?> | <a href="?action=domains"><?php echo htmlspecialchars(_('Manage domains')); ?></a><?php
 			?> | <a href="?action=alias"><?php echo htmlspecialchars(_('Manage aliases')); ?></a><?php
@@ -537,7 +547,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
             <input type="hidden" name="action" value="verify_admin_totp">
             <div class="row">
                 <div class="col"><label for="totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
-                <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+                <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required autofocus></div>
             </div>
             <button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
         </form>
@@ -546,7 +556,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
             <div class="row">
                 <div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
-                <div class="col"><input type="text" name="user" id="user" autocomplete="username" required></div>
+                <div class="col"><input type="text" name="user" id="user" autocomplete="username" required autofocus></div>
             </div>
             <div class="row">
                 <div class="col"><label for="pwd"><?php echo htmlspecialchars(_('Password')); ?></label></div>
@@ -562,6 +572,8 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 	<?php } else {
 		if ( empty( $_REQUEST[ 'action' ] ) || in_array( $_REQUEST[ 'action' ], [ 'login', 'verify_admin_totp' ], true ) ) {
 			?><p><?php echo htmlspecialchars(_('Welcome to the admin management interface. You can configure your domain(s) and accounts here. Please select an option from the menu.')); ?></p><?php
+		} elseif ( INVITE_CODES_ENABLED && in_array( $_REQUEST[ 'action' ], [ 'invite_codes', 'create_admin_invite_code' ], true ) ) {
+			send_manage_invite_codes();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'admins', 'delete_admin2' ], true ) && $_SESSION[ 'email_admin_superadmin' ] ) {
 			send_manage_admins();
 		} elseif ( in_array( $_REQUEST[ 'action' ], [ 'domains', 'delete_domain2' ], true ) ) {
@@ -611,6 +623,43 @@ function sync_admin_dkim_keys_alert(): string
 		error_log( 'Failed to synchronize DKIM signing keys after domain update: ' . $exception->getMessage() );
 		return '<div class="red" role="alert">' . htmlspecialchars(_('The domain was saved, but DKIM keys could not be synchronized to Redis. The scheduled sync will retry.')) . '</div>';
 	}
+}
+
+function send_manage_invite_codes(): void
+{
+	if ( ! INVITE_CODES_ENABLED ) {
+		return;
+	}
+	$db = get_db_instance();
+	$page = get_admin_list_page();
+	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
+	$total = (int) $db->query( 'SELECT COUNT(*) FROM invite_codes;' )->fetchColumn();
+	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
+	$stmt = $db->prepare( 'SELECT code, generated_by, generated_by_admin, created_at, redeemed_by, redeemed_at FROM invite_codes ORDER BY created_at DESC, id DESC LIMIT :limit OFFSET :offset;' );
+	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
+	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
+	$stmt->execute();
+	?>
+    <h2><?php echo htmlspecialchars(_('Invite codes')); ?></h2>
+    <form class="form_limit" action="admin.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <button name="action" value="create_admin_invite_code" type="submit"><?php echo htmlspecialchars(_('Generate invite code')); ?></button>
+    </form>
+	<?php
+	while ( $invite = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
+		$creator = $invite[ 'generated_by' ] ?? $invite[ 'generated_by_admin' ];
+		?>
+        <p><code><?php echo htmlspecialchars( $invite[ 'code' ] ); ?></code> —
+			<?php echo htmlspecialchars(_('Created by')); ?> <?php echo htmlspecialchars( $creator ); ?> (<?php echo htmlspecialchars( $invite[ 'created_at' ] ); ?>)
+			<?php if ( $invite[ 'redeemed_by' ] !== null ) { ?>
+				— <?php echo htmlspecialchars(_('Used by')); ?> <?php echo htmlspecialchars( $invite[ 'redeemed_by' ] ); ?> (<?php echo htmlspecialchars( $invite[ 'redeemed_at' ] ); ?>)
+			<?php } else { ?>
+				— <?php echo htmlspecialchars(_('Not yet used')); ?>
+			<?php } ?>
+        </p>
+		<?php
+	}
+	render_admin_pagination( 'invite_codes', $page, $totalPages );
 }
 
 function get_admin_list_page(): int

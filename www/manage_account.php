@@ -106,6 +106,13 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' ) {
 					$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('Incorrect username or password')).'</div>';
 				}
 			}
+		} elseif ( INVITE_CODES_ENABLED && INVITE_CODE_LIMIT > 0 && ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'create_invite_code' ) {
+			$invite_code = create_user_invite_code( $db, $_SESSION[ 'email_user' ] );
+			if ( $invite_code === null ) {
+				$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('No invite code is available yet. New accounts must wait before generating codes, and each used code can be replaced after the waiting period.')).'</div>';
+			} else {
+				$msg .= '<div class="green" role="status">'.sprintf(htmlspecialchars(_('Invite code created: %s')), '<code>'.htmlspecialchars( $invite_code ).'</code>').'</div>';
+			}
 		} elseif ( ! empty( $_SESSION[ 'email_user' ] ) && $_POST[ 'action' ] === 'update_settings' ) {
 			$alias_goto = '';
 			if ( isset( $_POST[ 'alias_keep_copy' ] ) ) {
@@ -310,7 +317,7 @@ if ( isset( $_SESSION[ 'user_totp_pending' ] ) ) {
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <div class="row">
             <div class="col"><label for="totp_code"><?php echo htmlspecialchars(_('Authentication code')); ?></label></div>
-            <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required></div>
+            <div class="col"><input type="text" name="totp_code" id="totp_code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required autofocus></div>
         </div>
         <button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
     </form>
@@ -352,7 +359,7 @@ if ( isset( $_SESSION[ 'user_totp_pending' ] ) ) {
 			<form class="form_limit" action="manage_account.php" method="post">
 				<input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
 				<div class="row">
-					<div class="col"><input type="text" name="2fa_code" aria-label="<?php echo htmlspecialchars(_('2FA code')); ?>"></div>
+					<div class="col"><input type="text" name="2fa_code" aria-label="<?php echo htmlspecialchars(_('2FA code')); ?>" autofocus></div>
 					<div class="col">
 						<button type="submit"><?php echo htmlspecialchars(_('Confirm')); ?></button>
 					</div>
@@ -387,7 +394,7 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <div class="row">
             <div class="col"><label for="user"><?php echo htmlspecialchars(_('Username')); ?></label></div>
-            <div class="col"><input type="text" name="user" id="user" autocomplete="username" required
+            <div class="col"><input type="text" name="user" id="user" autocomplete="username" required autofocus
                                     value="<?php echo htmlspecialchars( $_POST[ 'user' ] ?? '' ); ?>"></div>
         </div>
         <div class="row">
@@ -449,6 +456,39 @@ if ( empty( $_SESSION[ 'email_user' ] ) ) { ?>
             </div>
         </div>
     </form>
+
+	<?php if ( INVITE_CODES_ENABLED && INVITE_CODE_LIMIT > 0 ) {
+	$invite_status = get_user_invite_status( $db, $_SESSION[ 'email_user' ] );
+	$inviteStmt = $db->prepare( 'SELECT code, created_at, redeemed_by, redeemed_at FROM invite_codes WHERE generated_by = ? ORDER BY created_at DESC;' );
+	$inviteStmt->execute( [ $_SESSION[ 'email_user' ] ] );
+	?>
+    <h2><?php echo htmlspecialchars(_('Invite codes')); ?></h2>
+    <p><?php
+		if ( $invite_status[ 'available' ] > 0 ) {
+			printf( htmlspecialchars(_('You can create %d invite code(s).')), $invite_status[ 'available' ] );
+		} elseif ( ! $invite_status[ 'eligible' ] ) {
+			printf( htmlspecialchars(_('You can generate up to %d invite codes after your account has been active for %d month(s).')), INVITE_CODE_LIMIT, INVITE_WAIT_PERIOD_MONTHS );
+		} else {
+			printf( htmlspecialchars(_('You can create more invite codes %d month(s) after one of your existing codes is used.')), INVITE_WAIT_PERIOD_MONTHS );
+		}
+	?></p>
+	<?php if ( $invite_status[ 'available' ] > 0 ) { ?>
+    <form class="form_limit" action="manage_account.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
+        <button name="action" value="create_invite_code" type="submit"><?php echo htmlspecialchars(_('Generate invite code')); ?></button>
+    </form>
+	<?php }
+	while ( $invite = $inviteStmt->fetch( PDO::FETCH_ASSOC ) ) { ?>
+        <p><code><?php echo htmlspecialchars( $invite[ 'code' ] ); ?></code> —
+			<?php echo htmlspecialchars(_('Created')); ?>: <?php echo htmlspecialchars( $invite[ 'created_at' ] ); ?>
+			<?php if ( $invite[ 'redeemed_by' ] !== null ) { ?>
+				— <?php echo htmlspecialchars(_('Used by')); ?> <?php echo htmlspecialchars( $invite[ 'redeemed_by' ] ); ?> (<?php echo htmlspecialchars( $invite[ 'redeemed_at' ] ); ?>)
+			<?php } else { ?>
+				— <?php echo htmlspecialchars(_('Not yet used')); ?>
+			<?php } ?>
+        </p>
+	<?php } ?>
+	<?php } ?>
 
     <h2><?php echo htmlspecialchars(_('Identity addresses')); ?></h2>
     <p><?php echo htmlspecialchars(_('Identity addresses receive mail in this mailbox and can be used as a sender for this account. They must use your mailbox domain.')); ?></p>

@@ -85,6 +85,8 @@ while ( $tmp = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
 		$del_domain->execute( [ $tmp[ 'domain' ] ] );
 	}
 }
+// delete expired invite codes
+$db->exec( 'DELETE FROM invite_codes WHERE created_at <= DATE_SUB(NOW(), INTERVAL ' . (int) INVITE_CODE_EXPIRATION_MONTHS . ' MONTH);' );
 // delete squirrelmail attachments older than an hour
 exec( 'find /var/local/squirrelmail/attach/ -type f -cmin +60 -delete' );
 try {

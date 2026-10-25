@@ -9,7 +9,7 @@ const DBHOST = 'localhost'; // Database host
 const DBUSER = 'postfix'; // Database user
 const DBPASS = 'YOUR_PASSWORD'; // Database password
 const DBNAME = 'postfix'; // Database
-const DBVERSION = 13; // Database schema version
+const DBVERSION = 14; // Database schema version
 const INACTIVITY_PERIOD_MONTHS = [1, 6, 12, 24]; // Allowed inactivity periods in months - don't forget to update get_inactivity_period_options on changes here and if an option is removed, you should also update accounts in the database mailbox table
 const DEFAULT_INACTIVITY_PERIOD = 12; // Default inactivity period in months
 const ALLOW_ACCOUNT_NEVER_DELETE = false; // Whether to allow users to set their inactivity period to "never delete"
@@ -40,6 +40,10 @@ const DEFAULT_QUOTA = 50 * 1024 * 1024; // Default mailbox quota in bytes
 const POSTMASTER_EMAIL = 'postmaster@danwin1210.de'; // Email address of the postmaster account receiving TLS and DMARC reports
 const POSTMASTER_PASSWORD = 'YOUR_PASSWORD'; // Password of the postmaster account receiving TLS and DMARC reports
 const ADMIN_LIST_PAGE_SIZE = 50; // Number of entries per page in the admin list
+const INVITE_CODES_ENABLED = false; // Require invite codes for public registration and enable invite management
+const INVITE_CODE_LIMIT = 3; // Number of invite codes a user may have generated before replacements become available
+const INVITE_WAIT_PERIOD_MONTHS = 1; // Months to wait after account creation and invite redemption
+const INVITE_CODE_EXPIRATION_MONTHS = 6; // Months after which an invite code expires and is removed from the database
 
 const LANGUAGES = [
 	'cs' => ['name' => 'čeština', 'locale' => 'cs_CZ', 'flag' => '🇨🇿', 'show_in_menu' => true, 'dir' => 'ltr'],
@@ -111,6 +115,56 @@ function generate_feedback_id( PDO $db ): string
 		$stmt->execute( [ $feedback_id ] );
 	} while ( $stmt->fetchColumn() );
 	return $feedback_id;
+}
+
+function get_user_invite_status( PDO $db, string $username ): array
+{
+	if ( ! INVITE_CODES_ENABLED || INVITE_CODE_LIMIT <= 0 ) {
+		return [ 'available' => 0, 'eligible' => false ];
+	}
+	$stmt = $db->prepare( 'SELECT created <= DATE_SUB(NOW(), INTERVAL ' . (int) INVITE_WAIT_PERIOD_MONTHS . ' MONTH) FROM mailbox WHERE username = ? AND active = 1;' );
+	$stmt->execute( [ $username ] );
+	$eligible = (bool) $stmt->fetchColumn();
+	if ( $eligible === false ) {
+		return [ 'available' => 0, 'eligible' => false ];
+	}
+
+	$stmt = $db->prepare( 'SELECT COUNT(*), SUM(redeemed_at <= DATE_SUB(NOW(), INTERVAL ' . (int) INVITE_WAIT_PERIOD_MONTHS . ' MONTH)) FROM invite_codes WHERE generated_by = ?;' );
+	$stmt->execute( [ $username ] );
+	$counts = $stmt->fetch( PDO::FETCH_NUM );
+	$total = (int) $counts[ 0 ];
+	$matured_redemptions = (int) ( $counts[ 1 ] ?? 0 );
+
+	return [
+		'available' => $eligible ? max( 0, INVITE_CODE_LIMIT + $matured_redemptions - $total ) : 0,
+		'eligible' => $eligible,
+	];
+}
+
+function create_user_invite_code( PDO $db, string $username ): ?string
+{
+	if ( ! INVITE_CODES_ENABLED || INVITE_CODE_LIMIT <= 0 ) {
+		return null;
+	}
+	$status = get_user_invite_status( $db, $username );
+	if( ! $status[ 'eligible' ] || $status[ 'available' ] <= 0 ) {
+		return null;
+	}
+	$code = bin2hex( random_bytes( 24 ) );
+	$stmt = $db->prepare( 'INSERT INTO invite_codes (code, generated_by, created_at) VALUES (?, ?, NOW());' );
+	$stmt->execute( [ $code, $username ] );
+	return $code;
+}
+
+function create_admin_invite_code( PDO $db, string $admin ): ?string
+{
+	if ( ! INVITE_CODES_ENABLED ) {
+		return null;
+	}
+	$code = bin2hex( random_bytes( 24 ) );
+	$stmt = $db->prepare( 'INSERT INTO invite_codes (code, generated_by_admin, created_at) VALUES (?, ?, NOW());' );
+	$stmt->execute( [ $code, $admin ] );
+	return $code;
 }
 
 function get_db_instance(): PDO
