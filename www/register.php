@@ -32,7 +32,7 @@ if ( isset( $_POST[ 'user' ] ) ) {
 			$ok = false;
 			$msg .= '<div class="red" role="alert">'.htmlspecialchars(_('A valid invite code is required.')).'</div>';
 		} else {
-			$stmt = $db->prepare( 'SELECT null FROM invite_codes WHERE code = ? AND redeemed_by IS NULL;' );
+			$stmt = $db->prepare( 'SELECT code FROM invite_codes WHERE code = ? AND redeemed_by IS NULL;' );
 			$stmt->execute( [ $invite_code ] );
 			if ( ! $stmt->fetchColumn() ) {
 				$ok = false;
