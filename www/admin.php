@@ -632,15 +632,36 @@ function send_manage_invite_codes(): void
 	}
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$total = (int) $db->query( 'SELECT COUNT(*) FROM invite_codes;' )->fetchColumn();
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' WHERE code LIKE :code_search OR generated_by LIKE :user_search OR generated_by_admin LIKE :admin_search OR redeemed_by LIKE :redeemed_search' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM invite_codes' . $search_clause . ';' );
+	if ( $search_pattern !== null ) {
+		$countStmt->execute( [
+			'code_search' => $search_pattern,
+			'user_search' => $search_pattern,
+			'admin_search' => $search_pattern,
+			'redeemed_search' => $search_pattern,
+		] );
+	} else {
+		$countStmt->execute();
+	}
+	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT code, generated_by, generated_by_admin, created_at, redeemed_by, redeemed_at FROM invite_codes ORDER BY created_at DESC, id DESC LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT code, generated_by, generated_by_admin, created_at, redeemed_by, redeemed_at FROM invite_codes' . $search_clause . ' ORDER BY created_at DESC, id DESC LIMIT :limit OFFSET :offset;' );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':code_search', $search_pattern, PDO::PARAM_STR );
+		$stmt->bindValue( ':user_search', $search_pattern, PDO::PARAM_STR );
+		$stmt->bindValue( ':admin_search', $search_pattern, PDO::PARAM_STR );
+		$stmt->bindValue( ':redeemed_search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->execute();
 	?>
     <h2><?php echo htmlspecialchars(_('Invite codes')); ?></h2>
+	<?php render_admin_search( 'invite_codes', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <button name="action" value="create_admin_invite_code" type="submit"><?php echo htmlspecialchars(_('Generate invite code')); ?></button>
@@ -659,7 +680,7 @@ function send_manage_invite_codes(): void
         </p>
 		<?php
 	}
-	render_admin_pagination( 'invite_codes', $page, $totalPages );
+	render_admin_pagination( 'invite_codes', $page, $totalPages, $search );
 }
 
 function get_admin_list_page(): int
@@ -668,12 +689,35 @@ function get_admin_list_page(): int
 	return max( 1, $page );
 }
 
-function render_admin_pagination( string $action, int $page, int $totalPages ): void
+function get_admin_list_search(): string
+{
+	return is_string( $_GET[ 'search' ] ?? null ) ? trim( $_GET[ 'search' ] ) : '';
+}
+
+function render_admin_search( string $action, string $search ): void
+{
+	?>
+    <form action="admin.php" method="get">
+        <input type="hidden" name="action" value="<?php echo htmlspecialchars( $action ); ?>">
+        <label for="list_search"><?php echo htmlspecialchars(_('Search')); ?></label>
+        <input type="search" name="search" id="list_search" value="<?php echo htmlspecialchars( $search ); ?>">
+        <button type="submit"><?php echo htmlspecialchars(_('Search')); ?></button>
+		<?php if ( $search !== '' ) { ?>
+            <a href="?action=<?php echo rawurlencode( $action ); ?>"><?php echo htmlspecialchars(_('Clear search')); ?></a>
+		<?php } ?>
+    </form>
+	<?php
+}
+
+function render_admin_pagination( string $action, int $page, int $totalPages, string $search = '' ): void
 {
 	if ( $totalPages <= 1 ) {
 		return;
 	}
 	$base = '?action=' . rawurlencode( $action );
+	if ( $search !== '' ) {
+		$base .= '&search=' . rawurlencode( $search );
+	}
 	echo '<div class="row">';
 	if ( $page > 1 ) {
 		echo '<a href="' . $base . '&page=' . ( $page - 1 ) . '">' . htmlspecialchars( _('Previous') ) . '</a> ';
@@ -695,15 +739,28 @@ function send_manage_admins(): void
 {
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$total = (int) $db->query( 'SELECT COUNT(*) FROM admin;' )->fetchColumn();
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' WHERE username LIKE :search' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM admin' . $search_clause . ';' );
+	if ( $search_pattern !== null ) {
+		$countStmt->execute( [ 'search' => $search_pattern ] );
+	} else {
+		$countStmt->execute();
+	}
+	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT username, modified, active FROM admin ORDER BY username LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT username, modified, active FROM admin' . $search_clause . ' ORDER BY username LIMIT :limit OFFSET :offset;' );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->execute();
 	?>
     <p><a href="?action=new_admin"><?php echo htmlspecialchars(_('Create new admin')); ?></a></p>
+	<?php render_admin_search( 'admins', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <input type="hidden" name="action" value="edit_admin">
@@ -721,7 +778,7 @@ function send_manage_admins(): void
 		?></form>
     <p><a href="?action=new_admin"><?php echo htmlspecialchars(_('Create new admin')); ?></a></p>
 	<?php
-	render_admin_pagination( 'admins', $page, $totalPages );
+	render_admin_pagination( 'admins', $page, $totalPages, $search );
 }
 
 function send_edit_admin(): void
@@ -887,10 +944,22 @@ function send_manage_domains(): void
 {
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$total = (int) $db->query( 'SELECT COUNT(*) FROM domain;' )->fetchColumn();
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' WHERE domain LIKE :search' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM domain' . $search_clause . ';' );
+	if ( $search_pattern !== null ) {
+		$countStmt->execute( [ 'search' => $search_pattern ] );
+	} else {
+		$countStmt->execute();
+	}
+	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT domain, modified, active FROM domain ORDER BY domain LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT domain, modified, active FROM domain' . $search_clause . ' ORDER BY domain LIMIT :limit OFFSET :offset;' );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->execute();
@@ -898,6 +967,7 @@ function send_manage_domains(): void
 		?>
         <p><a href="?action=new_domain"><?php echo htmlspecialchars(_('Create new domain')); ?></a></p>
 	<?php } ?>
+	<?php render_admin_search( 'domains', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <input type="hidden" name="action" value="edit_domain">
@@ -922,7 +992,7 @@ function send_manage_domains(): void
     <p><a href="?action=new_domain"><?php echo htmlspecialchars(_('Create new domain')); ?></a></p>
 	<?php
 }
-	render_admin_pagination( 'domains', $page, $totalPages );
+	render_admin_pagination( 'domains', $page, $totalPages, $search );
 }
 
 function send_new_domain(): void
@@ -1012,10 +1082,23 @@ function send_manage_alias_domains(): void
 {
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$total = (int) $db->query( 'SELECT COUNT(*) FROM alias_domain;' )->fetchColumn();
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' WHERE alias_domain LIKE :alias_search OR target_domain LIKE :target_search' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias_domain' . $search_clause . ';' );
+	if ( $search_pattern !== null ) {
+		$countStmt->execute( [ 'alias_search' => $search_pattern, 'target_search' => $search_pattern ] );
+	} else {
+		$countStmt->execute();
+	}
+	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT alias_domain, target_domain, modified, active FROM alias_domain ORDER BY alias_domain LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT alias_domain, target_domain, modified, active FROM alias_domain' . $search_clause . ' ORDER BY alias_domain LIMIT :limit OFFSET :offset;' );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':alias_search', $search_pattern, PDO::PARAM_STR );
+		$stmt->bindValue( ':target_search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->execute();
@@ -1023,6 +1106,7 @@ function send_manage_alias_domains(): void
 		?>
         <p><a href="?action=new_alias_domain"><?php echo htmlspecialchars(_('Create new alias domain')); ?></a></p>
 	<?php } ?>
+	<?php render_admin_search( 'alias_domains', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <input type="hidden" name="action" value="edit_alias_domain">
@@ -1043,7 +1127,7 @@ function send_manage_alias_domains(): void
     <p><a href="?action=new_alias_domain"><?php echo htmlspecialchars(_('Create new alias domain')); ?></a></p>
 	<?php
 }
-	render_admin_pagination( 'alias_domains', $page, $totalPages );
+	render_admin_pagination( 'alias_domains', $page, $totalPages, $search );
 }
 
 function send_new_alias_domain(): void
@@ -1116,19 +1200,31 @@ function send_manage_aliases(): void
 {
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL;' );
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' AND (a.address LIKE :address_search OR a.goto LIKE :goto_search)' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL' . $search_clause . ';' );
 	$countStmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	if ( $search_pattern !== null ) {
+		$countStmt->bindValue( ':address_search', $search_pattern, PDO::PARAM_STR );
+		$countStmt->bindValue( ':goto_search', $search_pattern, PDO::PARAM_STR );
+	}
 	$countStmt->execute();
 	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL ORDER BY a.address LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT a.address, a.goto, a.modified, a.active FROM alias AS a LEFT JOIN mailbox AS m ON (m.username=a.address AND m.active=1) WHERE a.domain IN (SELECT domain FROM domain_admins WHERE username = :username) AND isnull(m.username) AND a.identity IS NULL' . $search_clause . ' ORDER BY a.address LIMIT :limit OFFSET :offset;' );
 	$stmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':address_search', $search_pattern, PDO::PARAM_STR );
+		$stmt->bindValue( ':goto_search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->execute();
 	?>
     <p><a href="?action=new_alias"><?php echo htmlspecialchars(_('Create new alias')); ?></a></p>
+	<?php render_admin_search( 'alias', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <input type="hidden" name="action" value="edit_alias">
@@ -1150,7 +1246,7 @@ function send_manage_aliases(): void
 		?></form>
     <p><a href="?action=new_alias"><?php echo htmlspecialchars(_('Create new alias')); ?></a></p>
 	<?php
-	render_admin_pagination( 'alias', $page, $totalPages );
+	render_admin_pagination( 'alias', $page, $totalPages, $search );
 }
 
 function send_new_alias(): void
@@ -1231,19 +1327,29 @@ function send_manage_mailboxes(): void
 {
 	$db = get_db_instance();
 	$page = get_admin_list_page();
+	$search = get_admin_list_search();
 	$offset = ( $page - 1 ) * ADMIN_LIST_PAGE_SIZE;
-	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username);' );
+	$search_pattern = $search !== '' ? '%' . $search . '%' : null;
+	$search_clause = $search !== '' ? ' AND username LIKE :search' : '';
+	$countStmt = $db->prepare( 'SELECT COUNT(*) FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username)' . $search_clause . ';' );
 	$countStmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	if ( $search_pattern !== null ) {
+		$countStmt->bindValue( ':search', $search_pattern, PDO::PARAM_STR );
+	}
 	$countStmt->execute();
 	$total = (int) $countStmt->fetchColumn();
 	$totalPages = max( 1, (int) ceil( $total / ADMIN_LIST_PAGE_SIZE ) );
-	$stmt = $db->prepare( 'SELECT username, modified, active FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username) ORDER BY username LIMIT :limit OFFSET :offset;' );
+	$stmt = $db->prepare( 'SELECT username, modified, active FROM mailbox WHERE domain IN (SELECT domain FROM domain_admins WHERE username = :username)' . $search_clause . ' ORDER BY username LIMIT :limit OFFSET :offset;' );
 	$stmt->bindValue( ':limit', ADMIN_LIST_PAGE_SIZE, PDO::PARAM_INT );
 	$stmt->bindValue( ':offset', $offset, PDO::PARAM_INT );
 	$stmt->bindValue( ':username', $_SESSION[ 'email_admin_user' ], PDO::PARAM_STR );
+	if ( $search_pattern !== null ) {
+		$stmt->bindValue( ':search', $search_pattern, PDO::PARAM_STR );
+	}
 	$stmt->execute();
 	?>
     <p><a href="?action=new_mailbox"><?php echo htmlspecialchars(_('Create new mailbox')); ?></a></p>
+	<?php render_admin_search( 'mailbox', $search ); ?>
     <form class="form_limit" action="admin.php" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION[ 'csrf_token' ]; ?>">
         <input type="hidden" name="action" value="edit_mailbox">
@@ -1268,7 +1374,7 @@ function send_manage_mailboxes(): void
 		?></form>
     <p><a href="?action=new_mailbox"><?php echo htmlspecialchars(_('Create new mailbox')); ?></a></p>
 	<?php
-	render_admin_pagination( 'mailbox', $page, $totalPages );
+	render_admin_pagination( 'mailbox', $page, $totalPages, $search );
 }
 
 function send_new_mailbox(): void
