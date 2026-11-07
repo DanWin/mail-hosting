@@ -97,3 +97,4 @@ try {
 	echo _('Error synchronizing DKIM signing keys:') . PHP_EOL;
 	echo $exception->getMessage() . PHP_EOL;
 }
+require_once __DIR__ . '/tools/dead_man_switch.php';

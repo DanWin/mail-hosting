@@ -44,6 +44,36 @@ const INVITE_CODES_ENABLED = false; // Require invite codes for public registrat
 const INVITE_CODE_LIMIT = 3; // Number of invite codes a user may have generated before replacements become available
 const INVITE_WAIT_PERIOD_MONTHS = 1; // Months to wait after account creation and invite redemption
 const INVITE_CODE_EXPIRATION_MONTHS = 6; // Months after which an invite code expires and is removed from the database
+const DEAD_MAN_SWITCH_ENABLED = false; // Enable staged inactivity notifications
+const DEAD_MAN_SWITCH_MAILBOX = 'admin@example.com'; // Mailbox whose account activity resets the switch
+const DEAD_MAN_SWITCH_TRUSTED_CONTACTS = ['trusted@example.com', 'trusted2@example.com']; // Email addresses of trusted contacts to be notified
+const DEAD_MAN_SWITCH_CUSTOMER_CONTACTS = ['customer@example.com', 'customer2@example.com']; // Customer email addresses to be notified
+const DEAD_MAN_SWITCH_STAGES = [
+	1 => [
+		'after' => 24 * 60 * 60,
+		'recipients' => [ DEAD_MAN_SWITCH_MAILBOX ],
+		'subject' => 'Dead man switch: please check in',
+		'body' => "No account activity has been recorded for 24 hours. Please sign in to your monitored mailbox to reset the dead man switch.\n",
+	],
+	2 => [
+		'after' => 48 * 60 * 60,
+		'recipients' => DEAD_MAN_SWITCH_TRUSTED_CONTACTS,
+		'subject' => 'Dead man switch: please contact me',
+		'body' => "No account activity has been recorded for 48 hours. Please try to contact me directly. If I am okay, signing in to " . DEAD_MAN_SWITCH_MAILBOX . " will reset the switch.\n",
+	],
+	3 => [
+		'after' => 72 * 60 * 60,
+		'recipients' => DEAD_MAN_SWITCH_TRUSTED_CONTACTS,
+		'subject' => 'Dead man switch: project handover instructions',
+		'body' => "No account activity has been recorded for 72 hours. The following are my instructions for taking over my projects:\n\nEDIT_ME\n",
+	],
+	4 => [
+		'after' => 96 * 60 * 60,
+		'recipients' => DEAD_MAN_SWITCH_CUSTOMER_CONTACTS,
+		'subject' => 'Important: your contact has changed',
+		'body' => "I have been unavailable for an extended period and something may have happened to me. For ongoing matters, please contact EDIT_ME.\n",
+	],
+];
 
 const LANGUAGES = [
 	'cs' => ['name' => 'čeština', 'locale' => 'cs_CZ', 'flag' => '🇨🇿', 'show_in_menu' => true, 'dir' => 'ltr'],
